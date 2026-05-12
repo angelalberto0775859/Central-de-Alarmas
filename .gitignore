@@ -1,0 +1,42 @@
+# Sistema
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Archivos temporales
+*.tmp
+*.temp
+.temp/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Recovery
+recovery/

@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Alarmas — Soluciones para Empresas</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #063970;
+            --accent-mid: #063970;
+            --accent-light: #e6f2f8;
+            --accent-yellow: #f6eb17;
+            --text: #17397d;
+            --text-muted: #64748b;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --glow: rgba(6,57,112,0.15);
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: transparent;
+            box-shadow: none;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+        }
+
+        header#main-header.scrolled {
+            background-color: var(--primary) !important;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.09);
+            padding: 0.8rem 2rem;
+        }
+
+        .logo img {
+            height: 36px;
+            transition: filter 0.4s ease;
+        }
+
+        nav {
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-sm);
+            transition: color 0.3s, background 0.3s;
+        }
+        nav a:hover { background: var(--accent-light); color: var(--accent); }
+
+        header.scrolled nav a { color: var(--text-muted); }
+        header.scrolled nav a:hover { background: var(--accent-light); color: var(--accent); }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            border: 1px solid var(--accent) !important;
+            color: #fff !important;
+            margin-left: 0.5rem;
+        }
+        header.scrolled .nav-cta {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
+            color: #fff !important;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 12px var(--glow); }
+
+        /* Hamburger */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background 0.3s;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px; height: 2px;
+            background: #fff;
+            border-radius: 2px;
+            transition: transform 0.35s, opacity 0.35s, background 0.4s;
+        }
+        header.scrolled .hamburger span { background: var(--accent); }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0; right: -100%;
+            width: 280px; height: 100dvh;
+            background: var(--footer-bg);
+            z-index: 999;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.3);
+        }
+        .mobile-menu.open { right: 0; }
+        .mobile-menu a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            transition: background 0.3s, color 0.3s;
+        }
+        .mobile-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .mobile-overlay.open { opacity: 1; pointer-events: all; }
+
+        /* ─── HERO ─── */
+        #inicio {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background-color: #ffffff;
+            color: var(--text);
+            overflow: hidden;
+            z-index: 1;
+            padding-top: 10rem;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(6, 20, 50, 0.6);
+            z-index: -1;
+            display: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(6,57,112,0.1);
+            border: 1px solid rgba(6,57,112,0.2);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.9rem;
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+        }
+        .hero-badge-dot {
+            width: 6px; height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.7; }
+        }
+
+        #inicio h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            color: var(--accent);
+            max-width: 800px;
+            text-shadow: none;
+            margin: 1rem auto 1.25rem;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
+        }
+
+        #inicio h1 span {
+            display: inline;
+        }
+
+        #inicio h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        #word1, #word2 {
+            transition: opacity 0.45s ease;
+            color: var(--accent);
+        }
+
+        #inicio .content {
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #inicio p.hero-sub {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            max-width: 560px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.85rem 1.8rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(6,57,112,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 15rem;
+            margin-top: 5rem;
+        }
+        .btn-primary:hover { 
+            background: var(--accent-mid);
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 24px rgba(6,57,112,0.3); 
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.9rem 2rem;
+            border: 1.5px solid var(--accent);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .btn-outline:hover { border-color: var(--accent-mid); background: rgba(6,57,112,0.08); }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: float-up-down 2.5s ease-in-out infinite;
+        }
+        .scroll-line {
+            width: 1px; height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+        }
+        @keyframes float-up-down {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        /* ─── SERVICE PREVIEW CARDS ─── */
+        #servicios-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 0 1.5rem;
+            margin-top: -11rem;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .preview-header {
+            display: none; /* Keep it clean like original - no header above preview cards */
+        }
+
+        .label-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            background: var(--accent-yellow);
+            color: var(--accent);
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-cards {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .card {
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 280px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.13);
+        }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            background: var(--accent-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon svg { stroke: var(--accent); }
+
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ─── SERVICES GRID ─── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 2rem auto 0;
+        }
+
+        .service-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .service-item:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+
+        .service-icon {
+            width: 50px; height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover .service-icon {
+            background: var(--accent-mid);
+            transform: scale(1.05);
+        }
+
+        .service-icon svg { 
+            stroke: var(--accent); 
+            width: 24px; 
+            height: 24px; 
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover .service-icon svg {
+            stroke: white;
+        }
+
+        .service-content {
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover .service-content {
+            transform: translateX(3px);
+        }
+
+        .service-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .service-item:hover h3 {
+            color: var(--accent);
+        }
+
+        .service-item:hover h3::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-yellow);
+        }
+
+        .service-item p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover p {
+            color: var(--text-muted);
+        }
+
+        /* ─── SERVICE MODAL ─── */
+        .service-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .service-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        .service-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .service-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .service-modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .service-modal-close:hover {
+            color: var(--accent);
+        }
+
+        .service-modal-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to { 
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* ─── NOSOTROS ─── */
+        #nosotros {
+            background: var(--primary);
+            padding: 6rem 1.5rem;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            
+            font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .about-text em {
+            font-style: normal;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .about-text .btn-accent {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.85rem 1.75rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .about-text .btn-accent:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow);
+        }
+
+        .map-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mexico-map {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            filter: drop-shadow(0 12px 32px rgba(6,57,112,0.15));
+        }
+
+        /* Partners carousel */
+        .partners-section {
+            margin-top: 5rem;
+            padding-top: 4rem;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .partners-section h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logos-slider { width: 100%; overflow: hidden; }
+        .logos-track {
+            display: flex;
+            width: calc(200px * 20 + 40px * 19); /* Ancho exacto para loop */
+            animation: scroll 40s linear infinite;
+            gap: 40px;
+            align-items: center;
+        }
+        .logos-track img {
+            height: 60px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        /* Clases individuales para cada partner */
+        .partner-alsea { height: 90px !important; }
+        .partner-bardahl { height: 90px !important; }
+        .partner-burgerking { height: 55px !important; }
+        .partner-cantia { height: 45px !important; }
+        .partner-chilis { height: 50px !important; }
+        .partner-corazondebarro { height: 90px !important; }
+        .partner-dominos { height: 100px !important; }
+        .partner-elpalaciodehierro { height: 45px !important; }
+        .partner-lumen { height: 105px !important; }
+        .partner-macstore { height: 110px !important; }
+        .partner-mercedesbenz { height: 40px !important; }
+        .partner-mundojoven { height: 120px !important; }
+        .partner-officedepot { height: 100px !important; }
+        .partner-balenciaga { height: 20px !important; }
+        .partner-bottega { height: 60px !important; }
+        .partner-pfchang { height: 110px !important; }
+        .partner-puma { height: 65px !important; }
+        .partner-soriana { height: 110px !important; }
+        .partner-starbucks { height: 100px !important; }
+        .partner-vips { height: 110px !important; }
+
+        .logos-track img {
+            filter: grayscale(1);
+            opacity: 0.5;
+            transition: opacity 0.3s, filter 0.3s;
+        }
+        .logos-track img:hover { filter: grayscale(0); opacity: 1; }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-200px * 20 - 40px * 19)); } /* Mover exactamente una tanda completa */
+        }
+
+        /* ─── WHY US (valor proposition) ─── */
+        #por-que {
+            background: var(--accent);
+            padding: 6rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #por-que::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            pointer-events: none;
+        }
+
+        .por-que-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 3rem auto 0;
+        }
+
+        .por-que-header { text-align: center; max-width: 640px; margin: 0 auto; }
+        .por-que-header .section-label { color: rgba(255,255,255,0.6); }
+        .por-que-header h2 {
+            
+            font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .valor-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .valor-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+
+        .valor-num {
+            
+            font-size: 2.5rem;
+            color: rgba(255,255,255,0.2);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .valor-item h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .valor-item p {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+
+        /* ─── PACKAGES ─── */
+        #packages-section {
+            padding: 6rem 1.5rem;
+            background: var(--secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-header h2 {
+            
+            font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0.75rem auto 0;
+            line-height: 1.7;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .package-card {
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(6,57,112,0.12);
+        }
+
+        .package-img-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .package-card:hover img { transform: scale(1.04); }
+
+        .package-tag {
+            position: absolute;
+            top: 1rem; left: 1rem;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+        }
+
+        .package-body {
+            padding: 1.75rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .package-card ul {
+            list-style: none;
+            flex: 1;
+        }
+
+        .package-card li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            padding: 0.45rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .package-card li:last-child { border-bottom: none; }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 18px; height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+
+        .check-icon::after {
+            content: '';
+            display: block;
+            width: 9px; height: 9px;
+            background: #fff;
+            -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="20 6 9 17 4 12"/%3E%3C/svg%3E');
+            mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="20 6 9 17 4 12"/%3E%3C/svg%3E');
+        }
+
+        .package-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .btn-package {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            transition: gap 0.25s;
+        }
+        .btn-package:hover { gap: 0.7rem; }
+
+        /* ─── CERTIFICACIONES ─── */
+        #certificaciones {
+            background: var(--primary);
+            padding: 6rem 1.5rem;
+        }
+
+        .certificaciones-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            max-width: 1100px;
+            margin: 3rem auto 0;
+            align-items: center;
+        }
+
+        .cert-item {
+            background: var(--secondary);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cert-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+        }
+
+        .certificaciones-grid img {
+            width: 100%;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        /* ─── CONTACTO ─── */
+        #contacto {
+            padding: 6rem 1.5rem;
+            background: var(--secondary);
+        }
+
+        .contacto-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .contact-form-wrap {
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group { position: relative; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1.5px solid #e0e7f0;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            
+            color: var(--text);
+            background: var(--secondary);
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+            appearance: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 4px var(--glow);
+        }
+
+        textarea { resize: vertical; min-height: 120px; }
+
+        .ghost { display: none; }
+
+        .error-message {
+            color: #c0392b;
+            font-size: 0.78rem;
+            margin-top: 0.3rem;
+            display: none;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .btn-submit:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow);
+        }
+
+        .contact-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .pbox {
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--accent);
+        }
+
+        .pbox h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .pbox a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.4rem 0;
+            transition: color 0.25s;
+        }
+        .pbox a:hover { color: var(--accent); }
+
+        .pbox .icon {
+            width: 20px; height: 20px;
+            background-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .pbox p.p3 {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 1.6rem;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        footer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6, 20, 50, 0.85) 0%, rgba(10, 15, 26, 0.95) 100%);
+            z-index: -1;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo img {
+            height: 36px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.7;
+            max-width: 260px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-col a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.35rem 0;
+            transition: color 0.25s;
+        }
+        .footer-col a:hover { color: #fff; }
+
+        .footer-col .icon {
+            width: 15px; height: 15px;
+            background-color: rgba(255,255,255,0.4);
+        }
+        .footer-col a:hover .icon { background-color: rgba(255,255,255,0.8); }
+
+        .footer-socials {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-socials a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            transition: background 0.3s;
+        }
+        .footer-socials a:hover { background: rgba(255,255,255,0.15); }
+
+        .footer-socials .icon {
+            width: 18px; height: 18px;
+            background-color: rgba(255,255,255,0.7);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .footer-bottom .gsi img {
+            height: 40px;
+            filter: brightness(0) invert(0.7);
+        }
+
+        .footer-bottom p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ─── BACK TO TOP ─── */
+        #back-to-top {
+            position: fixed;
+            bottom: 1.5rem; right: 1.5rem;
+            background: var(--accent);
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 16px var(--glow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.3s;
+            z-index: 9999;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); }
+        #back-to-top:hover { background: var(--accent-mid); }
+
+        #back-to-top .icon {
+            width: 20px; height: 20px;
+            background-color: #fff;
+            -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="12" y1="19" x2="12" y2="5"%3E%3C/line%3E%3Cpolyline points="5 12 12 5 19 12"%3E%3C/polyline%3E%3C/svg%3E');
+            mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="12" y1="19" x2="12" y2="5"%3E%3C/line%3E%3Cpolyline points="5 12 12 5 19 12"%3E%3C/polyline%3E%3C/svg%3E');
+            transform: translateY(-1px);
+        }
+
+        /* ─── SECTION SEPARATOR ─── */
+        .sep {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(6,57,112,0.15), transparent);
+            margin: 0;
+        }
+
+        /* ─── MAIN SECTION ─── */
+        .main-section {
+            padding: 8rem 1.5rem;
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .main-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            margin-top: 10rem;
+        }
+
+        .main-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .main-header p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ─── SERVICES EMPRESA ─── */
+        .service-item-empresa {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            position: relative;
+        }
+
+        .service-item-empresa.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-image {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .service-content {
+            flex: 1;
+            min-width: 0;
+            background-color: var(--accent);
+            padding: 3rem;
+            color: white;
+        }
+
+        .service-content h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .service-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .service-features .check-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .service-item-empresa:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .service-content h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            transition: color 0.4s ease;
+        }
+
+        .service-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .service-features .check-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .service-features .check-icon::after {
+            content: '✓';
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .service-item-empresa {
+                flex-direction: column !important;
+                gap: 2rem;
+                margin-bottom: 4rem;
+            }
+
+            .service-content h3 {
+                font-size: 2rem;
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (min-width: 640px) {
+            .preview-cards { 
+                flex-direction: row; 
+                flex-wrap: nowrap;
+                justify-content: center;
+                gap: 2rem;
+                max-width: 900px;
+            }
+            .preview-cards .card { 
+                min-height: 280px; 
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+            }
+            .card-icon {
+                width: 44px; height: 44px;
+                background: var(--accent-light);
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+            }
+            .services-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 1.5rem;
+            }
+            .packages-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+            .certificaciones-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (min-width: 768px) {
+            header { padding: 1.2rem 3rem; }
+            header.scrolled { padding: 0.8rem 3rem; }
+            nav { display: flex; }
+            .hamburger { display: none; }
+            .about-grid { grid-template-columns: 1fr 1fr; }
+            .por-que-grid { grid-template-columns: repeat(2, 1fr); }
+            .contacto-grid { grid-template-columns: 2fr 1fr; }
+            .footer-top { grid-template-columns: 1.5fr 1fr 1fr; }
+            .footer-bottom { flex-direction: row; justify-content: space-between; }
+            #packages-section { padding-top: 10rem; }
+            .mexico-map { max-width: 540px; }
+            .preview-cards { 
+                max-width: 900px;
+                gap: 2.5rem;
+            }
+            .preview-cards .card {
+                flex: 1;
+                min-width: 280px;
+            }
+            .services-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .packages-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+            .certificaciones-grid { grid-template-columns: repeat(5, 1fr); }
+            .por-que-grid { grid-template-columns: repeat(4, 1fr); }
+            .preview-cards { 
+                gap: 3rem;
+            }
+            .services-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .preview-cards { 
+                gap: 3rem;
+            }
+            .services-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header id="main-header">
+        <div class="logo">
+            <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
+        </div>
+        <nav id="main-nav">
+            <a href="#servicios-empresa">Servicios</a>
+            <a href="#contacto">Contacto</a>
+            <a href="https://centraldealarmas.trytoku.com/" class="nav-cta">Pagar</a>
+        </nav>
+        <div class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#servicios-empresa" class="mobile-link">Servicios</a>
+        <a href="#contacto" class="mobile-link">Contacto</a>
+        <a href="#" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;">Pagar</a>
+    </div>
+
+    <main>
+
+        <!-- ─── MAIN SECTION ─── -->
+        <section class="main-section">
+            <div class="main-header" data-aos="fade-in">
+                <h1>Soluciones para empresa</h1>
+                <p>Protección integral y avanzada para tu negocio con tecnología de última generación</p>
+                <a href="#servicios-empresa" class="btn-primary" data-aos="fade-up" data-aos-delay="200">
+                    Conocer nuestros servicios
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- ─── SERVICES SECTION ─── -->
+            <div class="services-empresa" id="servicios-empresa">
+            <!-- Monitoreo 24/7 -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Monitoreo.jpg" alt="Monitoreo 24/7">
+                </div>
+                <div class="service-content">
+                    <h3>Monitoreo 24/7</h3>
+                    <p>Vigilancia constante y profesional de sus instalaciones las 24 horas del día, los 365 días del año. Nuestro centro de monitoreo certificado garantiza respuesta inmediata ante cualquier incidente.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Centro de monitoreo certificado</li>
+                        <li><span class="check-icon"></span>Respuesta inmediata ante alarmas</li>
+                        <li><span class="check-icon"></span>Operadores altamente capacitados</li>
+                        <li><span class="check-icon"></span>Reportes detallados de incidentes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Control de Acceso -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/ControlDeAcceso.jpg" alt="Control de Acceso">
+                </div>
+                <div class="service-content">
+                    <h3>Control de Acceso</h3>
+                    <p>Gestión avanzada del acceso a sus instalaciones con sistemas biométricos, tarjetas de proximidad y controles de acceso inteligentes. Proteja sus áreas restringidas y controle quién entra y sale.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Lectores biométricos y de proximidad</li>
+                        <li><span class="check-icon"></span>Control de horarios y turnos</li>
+                        <li><span class="check-icon"></span>Registro de accesos en tiempo real</li>
+                        <li><span class="check-icon"></span>Integración con sistemas de alarma</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sistema de Intrusión -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Intrusión.jpg" alt="Sistema de Intrusión">
+                </div>
+                <div class="service-content">
+                    <h3>Sistema de Intrusión</h3>
+                    <p>Protección perimetral completa con sensores de última generación, detectores de movimiento, barreras infrarrojas y sistemas anti-intrusión inteligentes que alertan ante cualquier intento de acceso no autorizado.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Sensores de movimiento y apertura</li>
+                        <li><span class="check-icon"></span>Barreras infrarrojas y microondas</li>
+                        <li><span class="check-icon"></span>Detección de vidrio roto</li>
+                        <li><span class="check-icon"></span>Sirenas y alarmas visuales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Detección de Incendios -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Incendios.jpg" alt="Detección de Incendios">
+                </div>
+                <div class="service-content">
+                    <h3>Detección de Incendios</h3>
+                    <p>Sistema completo de detección y extinción de incendios con detectores de humo, calor y flama, alarmas de evacuación y sistemas de supresión automática para proteger su negocio y personal.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Detectores de humo y calor</li>
+                        <li><span class="check-icon"></span>Sistemas de rociadores automáticos</li>
+                        <li><span class="check-icon"></span>Alarmas de evacuación</li>
+                        <li><span class="check-icon"></span>Extintores y sistemas de supresión</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Niebla de Seguridad -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Niebla.jpg" alt="Niebla de Seguridad">
+                </div>
+                <div class="service-content">
+                    <h3>Niebla de Seguridad</h3>
+                    <p>Sistema de disuasión instantánea que genera una densa niebla de seguridad en segundos, impidiendo la visibilidad de intrusos y protegiendo sus bienes hasta la llegada de las autoridades.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Activación instantánea ante intrusión</li>
+                        <li><span class="check-icon"></span>Niebla densa y no tóxica</li>
+                        <li><span class="check-icon"></span>Duración de hasta 30 minutos</li>
+                        <li><span class="check-icon"></span>Integración con sistemas de alarma</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Videovigilancia -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Videovigilancia.jpg" alt="Videovigilancia">
+                </div>
+                <div class="service-content">
+                    <h3>Videovigilancia</h3>
+                    <p>Cámaras de alta definición con visión nocturna, análisis inteligente de video y grabación en la nube. Supervise sus instalaciones desde cualquier lugar con nuestro sistema de videovigilancia avanzado.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Cámaras 4K y visión nocturna</li>
+                        <li><span class="check-icon"></span>Análisis inteligente con IA</li>
+                        <li><span class="check-icon"></span>Grabación en la nube 24/7</li>
+                        <li><span class="check-icon"></span>Acceso remoto desde móvil</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Alertamiento Sísmico -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Sismos.png" alt="Alertamiento Sísmico">
+                </div>
+                <div class="service-content">
+                    <h3>Alertamiento Sísmico</h3>
+                    <p>Sistema de detección temprana de sismos que alerta segundos antes de que ocurra el movimiento telúrico, dando tiempo crucial para evacuar y proteger a su personal.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Detección temprana de sismos</li>
+                        <li><span class="check-icon"></span>Alerta hasta 60 segundos antes</li>
+                        <li><span class="check-icon"></span>Integración con sistemas de evacuación</li>
+                        <li><span class="check-icon"></span>Pruebas y mantenimiento periódico</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Antenas de Seguridad -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Antenas.jpg" alt="Antenas de Seguridad">
+                </div>
+                <div class="service-content">
+                    <h3>Antenas de Seguridad</h3>
+                    <p>Antenas de detección anti-robo para entradas y salidas de establecimientos comerciales. Sistema discreto y efectivo que alerta cuando productos etiquetados intentan salir sin autorización.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Detección de etiquetas y hard tags</li>
+                        <li><span class="check-icon"></span>Sistema de alarmas audibles</li>
+                        <li><span class="check-icon"></span>Diseño discreto y elegante</li>
+                        <li><span class="check-icon"></span>Fácil instalación y mantenimiento</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Videoverificación -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/Videoverificacion.jpg" alt="Videoverificación">
+                </div>
+                <div class="service-content">
+                    <h3>Videoverificación</h3>
+                    <p>Verificación visual de alarmas en tiempo real mediante cámaras conectadas que permiten a nuestros operadores confirmar incidentes y coordinar respuestas efectivas con las autoridades.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Verificación visual en tiempo real</li>
+                        <li><span class="check-icon"></span>Coordinación con autoridades</li>
+                        <li><span class="check-icon"></span>Reducción de falsas alarmas</li>
+                        <li><span class="check-icon"></span>Grabación como evidencia</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Rastreo GPS -->
+            <div class="service-item-empresa" data-aos="fade-up">
+                <div class="service-image">
+                    <img src="Servicios/RastreoGPS.jpg" alt="Rastreo GPS">
+                </div>
+                <div class="service-content">
+                    <h3>Rastreo GPS</h3>
+                    <p>Localización y monitoreo en tiempo real de vehículos y activos móviles. Sistema de rastreo GPS que proporciona información precisa sobre la ubicación y estado de sus recursos.</p>
+                    <ul class="service-features">
+                        <li><span class="check-icon"></span>Localización en tiempo real</li>
+                        <li><span class="check-icon"></span>Historial de rutas y paradas</li>
+                        <li><span class="check-icon"></span>Alertas de geocercas</li>
+                        <li><span class="check-icon"></span>Reportes de actividad detallados</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="sep"></div>
+
+        <!-- ─── CONTACTO ─── -->
+        <section id="contacto">
+            <div class="section-header" data-aos="fade-in">
+                <span class="label-tag">Contacto</span>
+                <h2>Contáctanos y conoce las soluciones que tenemos para ti</h2>
+            </div>
+
+            <div class="contacto-grid">
+                <div class="contact-form-wrap" data-aos="fade-right">
+                    <form id="contact-form-empresa" action="php/empresa.php" method="POST" novalidate>
+                        <select class="ghost" name="titulo">
+                            <option value="Nuevo Mensaje de Contacto - Central de Alarmas"></option>
+                        </select>
+
+                        <div class="form-group">
+                            <input type="text" name="nombre" placeholder="Nombre Completo *" required>
+                            <span class="error-message" id="nombre-error">El nombre es obligatorio.</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="correo" placeholder="Correo electrónico *" required>
+                            <span class="error-message" id="correo-error">Introduce un correo válido.</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" name="telefono" placeholder="Teléfono *" required>
+                            <span class="error-message" id="telefono-error">El teléfono es obligatorio.</span>
+                        </div>
+                        <div class="form-group">
+                            <select name="servicios" required>
+                                <option value="" disabled selected>Servicio de interés *</option>
+                                <option value="Monitoreo 24/7">Monitoreo 24/7</option>
+                                <option value="Control de Acceso">Control de Acceso</option>
+                                <option value="Sistema de Intrusión">Sistema de Intrusión</option>
+                                <option value="Detección de Incendios">Detección de Incendios</option>
+                                <option value="Niebla de Seguridad">Niebla de Seguridad</option>
+                                <option value="Videovigilancia">Videovigilancia</option>
+                                <option value="Alertamiento Sísmico">Alertamiento Sísmico</option>
+                                <option value="Antenas de Seguridad">Antenas de Seguridad</option>
+                                <option value="Videoverificación">Videoverificación</option>
+                                <option value="Rastreo GPS">Rastreo GPS</option>
+                                <option value="Más información">Quiero más información</option>
+                            </select>
+                            <span class="error-message" id="servicios-error">Selecciona un servicio.</span>
+                        </div>
+                        <div class="form-group">
+                            <select name="estado" required>
+                                <option value="" disabled selected>Estado de la República *</option>
+                                <option value="Aguascalientes">Aguascalientes</option>
+                                <option value="Baja California">Baja California</option>
+                                <option value="Baja California Sur">Baja California Sur</option>
+                                <option value="Campeche">Campeche</option>
+                                <option value="CDMX">CDMX</option>
+                                <option value="Chiapas">Chiapas</option>
+                                <option value="Chihuahua">Chihuahua</option>
+                                <option value="Coahuila">Coahuila</option>
+                                <option value="Colima">Colima</option>
+                                <option value="Durango">Durango</option>
+                                <option value="Estado de Mexico">Estado de México</option>
+                                <option value="Guanajuato">Guanajuato</option>
+                                <option value="Guerrero">Guerrero</option>
+                                <option value="Hidalgo">Hidalgo</option>
+                                <option value="Jalisco">Jalisco</option>
+                                <option value="Michoacan">Michoacán</option>
+                                <option value="Morelos">Morelos</option>
+                                <option value="Nayarit">Nayarit</option>
+                                <option value="Nuevo Leon">Nuevo León</option>
+                                <option value="Oaxaca">Oaxaca</option>
+                                <option value="Puebla">Puebla</option>
+                                <option value="Queretaro">Querétaro</option>
+                                <option value="Quintana Roo">Quintana Roo</option>
+                                <option value="San Luis Potosi">San Luis Potosí</option>
+                                <option value="Sinaloa">Sinaloa</option>
+                                <option value="Sonora">Sonora</option>
+                                <option value="Tabasco">Tabasco</option>
+                                <option value="Tamaulipas">Tamaulipas</option>
+                                <option value="Tlaxcala">Tlaxcala</option>
+                                <option value="Veracruz">Veracruz</option>
+                                <option value="Yucatán">Yucatán</option>
+                                <option value="Zacatecas">Zacatecas</option>
+                            </select>
+                            <span class="error-message" id="estado-error">Selecciona un estado.</span>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="mensaje" placeholder="¿En qué podemos ayudarte? *" required rows="4"></textarea>
+                            <span class="error-message" id="mensaje-error">El mensaje es obligatorio.</span>
+                        </div>
+                        <div class="g-recaptcha" data-sitekey="6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G"></div>
+                        <button type="submit" class="btn-submit">Recibe Asesoría Gratuita</button>
+                    </form>
+                </div>
+
+                <div class="contact-panel">
+                    <div class="pbox" data-aos="fade-left" data-aos-delay="100">
+                        <h3>Asesoría comercial</h3>
+                        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem;">Lunes a Viernes · 8 am a 6 pm</p>
+                        <a target="_blank" href="https://wa.me/5532534159?text=Hola%20me%20interesa%20recibir%20asesoría%20comercial">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22currentColor%22%3E%3Cpath d=%22M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c4.58 0 8.31 3.73 8.31 8.31 0 4.58-3.73 8.31-8.31 8.31-1.51 0-2.93-.39-4.13-1.08l-.3-.18-.31.08-1.26.33.33-1.22.09-.34-.2-.32a8.188 8.188 0 01-1.26-4.38c0-4.58 3.73-8.31 8.31-8.31zM8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1 2.56.12.17 1.76 2.67 4.25 3.73.59.27 1.05.42 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.27-.25-.14-1.47-.74-1.69-.82-.23-.08-.37-.12-.56.12-.16.25-.64.81-.78.97-.15.17-.29.19-.53.07-.26-.13-1.06-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.12-.24-.01-.39.11-.5.13-.13.28-.32.43-.5.14-.18.17-.31.26-.49.09-.19.04-.36-.02-.51-.05-.15-.24-.6-.33-.82-.09-.22-.18-.19-.26-.2-.07-.01-.15-.01-.23-.01z%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22currentColor%22%3E%3Cpath d=%22M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c4.58 0 8.31 3.73 8.31 8.31 0 4.58-3.73 8.31-8.31 8.31-1.51 0-2.93-.39-4.13-1.08l-.3-.18-.31.08-1.26.33.33-1.22.09-.34-.2-.32a8.188 8.188 0 01-1.26-4.38c0-4.58 3.73-8.31 8.31-8.31zM8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1 2.56.12.17 1.76 2.67 4.25 3.73.59.27 1.05.42 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.27-.25-.14-1.47-.74-1.69-.82-.23-.08-.37-.12-.56.12-.16.25-.64.81-.78.97-.15.17-.29.19-.53.07-.26-.13-1.06-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.12-.24-.01-.39.11-.5.13-.13.28-.32.43-.5.14-.18.17-.31.26-.49.09-.19.04-.36-.02-.51-.05-.15-.24-.6-.33-.82-.09-.22-.18-.19-.26-.2-.07-.01-.15-.01-.23-.01z%22/%3E%3C/svg%3E');"></div>
+                            55 3253 4159
+                        </a>
+                        <a href="mailto:ventas@centraldealarmas.com.mx">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E');"></div>
+                            ventas@centraldealarmas.com.mx
+                        </a>
+                    </div>
+
+                    <div class="pbox" data-aos="fade-left" data-aos-delay="200">
+                        <h3>Soporte técnico 24/7</h3>
+                        <a href="tel:5551340800">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z%22/%3E%3C/svg%3E');"></div>
+                            55 5134 0800
+                        </a>
+                        <p class="p3">(Opción 6) 8:00 am a 6:00 pm</p>
+                        <p class="p3">(Opción 2) 6:01 pm a 7:59 am</p>
+                        <a href="mailto:contigo@centraldealarmas.com.mx">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E');"></div>
+                            contigo@centraldealarmas.com.mx
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <video autoplay muted loop playsinline>
+            <source src="img/video-inicio.mp4" type="video/mp4">
+        </video>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <a href="#inicio"><img src="img/CDA_LOGO.svg" alt="Central de Alarmas"></a>
+                    </div>
+                    <p style="margin-top:1rem;">Empresa mexicana de seguridad electrónica con más de 79 años protegiendo lo que más importa.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navegación</h4>
+                    <a href="#servicios-preview">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z%22/%3E%3C/svg%3E');"></div>
+                        Servicios
+                    </a>
+                    <a href="#nosotros">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3C/svg%3E');"></div>
+                        Nosotros
+                    </a>
+                    <a href="#contacto">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E');"></div>
+                        Contacto
+                    </a>
+                    <a href="https://centraldealarmas.systems/" style="background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-sm); margin-top: 0.5rem; font-weight: 600;">
+                        Mi cuenta
+                    </a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z%22/%3E%3Cpolyline points=%2214 2 14 8 20 8%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z%22/%3E%3Cpolyline points=%2214 2 14 8 20 8%22/%3E%3C/svg%3E');"></div>
+                        Términos y Condiciones
+                    </a>
+                    <a href="#">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%2211%22 width=%2218%22 height=%2211%22 rx=%222%22 ry=%222%22/%3E%3Cpath d=%22M7 11V7a5 5 0 0 1 10 0v4%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%2211%22 width=%2218%22 height=%2211%22 rx=%222%22 ry=%222%22/%3E%3Cpath d=%22M7 11V7a5 5 0 0 1 10 0v4%22/%3E%3C/svg%3E');"></div>
+                        Política de Privacidad
+                    </a>
+                    <h4 style="margin-top:1.5rem;">Síguenos</h4>
+                    <div class="footer-socials">
+                        <a target="_blank" href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z%22/%3E%3C/svg%3E');"></div>
+                        </a>
+                        <a target="_blank" href="https://www.instagram.com/centraldealarmas.mx/" aria-label="Instagram">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%222%22 y=%222%22 width=%2220%22 height=%2220%22 rx=%225%22 ry=%225%22/%3E%3Cpath d=%22M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z%22/%3E%3Cline x1=%2217.5%22 y1=%226.5%22 x2=%2217.51%22 y2=%226.5%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%222%22 y=%222%22 width=%2220%22 height=%2220%22 rx=%225%22 ry=%225%22/%3E%3Cpath d=%22M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z%22/%3E%3Cline x1=%2217.5%22 y1=%226.5%22 x2=%2217.51%22 y2=%226.5%22/%3E%3C/svg%3E');"></div>
+                        </a>
+                        <a target="_blank" href="https://www.linkedin.com/company/86657867/" aria-label="LinkedIn">
+                            <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z%22/%3E%3Crect x=%222%22 y=%229%22 width=%224%22 height=%2212%22/%3E%3Ccircle cx=%224%22 cy=%224%22 r=%222%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z%22/%3E%3Crect x=%222%22 y=%229%22 width=%224%22 height=%2212%22/%3E%3Ccircle cx=%224%22 cy=%224%22 r=%222%22/%3E%3C/svg%3E');"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="gsi"><img src="img/GRUPO_LOGO.svg" alt="GSI"></div>
+                <p>© 2026 Central de Alarmas de México, S.A. de C.V. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SERVICE MODAL -->
+    <div id="serviceModal" class="service-modal">
+        <div class="service-modal-content">
+            <div class="service-modal-header">
+                <h3 id="modalTitle" class="service-modal-title"></h3>
+                <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+            </div>
+            <div class="service-modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+
+    <a href="#inicio" id="back-to-top" aria-label="Volver arriba">
+        <div class="icon"></div>
+    </a>
+
+    <script>
+        function openServiceModal(title, description) {
+            const modal = document.getElementById('serviceModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = title;
+            modalBody.textContent = description;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeServiceModal() {
+            const modal = document.getElementById('serviceModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('serviceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeServiceModal();
+            }
+        });
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeServiceModal();
+            }
+        });
+    </script>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="./js/form-handler.js"></script>
+    <script src="./js/main-empresa.js"></script>
+    <script>
+        // ─── HEADER SCROLL ───
+        const header = document.getElementById('main-header');
+        const backToTop = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            console.log('Scroll position:', st); // Debug
+            header.classList.toggle('scrolled', st > 0);
+            console.log('Header classes:', header.className); // Debug
+            backToTop.classList.toggle('visible', st > 100);
+        });
+
+        // ─── SCROLL ANIMATIONS FOR SERVICES ───
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos los servicios
+        document.querySelectorAll('.service-item-empresa').forEach(service => {
+            observer.observe(service);
+        });
+    </script>
+</body>
+</html>
