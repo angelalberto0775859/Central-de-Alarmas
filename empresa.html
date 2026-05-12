@@ -72,7 +72,7 @@
         }
 
         nav a {
-            color: var(--text);
+            color: rgba(255,255,255,0.9);
             text-decoration: none;
             font-size: 0.875rem;
             font-weight: 600;
@@ -81,7 +81,7 @@
             border-radius: var(--radius-sm);
             transition: color 0.3s, background 0.3s;
         }
-        nav a:hover { background: var(--accent-light); color: var(--accent); }
+        nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
         header.scrolled nav a { color: var(--text-muted); }
         header.scrolled nav a:hover { background: var(--accent-light); color: var(--accent); }
@@ -1005,7 +1005,19 @@
             gap: 1.25rem;
         }
 
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.25rem;
+        }
+
         .form-group { position: relative; }
+
+        @media (max-width: 900px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
 
         input, select, textarea {
             width: 100%;
@@ -1265,33 +1277,86 @@
 
         /* ─── MAIN SECTION ─── */
         .main-section {
-            padding: 8rem 1.5rem;
-            background-color: #ffffff;
+            position: relative;
+            padding: 100px 1.5rem 14rem;
+            background-color: #061432;
+            color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+        }
+
+        .main-section .video-overlay {
+            display: block;
+            z-index: -1;
+        }
+
+        #inicio.main-section {
+            padding: 100px 1.5rem 14rem;
+            background-color: #061432;
+            color: #fff;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
         }
 
         .main-header {
             text-align: center;
             max-width: 800px;
             margin: 0 auto 4rem;
-            margin-top: 10rem;
+            position: relative;
+            z-index: 2;
         }
 
-        .main-header h2 {
+        .main-header h1 {
             font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 800;
-            color: var(--accent);
+            color: #fff;
             margin-bottom: 1rem;
             line-height: 1.2;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.35);
         }
 
         .main-header p {
             font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.88);
             line-height: 1.6;
+        }
+
+        #inicio.main-section h1 {
+            color: #fff;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+        }
+
+        #inicio.main-section .main-header p {
+            color: rgba(255,255,255,0.88);
+        }
+
+        .main-section .btn-primary {
+            margin-top: 2rem;
+            margin-bottom: 0;
+            text-decoration: none;
+        }
+
+        .services-empresa {
+            padding: 6rem 1.5rem;
+            background: #fff;
         }
 
         /* ─── SERVICES EMPRESA ─── */
@@ -1549,7 +1614,12 @@
     <main>
 
         <!-- ─── MAIN SECTION ─── -->
-        <section class="main-section">
+        <section class="main-section" id="inicio">
+            <video autoplay muted loop playsinline id="background-video">
+                <source src="img/video-inicio.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+
             <div class="main-header" data-aos="fade-in">
                 <h1>Soluciones para empresa</h1>
                 <p>Protección integral y avanzada para tu negocio con tecnología de última generación</p>
@@ -1560,9 +1630,10 @@
                     </svg>
                 </a>
             </div>
+        </section>
 
             <!-- ─── SERVICES SECTION ─── -->
-            <div class="services-empresa" id="servicios-empresa">
+        <section class="services-empresa" id="servicios-empresa">
             <!-- Monitoreo 24/7 -->
             <div class="service-item-empresa" data-aos="fade-up">
                 <div class="service-image">
@@ -1750,75 +1821,76 @@
                             <option value="Nuevo Mensaje de Contacto - Central de Alarmas"></option>
                         </select>
 
-                        <div class="form-group">
-                            <input type="text" name="nombre" placeholder="Nombre Completo *" required>
-                            <span class="error-message" id="nombre-error">El nombre es obligatorio.</span>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" name="nombre" placeholder="Nombre completo *" required>
+                                <span class="error-message" id="nombre-error">El nombre es obligatorio.</span>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="correo" placeholder="Correo electrónico *" required>
+                                <span class="error-message" id="correo-error">Introduce un correo válido.</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <input type="email" name="correo" placeholder="Correo electrónico *" required>
-                            <span class="error-message" id="correo-error">Introduce un correo válido.</span>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="tel" name="telefono" placeholder="Teléfono *" required>
+                                <span class="error-message" id="telefono-error">El teléfono es obligatorio.</span>
+                            </div>
+                            <div class="form-group">
+                                <select name="estado" required>
+                                    <option value="" disabled selected>Estado de la República *</option>
+                                    <option value="Aguascalientes">Aguascalientes</option>
+                                    <option value="Baja California">Baja California</option>
+                                    <option value="Baja California Sur">Baja California Sur</option>
+                                    <option value="Campeche">Campeche</option>
+                                    <option value="CDMX">CDMX</option>
+                                    <option value="Chiapas">Chiapas</option>
+                                    <option value="Chihuahua">Chihuahua</option>
+                                    <option value="Coahuila">Coahuila</option>
+                                    <option value="Colima">Colima</option>
+                                    <option value="Durango">Durango</option>
+                                    <option value="Estado de Mexico">Estado de México</option>
+                                    <option value="Guanajuato">Guanajuato</option>
+                                    <option value="Guerrero">Guerrero</option>
+                                    <option value="Hidalgo">Hidalgo</option>
+                                    <option value="Jalisco">Jalisco</option>
+                                    <option value="Michoacan">Michoacán</option>
+                                    <option value="Morelos">Morelos</option>
+                                    <option value="Nayarit">Nayarit</option>
+                                    <option value="Nuevo Leon">Nuevo León</option>
+                                    <option value="Oaxaca">Oaxaca</option>
+                                    <option value="Puebla">Puebla</option>
+                                    <option value="Queretaro">Querétaro</option>
+                                    <option value="Quintana Roo">Quintana Roo</option>
+                                    <option value="San Luis Potosi">San Luis Potosí</option>
+                                    <option value="Sinaloa">Sinaloa</option>
+                                    <option value="Sonora">Sonora</option>
+                                    <option value="Tabasco">Tabasco</option>
+                                    <option value="Tamaulipas">Tamaulipas</option>
+                                    <option value="Tlaxcala">Tlaxcala</option>
+                                    <option value="Veracruz">Veracruz</option>
+                                    <option value="Yucatán">Yucatán</option>
+                                    <option value="Zacatecas">Zacatecas</option>
+                                </select>
+                                <span class="error-message" id="estado-error">Selecciona un estado.</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <input type="number" name="telefono" placeholder="Teléfono *" required>
-                            <span class="error-message" id="telefono-error">El teléfono es obligatorio.</span>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <select name="servicios" required>
+                                    <option value="" disabled selected>Servicio de interés *</option>
+                                    <option value="Hogar">Hogar</option>
+                                    <option value="PyMES">PyMES</option>
+                                    <option value="Información">Necesito más información</option>
+                                </select>
+                                <span class="error-message" id="servicios-error">Selecciona un servicio.</span>
+                            </div>
                         </div>
+
                         <div class="form-group">
-                            <select name="servicios" required>
-                                <option value="" disabled selected>Servicio de interés *</option>
-                                <option value="Monitoreo 24/7">Monitoreo 24/7</option>
-                                <option value="Control de Acceso">Control de Acceso</option>
-                                <option value="Sistema de Intrusión">Sistema de Intrusión</option>
-                                <option value="Detección de Incendios">Detección de Incendios</option>
-                                <option value="Niebla de Seguridad">Niebla de Seguridad</option>
-                                <option value="Videovigilancia">Videovigilancia</option>
-                                <option value="Alertamiento Sísmico">Alertamiento Sísmico</option>
-                                <option value="Antenas de Seguridad">Antenas de Seguridad</option>
-                                <option value="Videoverificación">Videoverificación</option>
-                                <option value="Rastreo GPS">Rastreo GPS</option>
-                                <option value="Más información">Quiero más información</option>
-                            </select>
-                            <span class="error-message" id="servicios-error">Selecciona un servicio.</span>
-                        </div>
-                        <div class="form-group">
-                            <select name="estado" required>
-                                <option value="" disabled selected>Estado de la República *</option>
-                                <option value="Aguascalientes">Aguascalientes</option>
-                                <option value="Baja California">Baja California</option>
-                                <option value="Baja California Sur">Baja California Sur</option>
-                                <option value="Campeche">Campeche</option>
-                                <option value="CDMX">CDMX</option>
-                                <option value="Chiapas">Chiapas</option>
-                                <option value="Chihuahua">Chihuahua</option>
-                                <option value="Coahuila">Coahuila</option>
-                                <option value="Colima">Colima</option>
-                                <option value="Durango">Durango</option>
-                                <option value="Estado de Mexico">Estado de México</option>
-                                <option value="Guanajuato">Guanajuato</option>
-                                <option value="Guerrero">Guerrero</option>
-                                <option value="Hidalgo">Hidalgo</option>
-                                <option value="Jalisco">Jalisco</option>
-                                <option value="Michoacan">Michoacán</option>
-                                <option value="Morelos">Morelos</option>
-                                <option value="Nayarit">Nayarit</option>
-                                <option value="Nuevo Leon">Nuevo León</option>
-                                <option value="Oaxaca">Oaxaca</option>
-                                <option value="Puebla">Puebla</option>
-                                <option value="Queretaro">Querétaro</option>
-                                <option value="Quintana Roo">Quintana Roo</option>
-                                <option value="San Luis Potosi">San Luis Potosí</option>
-                                <option value="Sinaloa">Sinaloa</option>
-                                <option value="Sonora">Sonora</option>
-                                <option value="Tabasco">Tabasco</option>
-                                <option value="Tamaulipas">Tamaulipas</option>
-                                <option value="Tlaxcala">Tlaxcala</option>
-                                <option value="Veracruz">Veracruz</option>
-                                <option value="Yucatán">Yucatán</option>
-                                <option value="Zacatecas">Zacatecas</option>
-                            </select>
-                            <span class="error-message" id="estado-error">Selecciona un estado.</span>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="mensaje" placeholder="¿En qué podemos ayudarte? *" required rows="4"></textarea>
+                            <textarea name="mensaje" placeholder="¿En qué podemos ayudarte? *" required rows="5"></textarea>
                             <span class="error-message" id="mensaje-error">El mensaje es obligatorio.</span>
                         </div>
                         <div class="g-recaptcha" data-sitekey="6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G"></div>
