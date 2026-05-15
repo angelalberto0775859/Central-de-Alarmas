@@ -349,10 +349,33 @@ header.scrolled .hamburger span { background: var(--accent); }
     align-items: center;
     gap: 2rem;
     padding: 0 1.5rem;
-    margin-top: -11rem;
+    margin-top: -1rem;
     position: relative;
     z-index: 2;
     width: 100%;
+    overflow: hidden;
+}
+
+#servicios::before,
+#packages-section::before,
+#contacto::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('../img/fondo_2.svg');
+    background-repeat: repeat;
+    background-position: center top;
+    background-size: 900px auto;
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#servicios > *,
+#packages-section > *,
+#contacto > * {
+    position: relative;
+    z-index: 1;
 }
 
 .preview-header {
@@ -427,10 +450,8 @@ header.scrolled .hamburger span { background: var(--accent); }
 
 /* ─── SERVICIOS ─── */
 #servicios {
-    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
-    background-size: 24px 24px;
-    background-position: 0 0;
     position: relative;
+    overflow: hidden;
 }
 
 /* ─── SERVICES GRID ─── */
@@ -628,6 +649,8 @@ header.scrolled .hamburger span { background: var(--accent); }
 #nosotros {
     background: var(--primary);
     padding: 6rem 1.5rem;
+    overflow: hidden;
+    position: relative;
 }
 
 .section-label {
@@ -710,7 +733,7 @@ header.scrolled .hamburger span { background: var(--accent); }
 .partners-section {
     margin-top: 5rem;
     padding-top: 4rem;
-    border-top: 1px solid rgba(0,0,0,0.06);
+    border-top: none; /* remove section divider */
 }
 
 .partners-section h3 {
@@ -841,11 +864,8 @@ header.scrolled .hamburger span { background: var(--accent); }
 /* ─── PACKAGES ─── */
 #packages-section {
     padding: 6rem 1.5rem;
-    background-color: var(--secondary);
-    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
-    background-size: 24px 24px;
-    background-position: 0 0;
     position: relative;
+    overflow: hidden;
 }
 
 .section-header {
@@ -976,7 +996,7 @@ header.scrolled .hamburger span { background: var(--accent); }
 .package-footer {
     margin-top: 1.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(0,0,0,0.06);
+    border-top: none; /* remove inner package divider for cleaner look */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -1004,6 +1024,8 @@ header.scrolled .hamburger span { background: var(--accent); }
 #certificaciones {
     background: var(--primary);
     padding: 6rem 1.5rem;
+    overflow: hidden;
+    position: relative;
 }
 
 .certificaciones-grid {
@@ -1042,9 +1064,7 @@ header.scrolled .hamburger span { background: var(--accent); }
 #contacto {
     padding: 6rem 1.5rem;
     background-color: var(--secondary);
-    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
-    background-size: 24px 24px;
-    background-position: 0 0;
+    overflow: hidden;
     position: relative;
 }
 
@@ -1057,10 +1077,11 @@ header.scrolled .hamburger span { background: var(--accent); }
 }
 
 .contact-form-wrap {
-    background: var(--primary);
+    background-color: var(--primary);
     border-radius: var(--radius-md);
     padding: 2.5rem;
     box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    position: relative;
 }
 
 form {
@@ -1395,9 +1416,7 @@ footer::after {
 
 /* ─── SECTION SEPARATOR ─── */
 .sep {
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(6,57,112,0.15), transparent);
-    margin: 0;
+    display: none; /* hide thin divider lines between sections */
 }
 
 /* ─── MOBILE OPTIMIZATION ─── */
