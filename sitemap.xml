@@ -10,4 +10,20 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/blog.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url><loc>https://centraldealarmas.com.mx/blog/que-es-un-sistema-de-seguridad.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/camaras-seguridad-negocio.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/como-funciona-centro-monitoreo.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/camaras-en-hoteles.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/alerta-sismica-utilidad.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/deteccion-incendios-inversion-salva-vidas.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/central-de-alarmas-empresa-mexicana.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/tips-seguridad-negocio.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/modus-operandi-robo-casa.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/camara-seguridad-borrosa.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://centraldealarmas.com.mx/blog/donde-comprar-camaras-seguridad-casa.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

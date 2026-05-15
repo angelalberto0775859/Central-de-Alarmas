@@ -87,8 +87,8 @@
         header.scrolled nav a:hover { background: var(--accent-light); color: var(--accent); }
 
         .nav-cta {
-            background: var(--accent) !important;
-            border: 1px solid var(--accent) !important;
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.4) !important;
             color: #fff !important;
             margin-left: 0.5rem;
         }
@@ -96,6 +96,9 @@
             background: var(--accent) !important;
             border-color: var(--accent) !important;
             color: #fff !important;
+        }
+        header:not(.scrolled) .nav-cta:hover {
+            background: rgba(255,255,255,0.22) !important;
         }
         .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 12px var(--glow); }
 
@@ -1584,6 +1587,48 @@
                 gap: 2.5rem;
             }
         }
+
+        .cookie-banner {
+            position: fixed;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 10000;
+            max-width: 980px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            background: rgba(255,255,255,0.96);
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: var(--radius-md);
+            padding: 1.1rem;
+            box-shadow: 0 20px 60px rgba(6,20,50,0.2);
+        }
+        .cookie-label {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--accent);
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        .cookie-copy h2 { font-size: 1rem; color: var(--accent); margin-bottom: 0.25rem; }
+        .cookie-copy p { color: var(--text-muted); font-size: 0.86rem; line-height: 1.5; }
+        .cookie-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+        .cookie-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .cookie-btn.primary { background: var(--accent); color: #fff; }
+        .cookie-btn.secondary { background: var(--accent-light); color: var(--accent); }
+        @media (min-width: 640px) {
+            .cookie-banner { grid-template-columns: 1fr auto; align-items: center; }
+        }
     </style>
 </head>
 <body>
@@ -1596,6 +1641,7 @@
         <nav id="main-nav">
             <a href="#servicios-empresa">Servicios</a>
             <a href="#contacto">Contacto</a>
+            <a href="blog.html">News</a>
             <a href="https://centraldealarmas.trytoku.com/" class="nav-cta">Pagar</a>
         </nav>
         <div class="hamburger" id="hamburger" aria-label="Abrir menú">
@@ -1608,6 +1654,7 @@
     <div class="mobile-menu" id="mobile-menu">
         <a href="#servicios-empresa" class="mobile-link">Servicios</a>
         <a href="#contacto" class="mobile-link">Contacto</a>
+        <a href="blog.html" class="mobile-link">News</a>
         <a href="#" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;">Pagar</a>
     </div>
 
@@ -1958,6 +2005,10 @@
                         <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z%22/%3E%3Cpolyline points=%2222,6 12,13 2,6%22/%3E%3C/svg%3E');"></div>
                         Contacto
                     </a>
+                    <a href="blog.html">
+                        <div class="icon" style="-webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 19.5A2.5 2.5 0 0 1 6.5 17H20%22/%3E%3Cpath d=%22M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z%22/%3E%3C/svg%3E'); mask-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 19.5A2.5 2.5 0 0 1 6.5 17H20%22/%3E%3Cpath d=%22M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z%22/%3E%3C/svg%3E');"></div>
+                        News
+                    </a>
                     <a href="https://centraldealarmas.systems/" style="background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-sm); margin-top: 0.5rem; font-weight: 600;">
                         Mi cuenta
                     </a>
@@ -2044,6 +2095,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="./js/form-handler.js"></script>
+    <script src="./js/cookies.js"></script>
     <script src="./js/main-empresa.js"></script>
     <script>
         // ─── HEADER SCROLL ───
