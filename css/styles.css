@@ -377,7 +377,7 @@ header.scrolled .hamburger span { background: var(--accent); }
     flex-direction: row;
     gap: 2rem;
     width: 100%;
-    max-width: 900px;
+    max-width: 1050px;
     margin: 0 auto;
     justify-content: center;
     align-items: stretch;
@@ -423,6 +423,14 @@ header.scrolled .hamburger span { background: var(--accent); }
     font-size: 0.95rem;
     color: var(--text-muted);
     line-height: 1.6;
+}
+
+/* ─── SERVICIOS ─── */
+#servicios {
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+    position: relative;
 }
 
 /* ─── SERVICES GRID ─── */
@@ -833,7 +841,11 @@ header.scrolled .hamburger span { background: var(--accent); }
 /* ─── PACKAGES ─── */
 #packages-section {
     padding: 6rem 1.5rem;
-    background: var(--secondary);
+    background-color: var(--secondary);
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+    position: relative;
 }
 
 .section-header {
@@ -1029,7 +1041,11 @@ header.scrolled .hamburger span { background: var(--accent); }
 /* ─── CONTACTO ─── */
 #contacto {
     padding: 6rem 1.5rem;
-    background: var(--secondary);
+    background-color: var(--secondary);
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 2px, transparent 2px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+    position: relative;
 }
 
 .contacto-grid {
@@ -1507,12 +1523,18 @@ footer::after {
     /* Preview cards */
     .preview-cards {
         flex-direction: column;
+        align-items: center; /* Center cards horizontally in column layout */
         gap: 1.5rem;
         padding: 0 1.5rem;
     }
     .preview-cards .card {
         min-height: auto;
         padding: 2rem;
+        width: 100%;
+        max-width: 320px;
+    }
+    .preview-cards .card-icon {
+        margin: 0 auto 1rem auto; /* Center the icon */
     }
     
     /* Services grid */
@@ -1613,16 +1635,17 @@ footer::after {
 @media (min-width: 640px) {
     .preview-cards { 
         flex-direction: row; 
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 2rem;
-        max-width: 900px;
+        max-width: 1050px;
     }
     .preview-cards .card { 
         min-height: 280px; 
         display: flex;
         flex-direction: column;
         flex: 1;
+        min-width: 270px;
     }
     .card-icon {
         width: 44px; height: 44px;
@@ -1654,7 +1677,7 @@ footer::after {
     #packages-section { padding-top: 10rem; }
     .mexico-map { max-width: 540px; }
     .preview-cards { 
-        max-width: 900px;
+        max-width: 1050px;
         gap: 2.5rem;
     }
     .preview-cards .card {
