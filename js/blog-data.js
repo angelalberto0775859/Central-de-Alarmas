@@ -1,5 +1,30 @@
 window.CDABlogPosts = [
     {
+        slug: 'como-funciona-centro-monitoreo',
+        title: '¿Cómo funciona el centro de monitoreo?',
+        category: 'Monitoreo',
+        date: '15 mayo 2026',
+        readTime: '6 min',
+        image: 'img/Servicios/Monitoreo_.jpg',
+        excerpt: 'Conoce qué ocurre cuando se activa una alarma, cómo se validan las señales y qué protocolo sigue una central de monitoreo.',
+        intro: 'La seguridad es una preocupación constante en nuestra sociedad. Para proteger hogares, negocios y comunidades, contamos con sistemas de seguridad cada vez más sofisticados. Pero cuando se activa una alarma, el valor real está en quién responde y cómo se gestiona la situación.',
+        sections: [
+            {
+                heading: '¿Qué es un centro de monitoreo?',
+                body: 'Es el lugar donde trabaja personal especializado y capacitado que analiza, da seguimiento y gestiona las alarmas emitidas por sistemas de seguridad electrónica.'
+            },
+            {
+                heading: '¿Qué se hace en una central de monitoreo?',
+                body: 'Se reciben, procesan y analizan señales provenientes de cámaras, sensores de movimiento, detectores de humo y otros dispositivos para proteger personas y bienes con una respuesta rápida.'
+            },
+            {
+                heading: 'Protocolo de monitoreo en Central de Alarmas',
+                body: 'Nuestro protocolo contempla recepción de señales, análisis, validación, respuesta, seguimiento y reporte para que cada emergencia tenga trazabilidad.'
+            }
+        ],
+        takeaway: 'En nuestro centro de monitoreo, tu seguridad es prioridad número uno.'
+    },
+    {
         slug: 'que-es-un-sistema-de-seguridad',
         title: '¿Qué es un sistema de seguridad?',
         category: 'Guía',
@@ -48,31 +73,6 @@ window.CDABlogPosts = [
             }
         ],
         takeaway: 'Un buen sistema de camaras se planea desde los puntos criticos del negocio, no desde la cantidad de camaras.'
-    },
-    {
-        slug: 'como-funciona-centro-monitoreo',
-        title: '¿Cómo funciona el centro de monitoreo?',
-        category: 'Monitoreo',
-        date: '15 mayo 2026',
-        readTime: '4 min',
-        image: 'img/Servicios/Monitoreo_.jpg',
-        excerpt: 'El centro de monitoreo recibe senales, valida eventos y activa protocolos para atender emergencias con mayor velocidad.',
-        intro: 'El centro de monitoreo es el punto donde una senal tecnica se convierte en una accion coordinada. Su funcion es escuchar, validar y escalar cada evento segun el protocolo del cliente.',
-        sections: [
-            {
-                heading: 'Recepcion de eventos',
-                body: 'Cuando un sensor se activa, el panel envia una senal a la central. El operador identifica el tipo de evento, la ubicacion y el historial asociado.'
-            },
-            {
-                heading: 'Verificacion y protocolo',
-                body: 'Dependiendo del evento, se realiza contacto con usuarios autorizados, revision de video o escalamiento a servicios de emergencia. El protocolo evita improvisacion.'
-            },
-            {
-                heading: 'Continuidad 24/7',
-                body: 'Una central activa todo el dia permite que la seguridad no dependa de que alguien este despierto, conectado o revisando su telefono.'
-            }
-        ],
-        takeaway: 'El monitoreo profesional convierte alertas en decisiones operativas con trazabilidad.'
     },
     {
         slug: 'camaras-en-hoteles',
