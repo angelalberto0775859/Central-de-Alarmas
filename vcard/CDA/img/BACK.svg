@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1080 1200">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14 {
+        fill: none;
+      }
+
+      .cls-15 {
+        mask: url(#mask);
+      }
+
+      .cls-16 {
+        fill: #071426;
+      }
+
+      .cls-2 {
+        opacity: .17;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14 {
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 4.46px;
+      }
+
+      .cls-3 {
+        opacity: .08;
+      }
+
+      .cls-4 {
+        opacity: .05;
+      }
+
+      .cls-5 {
+        opacity: .2;
+      }
+
+      .cls-7 {
+        opacity: .12;
+      }
+
+      .cls-8 {
+        opacity: .53;
+      }
+
+      .cls-9 {
+        opacity: .37;
+      }
+
+      .cls-10 {
+        opacity: .1;
+      }
+
+      .cls-11 {
+        opacity: .68;
+      }
+
+      .cls-12 {
+        opacity: .15;
+      }
+
+      .cls-13 {
+        opacity: .21;
+      }
+
+      .cls-17 {
+        fill: url(#Degradado_sin_nombre_44);
+      }
+
+      .cls-14 {
+        opacity: .84;
+      }
+
+      .cls-18 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" x=".6" y="0" width="1078.79" height="1200"/>
+    </clipPath>
+    <linearGradient id="Degradado_sin_nombre_44" data-name="Degradado sin nombre 44" x1="-7108.66" y1="-4765.71" x2="-6280.07" y2="-4765.71" gradientTransform="translate(8221.06 8038.82) scale(1.15 1.59)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".11" stop-color="#ababab" stop-opacity=".33"/>
+      <stop offset=".83" stop-color="#000"/>
+    </linearGradient>
+    <mask id="mask" x="-231.88" y="-199.35" width="1303.06" height="1337.86" maskUnits="userSpaceOnUse">
+      <rect class="cls-17" x="59.51" y="-154.69" width="951.31" height="1248.53" transform="translate(1020.4 990.59) rotate(-174.23)"/>
+    </mask>
+  </defs>
+  <rect class="cls-16" x="0" y="0" width="1080" height="1200"/>
+  <g class="cls-18">
+    <g class="cls-15">
+      <g id="LINES_" data-name="LINES+">
+        <g>
+          <ellipse class="cls-6" cx="231.49" cy="589.5" rx="332.37" ry="435.36" transform="translate(-349.04 336.35) rotate(-45)"/>
+          <ellipse class="cls-14" cx="250.48" cy="570.52" rx="359.22" ry="470.53" transform="translate(-330.06 344.21) rotate(-45)"/>
+          <ellipse class="cls-11" cx="269.46" cy="551.54" rx="386.07" ry="505.7" transform="translate(-311.07 352.08) rotate(-45)"/>
+          <ellipse class="cls-8" cx="288.44" cy="532.55" rx="412.92" ry="540.86" transform="translate(-292.09 359.94) rotate(-45)"/>
+          <ellipse class="cls-9" cx="307.43" cy="513.57" rx="439.76" ry="576.03" transform="translate(-273.1 367.81) rotate(-45)"/>
+          <ellipse class="cls-13" cx="326.41" cy="494.58" rx="466.61" ry="611.2" transform="translate(-254.12 375.67) rotate(-45)"/>
+          <ellipse class="cls-4" cx="345.4" cy="475.6" rx="493.46" ry="646.36" transform="translate(-235.14 383.53) rotate(-45)"/>
+          <ellipse class="cls-3" cx="311.34" cy="509.66" rx="445.29" ry="583.27" transform="translate(-269.19 369.42) rotate(-45)"/>
+          <ellipse class="cls-10" cx="277.28" cy="543.71" rx="397.13" ry="520.18" transform="translate(-303.25 355.32) rotate(-45)"/>
+          <ellipse class="cls-7" cx="243.22" cy="577.77" rx="348.97" ry="457.1" transform="translate(-337.31 341.21) rotate(-45)"/>
+          <ellipse class="cls-12" cx="209.17" cy="611.83" rx="300.8" ry="394.01" transform="translate(-371.37 327.1) rotate(-45)"/>
+          <ellipse class="cls-2" cx="175.11" cy="645.89" rx="252.64" ry="330.92" transform="translate(-405.42 313) rotate(-45)"/>
+          <ellipse class="cls-5" cx="141.05" cy="679.94" rx="204.47" ry="267.83" transform="translate(-439.48 298.89) rotate(-45)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

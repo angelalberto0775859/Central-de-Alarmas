@@ -1,0 +1,9 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//macOS 15.6//EN
+N:Alejandre;Gerardo;;;
+FN:Gerardo Alejandre
+ORG:Gerente de Mística y Excelencia Operativa GSI;
+EMAIL;type=INTERNET;type=HOME;type=pref:gerardo.alejandre@gsi.com.mx
+TEL;type=CELL;type=VOICE;type=pref:5534322061
+END:VCARD

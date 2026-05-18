@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarjeta de Contacto - GSI</title>
+  
+  <!-- Tipografía -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Íconos Font Awesome (reemplazado el script por el CDN correcto) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        integrity="sha512-p+U0lBw+3ojS6BjXmF+2V0uJb2f/VvVx0ax3wAcRPZXYQm4G3FSW+aOZLZktTx+zUeYDFtkFrM2knzOtgXAUuQ==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="logo-wrapper">
+        <img src="./img/Logotipo para web_EMPRESA DE GSI.svg" alt="Logo GSI">
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="name">Lic. Gerardo Adonay<br>Alejandre Rivera</div>
+      <div class="position">Gerente de Mística y Excelencia Operativa</div>
+
+      <div class="info-card">
+        <div class="info-left">
+          <div class="icon-box">
+            <img src="img/llamar.svg" alt="Teléfono" class="info-icon">
+          </div>
+          <div class="info-text">
+            <span class="info-title">Teléfono móvil</span>
+            <a href="tel:+525534322061" class="info-number">+52 55 3432 2061</a>
+          </div>
+        </div>
+      </div>      
+      
+      <div class="info-card">
+        <div class="info-left">
+          <div class="icon-box">
+            <img src="img/correo.svg" alt="Correo" class="info-icon">
+          </div>
+          <div class="info-text">
+            <span class="info-title">Correo</span>
+            <a href="mailto:gerardo.alejandre@gsi.com.mx" class="info-mail">gerardo.alejandre@gsi.com.mx</a>
+          </div>
+        </div>
+      </div>      
+
+      <div style="height: 85px;"></div>
+
+      <div class="button-container">
+        <a href="./vcf/Gerardo_Alejandre.vcf" download="Mi-Contacto.vcf" class="guardar" style="display: inline-block; text-decoration: none;">
+          <img src="img/descargas.svg" alt="Guardar" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
+          Guardar
+        </a>
+        
+        <button class="compartir" onclick="compartirNativo()">
+          <img src="img/compartir.svg" alt="Compartir" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px; filter: brightness(0) invert(1);">
+          Compartir
+        </button>
+      </div>
+      
+      <script>
+      async function compartirNativo() {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: document.title,
+              text: 'Mira este contenido',
+              url: window.location.href
+            });
+          } catch (err) {
+            console.log('Error al compartir:', err);
+            mostrarMenuCompartir();
+          }
+        } else {
+          mostrarMenuCompartir();
+        }
+      }
+      
+      function mostrarMenuCompartir() {
+        alert('Función de compartir no disponible');
+      }
+      </script>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Pérez;Alicia;;;
+FN:Alicia Pérez
+ORG:Central de Alarmas
+TITLE:Gerente Comercial División Vigilancia y Tecnología
+TEL;TYPE=cell:+525514744827
+EMAIL:aperez@centraldealarmas.com.mx
+ADR;TYPE=work:;;C. 5 de Febrero 283;Ciudad de México;;06800;México
+URL:centraldealarmas.com.mx
+END:VCARD

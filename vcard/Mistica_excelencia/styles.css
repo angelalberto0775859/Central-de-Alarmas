@@ -1,0 +1,196 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: #446182;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 380px; /* Ancho máximo para mantener aspecto de tarjeta */
+  min-width: 320px; /* Ancho mínimo para que no se vea muy pequeña */
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  background-color: #f3f3f3;
+  height: 45%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
+.logo-wrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #084c94;
+  height: 110px;
+  width: 110px;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 2;
+}
+
+.logo-wrapper img {
+  width: 100px;
+  height: 100px;
+  background: rgb(255, 255, 255);
+  border-radius: 50%;
+  padding: 3px;
+  object-fit: contain;
+  margin-bottom: 5px;
+  z-index: 3;
+}
+
+.card-body {
+  position: relative;
+  z-index: 1;
+  padding: 120px 20px 20px;
+}
+
+.name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2C3546;
+  margin-bottom: 5px;
+}
+
+.position {
+  font-size: 18px;
+  color: #3b4453;
+  margin-bottom: 50px;
+}
+
+.icon-box {
+  background-color: #ffffff;
+  padding: 1px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 px rgba(0,0,0,0.1);
+  width: 76px;
+  height: 76px;
+}
+
+.info-icon,
+.download-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.download {
+  cursor: pointer;
+}
+
+.info-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #222b3f;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-text {
+  display:flex;
+  align-items: first baseline;
+  flex-direction: column;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.info-title {
+  font-weight: bold;
+  padding-bottom: 12px;
+}
+
+.info-number {
+  color: #ffffff;         /* El color que ya usas en .info-text */
+  text-decoration: none;  /* Elimina el subrayado */
+  font-size: 12px;        /* Igual que .info-text, si quieres mantenerlo uniforme */
+}
+
+.info-mail {
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px 15px; /* Agregué padding horizontal */
+  gap: 15px; /* Reduje el gap */
+}
+
+.button-container button,
+.button-container a {
+  padding: 16px 15px; /* Reducir padding horizontal */
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Reducir gap entre ícono y texto */
+  font-size: 13px; /* Reducir tamaño de fuente */
+  text-decoration: none;
+  font-family: inherit;
+  white-space: nowrap;
+  flex: 1;
+  max-width: 170px; /* Aumentar ancho máximo */
+  justify-content: center;
+  min-width: 140px; /* Ancho mínimo */
+}
+
+.guardar {
+  background-color: #E4EBF3;
+  color: #333;
+}
+
+.compartir {
+  background-color: #222b3f;
+  color: white;
+}
+
+@media (max-width: 360px) {
+  .button-container button,
+  .button-container a {
+    padding: 12px 8px; /* Padding muy reducido */
+    font-size: 12px; /* Fuente más pequeña */
+    gap: 4px; /* Gap más pequeño */
+    max-width: 150px;
+    min-width: 120px;
+  }
+}

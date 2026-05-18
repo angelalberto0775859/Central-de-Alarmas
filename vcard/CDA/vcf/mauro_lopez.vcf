@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:López;Mauro;;;
+FN:Mauro López
+ORG:Central de Alarmas
+TITLE:Director General de Central de Alarmas
+TEL;TYPE=cell:+525554028927
+EMAIL:ilopez@centraldealarmas.com.mx
+ADR;TYPE=work:;;C. 5 de Febrero 283;Ciudad de México;;06800;México
+URL:centraldealarmas.com.mx
+END:VCARD
