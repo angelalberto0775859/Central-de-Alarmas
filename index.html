@@ -38,12 +38,23 @@
             <a href="#inicio"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
         </div>
         <nav id="main-nav">
-            <a href="#servicios-preview">Servicios</a>
-            <a href="#packages-section">Paquetes</a>
-            <a href="#nosotros">Nosotros</a>
-            <a href="#contacto">Contacto</a>
-            <a href="blog.html">News</a>
-            <a href="https://centraldealarmas.trytoku.com/" class="nav-cta">Pagar</a>
+            <a href="#servicios-preview" data-i18n="nav.services">Servicios</a>
+            <a href="#packages-section" data-i18n="nav.packages">Paquetes</a>
+            <a href="#nosotros" data-i18n="nav.about">Nosotros</a>
+            <a href="#contacto" data-i18n="nav.contact">Contacto</a>
+            <a href="blog.html" data-i18n="nav.news">News</a>
+            <a href="https://centraldealarmas.trytoku.com/" class="nav-cta" data-i18n="nav.pay">Pagar</a>
+            <div class="language-switcher" aria-label="Cambiar idioma">
+                <span class="language-switcher-value" id="languageSwitcherValue">ES</span>
+                <select id="languageSelect" aria-label="Cambiar idioma">
+                    <option value="es">ES</option>
+                    <option value="en">EN</option>
+                    <option value="fr">FR</option>
+                    <option value="ja">JA</option>
+                    <option value="ko">KO</option>
+                    <option value="zh">ZH</option>
+                </select>
+            </div>
         </nav>
         <div class="hamburger" id="hamburger" aria-label="Abrir menú">
             <span></span><span></span><span></span>
@@ -53,13 +64,24 @@
     <!-- MOBILE MENU -->
     <div class="mobile-overlay" id="mobile-overlay"></div>
     <div class="mobile-menu" id="mobile-menu">
-        <a href="#servicios-preview" class="mobile-link">Servicios</a>
-        <a href="#packages-section" class="mobile-link">Paquetes</a>
-        <a href="#nosotros" class="mobile-link">Nosotros</a>
+        <a href="#servicios-preview" class="mobile-link" data-i18n="nav.services">Servicios</a>
+        <a href="#packages-section" class="mobile-link" data-i18n="nav.packages">Paquetes</a>
+        <a href="#nosotros" class="mobile-link" data-i18n="nav.about">Nosotros</a>
         <a href="#certificaciones" class="mobile-link">Certificaciones</a>
-        <a href="#contacto" class="mobile-link">Contacto</a>
-        <a href="blog.html" class="mobile-link">News</a>
-        <a href="#" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;">Pagar</a>
+        <a href="#contacto" class="mobile-link" data-i18n="nav.contact">Contacto</a>
+        <a href="blog.html" class="mobile-link" data-i18n="nav.news">News</a>
+        <a href="https://centraldealarmas.trytoku.com/" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;" data-i18n="nav.pay">Pagar</a>
+        <label class="mobile-language-switcher">
+            <span data-i18n="language.label">Idioma</span>
+            <select id="mobileLanguageSelect" aria-label="Cambiar idioma">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="zh">中文</option>
+            </select>
+        </label>
     </div>
 
     <main>
@@ -87,8 +109,8 @@
                 </p>
 
                 <div class="hero-actions" data-aos="fade-in" data-aos-delay="200">
-                    <a href="#contacto" class="btn-primary">Recibe asesoría</a>
-                    <a href="#packages-section" class="btn-outline">Ver paquetes</a>
+                    <a href="#contacto" class="btn-primary" data-i18n="hero.advice">Recibe asesoría</a>
+                    <a href="#packages-section" class="btn-outline" data-i18n="hero.viewPackages">Ver paquetes</a>
                 </div>
             </div>
 
@@ -243,9 +265,9 @@
         <!-- ─── PAQUETES ─── -->
         <section id="packages-section">
             <div class="section-header" data-aos="fade-in">
-                <span class="label-tag">Nuestros paquetes</span>
-                <h2>Encuentra el plan perfecto para ti</h2>
-                <p>Desde protección básica hasta soluciones corporativas completas.</p>
+                <span class="label-tag" data-i18n="packages.eyebrow">Nuestros paquetes</span>
+                <h2 data-i18n="packages.title">Encuentra el plan perfecto para ti</h2>
+                <p data-i18n="packages.subtitle">Desde protección básica hasta soluciones corporativas completas.</p>
             </div>
             <div class="packages-grid">
                 <!-- Paquetes visibles: Hogar, Hogar y PyMES, Negocio -->
@@ -253,7 +275,7 @@
                     <div class="package-img-wrap">
                         <img src="img/Paquetes AJAX/Paquete Essential/Essential.png" alt="Paquete Essential">
                         <span class="package-tag">Hogar</span>
-                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('essential')" aria-label="Ver galería de componentes del paquete Essential">
+                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('essential')" aria-label="Ver galería de componentes del paquete Essential" data-i18n="packages.galleryButton">
                             Galería
                         </button>
                     </div>
@@ -267,15 +289,22 @@
                             <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Apps incluidas</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
-                            <li><span class="check-icon"></span>Disponible en blanco o negro</li>
+                            <li class="package-color-option">
+                                <span class="check-icon"></span>
+                                <span data-i18n="packages.availableColors">Disponible en</span>
+                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" aria-label="Color blanco"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" aria-label="Color negro"></button>
+                                </span>
+                            </li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('essential')">
-                                Ver paquete
+                                <span data-i18n="packages.viewPackage">Ver paquete</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </button>
                             <a href="#contacto" class="btn-package btn-package-primary">
-                                Solicitar más información
+                                <span data-i18n="packages.requestInfo">Solicitar más información</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </a>
                         </div>
@@ -343,7 +372,7 @@
                     <div class="package-img-wrap">
                         <img src="img/Paquetes AJAX/Paquete Profesional/Profesional.png" alt="Paquete Profesional">
                         <span class="package-tag">Hogar y PyMES</span>
-                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('professional')" aria-label="Ver galería de componentes del paquete Profesional">
+                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('professional')" aria-label="Ver galería de componentes del paquete Profesional" data-i18n="packages.galleryButton">
                             Galería
                         </button>
                     </div>
@@ -357,15 +386,22 @@
                             <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Apps incluidas</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
-                            <li><span class="check-icon"></span>Disponible en blanco o negro</li>
+                            <li class="package-color-option">
+                                <span class="check-icon"></span>
+                                <span data-i18n="packages.availableColors">Disponible en</span>
+                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" aria-label="Color blanco"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" aria-label="Color negro"></button>
+                                </span>
+                            </li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('professional')">
-                                Ver paquete
+                                <span data-i18n="packages.viewPackage">Ver paquete</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </button>
                             <a href="#contacto" class="btn-package btn-package-primary">
-                                Solicitar más información
+                                <span data-i18n="packages.requestInfo">Solicitar más información</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </a>
                         </div>
@@ -404,7 +440,7 @@
                     <div class="package-img-wrap">
                         <img src="img/Paquetes AJAX/Paquete Elite/Elite.png" alt="Paquete Elite">
                         <span class="package-tag">Negocio</span>
-                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('elite')" aria-label="Ver galería de componentes del paquete Elite">
+                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('elite')" aria-label="Ver galería de componentes del paquete Elite" data-i18n="packages.galleryButton">
                             Galería
                         </button>
                     </div>
@@ -418,15 +454,22 @@
                             <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Apps incluidas</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
-                            <li><span class="check-icon"></span>Disponible en blanco o negro</li>
+                            <li class="package-color-option">
+                                <span class="check-icon"></span>
+                                <span data-i18n="packages.availableColors">Disponible en</span>
+                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" aria-label="Color blanco"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" aria-label="Color negro"></button>
+                                </span>
+                            </li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('elite')">
-                                Ver paquete
+                                <span data-i18n="packages.viewPackage">Ver paquete</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </button>
                             <a href="#contacto" class="btn-package btn-package-primary">
-                                Solicitar más información
+                                <span data-i18n="packages.requestInfo">Solicitar más información</span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </a>
                         </div>
