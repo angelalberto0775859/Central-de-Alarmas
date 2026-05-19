@@ -4,38 +4,30 @@ const backToTop = document.getElementById('back-to-top');
 
 window.addEventListener('scroll', () => {
     const st = window.pageYOffset || document.documentElement.scrollTop;
-    console.log('Scroll position:', st); // Debug
-    header.classList.toggle('scrolled', st > 0);
-    console.log('Header classes:', header.className); // Debug
-    backToTop.classList.toggle('visible', st > 100);
+    if (header) header.classList.toggle('scrolled', st > 0);
+    if (backToTop) backToTop.classList.toggle('visible', st > 100);
 });
 
 // ─── MOBILE MENU ───
 const hamburger = document.getElementById('hamburger');
-const mainNav = document.getElementById('main-nav');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileOverlay = document.getElementById('mobile-overlay');
 
-if (hamburger && mainNav) {
+if (hamburger && mobileMenu && mobileOverlay) {
+    const closeMobileMenu = () => {
+        mobileMenu.classList.remove('open');
+        mobileOverlay.classList.remove('open');
+        hamburger.classList.remove('open');
+    };
+
     hamburger.addEventListener('click', function() {
-        mainNav.classList.toggle('active');
-        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('open');
+        mobileOverlay.classList.toggle('open');
+        hamburger.classList.toggle('open');
     });
-    
-    // Close menu when clicking on a link
-    const navLinks = mainNav.querySelectorAll('a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            mainNav.classList.remove('active');
-            hamburger.classList.remove('active');
-        });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!hamburger.contains(event.target) && !mainNav.contains(event.target)) {
-            mainNav.classList.remove('active');
-            hamburger.classList.remove('active');
-        }
-    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMobileMenu));
+    mobileOverlay.addEventListener('click', closeMobileMenu);
 }
 
 // ─── AOS INITIALIZATION ───
@@ -111,6 +103,6 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observar todos los servicios
-document.querySelectorAll('.service-item-empresa').forEach(service => {
+document.querySelectorAll('.service-item-empresa, .enterprise-service-card, .story-step, .operation-card').forEach(service => {
     observer.observe(service);
 });

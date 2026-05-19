@@ -17,6 +17,9 @@
             --accent-yellow: #f6eb17;
             --text: #17397d;
             --text-muted: #64748b;
+            --secondary: #f4f8fc;
+            --footer-bg: #061432;
+            --footer-text: #ffffff;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -1494,8 +1497,470 @@
             font-weight: bold;
         }
 
+        /* ─── EMPRESA STORY REDESIGN ─── */
+        .enterprise-hero {
+            position: relative;
+            min-height: 100vh;
+            display: grid;
+            align-items: end;
+            padding: 8rem 1.5rem 3rem;
+            overflow: hidden;
+            background: #061432;
+            color: #fff;
+        }
+
+        .enterprise-hero video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .enterprise-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(6,20,50,0.92) 0%, rgba(6,20,50,0.78) 46%, rgba(6,20,50,0.35) 100%),
+                linear-gradient(0deg, rgba(6,20,50,0.96) 0%, rgba(6,20,50,0.18) 42%, rgba(6,20,50,0.74) 100%);
+            z-index: 1;
+        }
+
+        .enterprise-hero-inner {
+            position: relative;
+            z-index: 2;
+            width: min(1180px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.55fr);
+            gap: 3rem;
+            align-items: end;
+        }
+
+        .eyebrow-line {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: rgba(255,255,255,0.82);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 1.1rem;
+        }
+
+        .eyebrow-line::before {
+            content: '';
+            width: 42px;
+            height: 3px;
+            background: var(--accent-yellow);
+        }
+
+        .enterprise-hero h1 {
+            max-width: 780px;
+            color: #fff;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: 0;
+            margin-bottom: 1.4rem;
+        }
+
+        .enterprise-hero h1 span {
+            color: var(--accent-yellow);
+        }
+
+        .enterprise-lead {
+            max-width: 650px;
+            color: rgba(255,255,255,0.84);
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.75;
+            margin-bottom: 2rem;
+        }
+
+        .enterprise-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+        }
+
+        .enterprise-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0.85rem 1.15rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            transition: transform 0.25s, background 0.25s, color 0.25s, border-color 0.25s;
+        }
+
+        .enterprise-btn.primary {
+            background: var(--accent-yellow);
+            color: var(--accent);
+        }
+
+        .enterprise-btn.secondary {
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #fff;
+        }
+
+        .enterprise-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-signal-panel {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(18px);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+        }
+
+        .signal-title {
+            color: #fff;
+            font-size: 0.92rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .signal-row {
+            display: grid;
+            grid-template-columns: 76px 1fr;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .signal-row strong {
+            color: var(--accent-yellow);
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .signal-row span {
+            display: block;
+            color: rgba(255,255,255,0.72);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .story-section {
+            padding: 6rem 1.5rem;
+            background: #fff;
+        }
+
+        .story-wrap {
+            width: min(1180px, 100%);
+            margin: 0 auto;
+        }
+
+        .story-kicker {
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 0.9rem;
+        }
+
+        .story-heading {
+            color: var(--accent);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.04;
+            max-width: 840px;
+            margin-bottom: 1rem;
+        }
+
+        .story-copy {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            max-width: 720px;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 3.5rem;
+        }
+
+        .story-media {
+            position: relative;
+            min-height: 560px;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+        }
+
+        .story-media img {
+            width: 100%;
+            height: 100%;
+            min-height: 560px;
+            object-fit: cover;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .story-media-caption {
+            position: absolute;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            background: rgba(6,20,50,0.86);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .story-steps {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .story-step {
+            display: grid;
+            grid-template-columns: 68px 1fr;
+            gap: 1.1rem;
+            padding: 1.3rem;
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: var(--radius-md);
+            background: #f8fbff;
+        }
+
+        .story-step-num {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: var(--accent-yellow);
+            font-weight: 900;
+        }
+
+        .story-step h3 {
+            color: var(--accent);
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .story-step p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        .operations-band {
+            background: #061432;
+            color: #fff;
+            padding: 5rem 1.5rem;
+            overflow: hidden;
+        }
+
+        .operations-layout {
+            width: min(1180px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 0.75fr 1.25fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .operations-layout h2 {
+            color: #fff;
+            font-size: clamp(2rem, 4vw, 3.6rem);
+            line-height: 1.05;
+            position: sticky;
+            top: 110px;
+        }
+
+        .operations-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .operation-card {
+            min-height: 230px;
+            padding: 1.4rem;
+            border-radius: var(--radius-md);
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .operation-card img {
+            width: 100%;
+            height: 126px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+        }
+
+        .operation-card h3 {
+            color: #fff;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .operation-card p {
+            color: rgba(255,255,255,0.72);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .proof-section {
+            padding: 5rem 1.5rem;
+            background: #f4f8fc;
+        }
+
+        .proof-grid {
+            width: min(1180px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .proof-card {
+            padding: 1.6rem;
+            border-radius: var(--radius-md);
+            background: #fff;
+            border: 1px solid rgba(6,57,112,0.1);
+        }
+
+        .proof-card strong {
+            display: block;
+            color: var(--accent);
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1;
+            margin-bottom: 0.8rem;
+        }
+
+        .proof-card span {
+            color: var(--text-muted);
+            line-height: 1.65;
+            font-size: 0.95rem;
+        }
+
+        .services-empresa {
+            padding: 6rem 1.5rem;
+            background: #fff;
+        }
+
+        .enterprise-service-grid {
+            width: min(1180px, 100%);
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .enterprise-service-card {
+            position: relative;
+            min-height: 360px;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: #061432;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .enterprise-service-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.58;
+            transition: transform 0.4s, opacity 0.4s;
+        }
+
+        .enterprise-service-card:hover img {
+            transform: scale(1.05);
+            opacity: 0.42;
+        }
+
+        .enterprise-service-copy {
+            position: relative;
+            z-index: 1;
+            padding: 1.35rem;
+            color: #fff;
+        }
+
+        .enterprise-service-copy h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.65rem;
+            color: #fff;
+        }
+
+        .enterprise-service-copy p {
+            color: rgba(255,255,255,0.78);
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .enterprise-service-copy span {
+            display: inline-flex;
+            margin-top: 1rem;
+            color: var(--accent-yellow);
+            font-weight: 900;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {
+            .enterprise-hero {
+                min-height: auto;
+                padding: 7rem 1.25rem 2rem;
+            }
+
+            .enterprise-hero-inner,
+            .story-grid,
+            .operations-layout,
+            .proof-grid,
+            .enterprise-service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .enterprise-hero h1 {
+                font-size: clamp(2.6rem, 18vw, 4.5rem);
+            }
+
+            .hero-signal-panel {
+                margin-top: 1rem;
+            }
+
+            .story-section,
+            .services-empresa,
+            .operations-band,
+            .proof-section {
+                padding: 4rem 1.25rem;
+            }
+
+            .story-media,
+            .story-media img {
+                min-height: 360px;
+            }
+
+            .operations-layout h2 {
+                position: static;
+            }
+
+            .operations-list {
+                grid-template-columns: 1fr;
+            }
+
             .service-item-empresa {
                 flex-direction: column !important;
                 gap: 2rem;
@@ -1639,6 +2104,7 @@
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
         </div>
         <nav id="main-nav">
+            <a href="#metodo">Método</a>
             <a href="#servicios-empresa">Servicios</a>
             <a href="#contacto">Contacto</a>
             <a href="blog.html">News</a>
@@ -1652,203 +2118,238 @@
     <!-- MOBILE MENU -->
     <div class="mobile-overlay" id="mobile-overlay"></div>
     <div class="mobile-menu" id="mobile-menu">
+        <a href="#metodo" class="mobile-link">Método</a>
         <a href="#servicios-empresa" class="mobile-link">Servicios</a>
         <a href="#contacto" class="mobile-link">Contacto</a>
         <a href="blog.html" class="mobile-link">News</a>
-        <a href="#" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;">Pagar</a>
+        <a href="https://centraldealarmas.trytoku.com/" class="mobile-link" style="background: var(--accent); color: white; margin-top: 0.5rem;">Pagar</a>
     </div>
 
     <main>
 
-        <!-- ─── MAIN SECTION ─── -->
-        <section class="main-section" id="inicio">
+        <!-- ─── HERO ─── -->
+        <section class="enterprise-hero" id="inicio">
             <video autoplay muted loop playsinline id="background-video">
                 <source src="img/video-inicio.mp4" type="video/mp4">
             </video>
-            <div class="video-overlay"></div>
 
-            <div class="main-header" data-aos="fade-in">
-                <h1>Soluciones para empresa</h1>
-                <p>Protección integral y avanzada para tu negocio con tecnología de última generación</p>
-                <a href="#servicios-empresa" class="btn-primary" data-aos="fade-up" data-aos-delay="200">
-                    Conocer nuestros servicios
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
+            <div class="enterprise-hero-inner" data-aos="fade-in">
+                <div>
+                    <div class="eyebrow-line">Seguridad empresarial en operación real</div>
+                    <h1>Del riesgo al control <span>sin fricción</span></h1>
+                    <p class="enterprise-lead">
+                        Diseñamos, instalamos y operamos ecosistemas de seguridad para empresas que no pueden detenerse:
+                        monitoreo, videovigilancia, intrusión, incendio, acceso, GPS y respuesta coordinada desde una misma lógica.
+                    </p>
+                    <div class="enterprise-actions">
+                        <a href="#contacto" class="enterprise-btn primary">Diseñar mi solución</a>
+                        <a href="#metodo" class="enterprise-btn secondary">Ver el método</a>
+                    </div>
+                </div>
+                <aside class="hero-signal-panel" aria-label="Indicadores de operación">
+                    <p class="signal-title">Lo que importa cuando hay un evento</p>
+                    <div class="signal-row">
+                        <strong>24/7</strong>
+                        <span>Monitoreo activo para alarmas, videoverificación y protocolos de escalamiento.</span>
+                    </div>
+                    <div class="signal-row">
+                        <strong>360°</strong>
+                        <span>Integración de sensores, cámaras, accesos, incendio y activos móviles.</span>
+                    </div>
+                    <div class="signal-row">
+                        <strong>GSI</strong>
+                        <span>Respaldo operativo del Grupo Seguridad Integral para proyectos de alta exigencia.</span>
+                    </div>
+                </aside>
             </div>
         </section>
 
-            <!-- ─── SERVICES SECTION ─── -->
+        <!-- ─── STORY ─── -->
+        <section class="story-section" id="metodo">
+            <div class="story-wrap">
+                <div data-aos="fade-up">
+                    <p class="story-kicker">Una estrategia, no una colección de equipos</p>
+                    <h2 class="story-heading">La seguridad empieza antes de que suene una alarma.</h2>
+                    <p class="story-copy">
+                        Cada operación tiene horarios, puntos ciegos, accesos sensibles, mercancía crítica y personas que proteger.
+                        Por eso construimos sistemas que leen el contexto del negocio y convierten cada señal en una acción clara.
+                    </p>
+                </div>
+
+                <div class="story-grid">
+                    <div class="story-media" data-aos="fade-right">
+                        <img src="img/Servicios/Monitoreo.jpg" alt="Centro de monitoreo empresarial">
+                        <div class="story-media-caption">
+                            Un evento no se queda en una notificación: se valida, se documenta y se escala bajo protocolo.
+                        </div>
+                    </div>
+                    <div class="story-steps" data-aos="fade-left">
+                        <article class="story-step">
+                            <div class="story-step-num">01</div>
+                            <div>
+                                <h3>Diagnóstico operativo</h3>
+                                <p>Mapeamos flujo de personas, horarios, accesos, activos y zonas vulnerables para entender dónde nace el riesgo.</p>
+                            </div>
+                        </article>
+                        <article class="story-step">
+                            <div class="story-step-num">02</div>
+                            <div>
+                                <h3>Arquitectura de seguridad</h3>
+                                <p>Diseñamos capas conectadas: detección, video, control de acceso, incendio, comunicación y monitoreo.</p>
+                            </div>
+                        </article>
+                        <article class="story-step">
+                            <div class="story-step-num">03</div>
+                            <div>
+                                <h3>Implementación sin ruido</h3>
+                                <p>Instalamos con criterios técnicos y continuidad operativa para que el negocio siga funcionando.</p>
+                            </div>
+                        </article>
+                        <article class="story-step">
+                            <div class="story-step-num">04</div>
+                            <div>
+                                <h3>Operación y mejora</h3>
+                                <p>El sistema queda vivo: monitoreo, reportes, mantenimiento y ajustes conforme cambia la operación.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── OPERATIONS ─── -->
+        <section class="operations-band">
+            <div class="operations-layout">
+                <div data-aos="fade-up">
+                    <p class="eyebrow-line">Capas de protección</p>
+                    <h2>Todo conectado para responder mejor.</h2>
+                </div>
+                <div class="operations-list">
+                    <article class="operation-card" data-aos="fade-up">
+                        <img src="img/Servicios/Videovigilancia.jpg" alt="Videovigilancia empresarial">
+                        <h3>Verificación visual</h3>
+                        <p>Cámaras y videoverificación ayudan a distinguir un evento real de una falsa alarma.</p>
+                    </article>
+                    <article class="operation-card" data-aos="fade-up" data-aos-delay="80">
+                        <img src="img/Servicios/ControlDeAcceso.jpg" alt="Control de acceso empresarial">
+                        <h3>Accesos bajo control</h3>
+                        <p>Usuarios, horarios, visitantes y zonas restringidas se vuelven trazables.</p>
+                    </article>
+                    <article class="operation-card" data-aos="fade-up" data-aos-delay="160">
+                        <img src="img/Servicios/Incendios.jpg" alt="Detección de incendios">
+                        <h3>Riesgos críticos</h3>
+                        <p>Incendio, sismo e intrusión se integran a protocolos de protección y evacuación.</p>
+                    </article>
+                    <article class="operation-card" data-aos="fade-up" data-aos-delay="240">
+                        <img src="img/Servicios/RastreoGPS.jpg" alt="Rastreo GPS de activos">
+                        <h3>Activos en movimiento</h3>
+                        <p>Flotillas, rutas, geocercas y alertas para operaciones que salen del inmueble.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="proof-section">
+            <div class="proof-grid">
+                <article class="proof-card" data-aos="fade-up">
+                    <strong>1991</strong>
+                    <span>Integrados al Grupo Seguridad Integral, con experiencia en operaciones sensibles y de alta continuidad.</span>
+                </article>
+                <article class="proof-card" data-aos="fade-up" data-aos-delay="80">
+                    <strong>24/7</strong>
+                    <span>Centro de monitoreo activo para validar señales, coordinar respuesta y documentar eventos.</span>
+                </article>
+                <article class="proof-card" data-aos="fade-up" data-aos-delay="160">
+                    <strong>360°</strong>
+                    <span>Servicios empresariales que cubren perímetro, acceso, video, fuego, sismo, GPS y soporte.</span>
+                </article>
+            </div>
+        </section>
+
+        <!-- ─── SERVICES SECTION ─── -->
         <section class="services-empresa" id="servicios-empresa">
-            <!-- Monitoreo 24/7 -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Monitoreo.jpg" alt="Monitoreo 24/7">
-                </div>
-                <div class="service-content">
-                    <h3>Monitoreo 24/7</h3>
-                    <p>Vigilancia constante y profesional de sus instalaciones las 24 horas del día, los 365 días del año. Nuestro centro de monitoreo certificado garantiza respuesta inmediata ante cualquier incidente.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Centro de monitoreo certificado</li>
-                        <li><span class="check-icon"></span>Respuesta inmediata ante alarmas</li>
-                        <li><span class="check-icon"></span>Operadores altamente capacitados</li>
-                        <li><span class="check-icon"></span>Reportes detallados de incidentes</li>
-                    </ul>
-                </div>
+            <div class="story-wrap" data-aos="fade-up">
+                <p class="story-kicker">Servicios empresariales</p>
+                <h2 class="story-heading">Una solución modular para crecer con tu operación.</h2>
+                <p class="story-copy">
+                    Puedes empezar por un punto crítico o integrar todo el ecosistema. La arquitectura se adapta al tamaño,
+                    sector y nivel de exposición de tu empresa.
+                </p>
             </div>
 
-            <!-- Control de Acceso -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/ControlDeAcceso.jpg" alt="Control de Acceso">
-                </div>
-                <div class="service-content">
-                    <h3>Control de Acceso</h3>
-                    <p>Gestión avanzada del acceso a sus instalaciones con sistemas biométricos, tarjetas de proximidad y controles de acceso inteligentes. Proteja sus áreas restringidas y controle quién entra y sale.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Lectores biométricos y de proximidad</li>
-                        <li><span class="check-icon"></span>Control de horarios y turnos</li>
-                        <li><span class="check-icon"></span>Registro de accesos en tiempo real</li>
-                        <li><span class="check-icon"></span>Integración con sistemas de alarma</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Sistema de Intrusión -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Intrusión.jpg" alt="Sistema de Intrusión">
-                </div>
-                <div class="service-content">
-                    <h3>Sistema de Intrusión</h3>
-                    <p>Protección perimetral completa con sensores de última generación, detectores de movimiento, barreras infrarrojas y sistemas anti-intrusión inteligentes que alertan ante cualquier intento de acceso no autorizado.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Sensores de movimiento y apertura</li>
-                        <li><span class="check-icon"></span>Barreras infrarrojas y microondas</li>
-                        <li><span class="check-icon"></span>Detección de vidrio roto</li>
-                        <li><span class="check-icon"></span>Sirenas y alarmas visuales</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Detección de Incendios -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Incendios.jpg" alt="Detección de Incendios">
-                </div>
-                <div class="service-content">
-                    <h3>Detección de Incendios</h3>
-                    <p>Sistema completo de detección y extinción de incendios con detectores de humo, calor y flama, alarmas de evacuación y sistemas de supresión automática para proteger su negocio y personal.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Detectores de humo y calor</li>
-                        <li><span class="check-icon"></span>Sistemas de rociadores automáticos</li>
-                        <li><span class="check-icon"></span>Alarmas de evacuación</li>
-                        <li><span class="check-icon"></span>Extintores y sistemas de supresión</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Niebla de Seguridad -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Niebla.jpg" alt="Niebla de Seguridad">
-                </div>
-                <div class="service-content">
-                    <h3>Niebla de Seguridad</h3>
-                    <p>Sistema de disuasión instantánea que genera una densa niebla de seguridad en segundos, impidiendo la visibilidad de intrusos y protegiendo sus bienes hasta la llegada de las autoridades.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Activación instantánea ante intrusión</li>
-                        <li><span class="check-icon"></span>Niebla densa y no tóxica</li>
-                        <li><span class="check-icon"></span>Duración de hasta 30 minutos</li>
-                        <li><span class="check-icon"></span>Integración con sistemas de alarma</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Videovigilancia -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Videovigilancia.jpg" alt="Videovigilancia">
-                </div>
-                <div class="service-content">
-                    <h3>Videovigilancia</h3>
-                    <p>Cámaras de alta definición con visión nocturna, análisis inteligente de video y grabación en la nube. Supervise sus instalaciones desde cualquier lugar con nuestro sistema de videovigilancia avanzado.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Cámaras 4K y visión nocturna</li>
-                        <li><span class="check-icon"></span>Análisis inteligente con IA</li>
-                        <li><span class="check-icon"></span>Grabación en la nube 24/7</li>
-                        <li><span class="check-icon"></span>Acceso remoto desde móvil</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Alertamiento Sísmico -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Sismos.png" alt="Alertamiento Sísmico">
-                </div>
-                <div class="service-content">
-                    <h3>Alertamiento Sísmico</h3>
-                    <p>Sistema de detección temprana de sismos que alerta segundos antes de que ocurra el movimiento telúrico, dando tiempo crucial para evacuar y proteger a su personal.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Detección temprana de sismos</li>
-                        <li><span class="check-icon"></span>Alerta hasta 60 segundos antes</li>
-                        <li><span class="check-icon"></span>Integración con sistemas de evacuación</li>
-                        <li><span class="check-icon"></span>Pruebas y mantenimiento periódico</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Antenas de Seguridad -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Antenas.jpg" alt="Antenas de Seguridad">
-                </div>
-                <div class="service-content">
-                    <h3>Antenas de Seguridad</h3>
-                    <p>Antenas de detección anti-robo para entradas y salidas de establecimientos comerciales. Sistema discreto y efectivo que alerta cuando productos etiquetados intentan salir sin autorización.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Detección de etiquetas y hard tags</li>
-                        <li><span class="check-icon"></span>Sistema de alarmas audibles</li>
-                        <li><span class="check-icon"></span>Diseño discreto y elegante</li>
-                        <li><span class="check-icon"></span>Fácil instalación y mantenimiento</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Videoverificación -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/Videoverificacion.jpg" alt="Videoverificación">
-                </div>
-                <div class="service-content">
-                    <h3>Videoverificación</h3>
-                    <p>Verificación visual de alarmas en tiempo real mediante cámaras conectadas que permiten a nuestros operadores confirmar incidentes y coordinar respuestas efectivas con las autoridades.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Verificación visual en tiempo real</li>
-                        <li><span class="check-icon"></span>Coordinación con autoridades</li>
-                        <li><span class="check-icon"></span>Reducción de falsas alarmas</li>
-                        <li><span class="check-icon"></span>Grabación como evidencia</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Rastreo GPS -->
-            <div class="service-item-empresa" data-aos="fade-up">
-                <div class="service-image">
-                    <img src="Servicios/RastreoGPS.jpg" alt="Rastreo GPS">
-                </div>
-                <div class="service-content">
-                    <h3>Rastreo GPS</h3>
-                    <p>Localización y monitoreo en tiempo real de vehículos y activos móviles. Sistema de rastreo GPS que proporciona información precisa sobre la ubicación y estado de sus recursos.</p>
-                    <ul class="service-features">
-                        <li><span class="check-icon"></span>Localización en tiempo real</li>
-                        <li><span class="check-icon"></span>Historial de rutas y paradas</li>
-                        <li><span class="check-icon"></span>Alertas de geocercas</li>
-                        <li><span class="check-icon"></span>Reportes de actividad detallados</li>
-                    </ul>
-                </div>
+            <div class="enterprise-service-grid">
+                <article class="enterprise-service-card" data-aos="fade-up">
+                    <img src="img/Servicios/Monitoreo.jpg" alt="Monitoreo 24/7">
+                    <div class="enterprise-service-copy">
+                        <h3>Monitoreo 24/7</h3>
+                        <p>Operadores, protocolos y escalamiento para que cada señal tenga seguimiento.</p>
+                        <span>Operación continua</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="60">
+                    <img src="img/Servicios/Videovigilancia.jpg" alt="Videovigilancia">
+                    <div class="enterprise-service-copy">
+                        <h3>Videovigilancia</h3>
+                        <p>Cámaras, analítica y acceso remoto para supervisión en tiempo real.</p>
+                        <span>Visibilidad total</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="120">
+                    <img src="img/Servicios/ControlDeAcceso.jpg" alt="Control de acceso">
+                    <div class="enterprise-service-copy">
+                        <h3>Control de acceso</h3>
+                        <p>Gestión de usuarios, horarios, visitantes y áreas restringidas.</p>
+                        <span>Trazabilidad</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up">
+                    <img src="img/Servicios/Intrusión.jpg" alt="Sistema de intrusión">
+                    <div class="enterprise-service-copy">
+                        <h3>Intrusión</h3>
+                        <p>Sensores, sirenas y detección perimetral para anticipar accesos no autorizados.</p>
+                        <span>Prevención</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="60">
+                    <img src="img/Servicios/Incendios.jpg" alt="Detección de incendios">
+                    <div class="enterprise-service-copy">
+                        <h3>Incendios</h3>
+                        <p>Detección, alertamiento y sistemas integrados para proteger personas y activos.</p>
+                        <span>Riesgo crítico</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="120">
+                    <img src="img/Servicios/RastreoGPS.jpg" alt="Rastreo GPS">
+                    <div class="enterprise-service-copy">
+                        <h3>Rastreo GPS</h3>
+                        <p>Ubicación, rutas, geocercas y alertas para flotillas y activos móviles.</p>
+                        <span>Movilidad segura</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up">
+                    <img src="img/Servicios/Niebla.jpg" alt="Niebla de seguridad">
+                    <div class="enterprise-service-copy">
+                        <h3>Niebla de seguridad</h3>
+                        <p>Disuasión instantánea para reducir visibilidad y proteger mercancía ante intrusión.</p>
+                        <span>Contención</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="60">
+                    <img src="img/Servicios/Sismos.png" alt="Alertamiento sísmico">
+                    <div class="enterprise-service-copy">
+                        <h3>Alertamiento sísmico</h3>
+                        <p>Integración de alertas y protocolos para evacuación y continuidad operativa.</p>
+                        <span>Respuesta temprana</span>
+                    </div>
+                </article>
+                <article class="enterprise-service-card" data-aos="fade-up" data-aos-delay="120">
+                    <img src="img/Servicios/Antenas.jpg" alt="Antenas de seguridad">
+                    <div class="enterprise-service-copy">
+                        <h3>Antenas de seguridad</h3>
+                        <p>Prevención de merma y control en puntos de entrada y salida comerciales.</p>
+                        <span>Retail protegido</span>
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -2097,37 +2598,5 @@
     <script src="./js/form-handler.js"></script>
     <script src="./js/cookies.js"></script>
     <script src="./js/main-empresa.js"></script>
-    <script>
-        // ─── HEADER SCROLL ───
-        const header = document.getElementById('main-header');
-        const backToTop = document.getElementById('back-to-top');
-
-        window.addEventListener('scroll', () => {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            console.log('Scroll position:', st); // Debug
-            header.classList.toggle('scrolled', st > 0);
-            console.log('Header classes:', header.className); // Debug
-            backToTop.classList.toggle('visible', st > 100);
-        });
-
-        // ─── SCROLL ANIMATIONS FOR SERVICES ───
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        // Observar todos los servicios
-        document.querySelectorAll('.service-item-empresa').forEach(service => {
-            observer.observe(service);
-        });
-    </script>
 </body>
 </html>
