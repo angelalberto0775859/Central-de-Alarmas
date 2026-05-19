@@ -1,11 +1,162 @@
 // ─── SERVICE MODAL ───
+const packageModalData = {
+    essential: {
+        title: 'Essential/Monitoreo 24/7',
+        intro: 'Protección ideal para espacios pequeños con componentes básicos de seguridad.',
+        components: [
+            {
+                name: 'Hub 2 (4G) Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Hub 2 Jeweller.avif',
+                description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Ethernet y dos tarjetas SIM (2G/3G/LTE).'
+            },
+            {
+                name: 'MotionProtect Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Motion protect jeweller.avif',
+                description: 'Detector IR e inalámbrico de movimiento.'
+            },
+            {
+                name: 'DoorProtect Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Door Protect jeweller.avif',
+                description: 'Detector inalámbrico de apertura con relé reed.'
+            },
+            {
+                name: 'HomeSiren Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Home Siren jeweller.avif',
+                description: 'Sirena inalámbrica.'
+            },
+            {
+                name: 'SpaceControl Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Ajax space control jeweller.avif',
+                description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
+            },
+            {
+                name: 'TurretCam (5 Mp/2.8 mm)',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Essential/Render - Ajax TurretCam - Black - front3 4.png',
+                description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
+            }
+        ]
+    },
+    professional: {
+        title: 'Profesional/Monitoreo 24/7',
+        intro: 'Paquete ideal para hogares y PyMES con vigilancia y acceso controlado.',
+        components: [
+            {
+                name: 'Hub 2 Plus Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/Hub 2 Plus Jeweller.avif',
+                description: 'Panel de control inalámbrico con soporte para fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
+            },
+            {
+                name: 'MotionCam (PhOD) Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/MotionCam (PhOD) Jeweller.avif',
+                description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
+            },
+            {
+                name: 'DoorProtect Jeweller',
+                badge: 'Cantidad: 2',
+                image: 'img/Paquetes AJAX/Paquete Profesional/DoorProtect Jeweller.avif',
+                description: 'Detector inalámbrico de apertura con relé reed.'
+            },
+            {
+                name: 'KeyPad Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/KeyPad Jeweller.avif',
+                description: 'Teclado inalámbrico y táctil.'
+            },
+            {
+                name: 'StreetSiren Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/Streetsiren jeweller.avif',
+                description: 'Sirena inalámbrico para interiores y exteriores.'
+            },
+            {
+                name: 'SpaceControl Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/Ajax SpaceCOntrol Jewellet.avif',
+                description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
+            },
+            {
+                name: 'TurretCam (5 Mp/2.8 mm)',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Profesional/Render - Ajax TurretCam - Black - front3 4.png',
+                description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
+            }
+        ]
+    },
+    elite: {
+        title: 'Elite/Monitoreo 24/7',
+        intro: 'Solución corporativa para negocios que necesitan cobertura completa y respuesta garantizada.',
+        components: [
+            {
+                name: 'Hub 2 Plus Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Elite/Hub 2 Plus Jeweller.avif',
+                description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
+            },
+            {
+                name: 'MotionCam (PhOD) Jeweller',
+                badge: 'Cantidad: 2',
+                image: 'img/Paquetes AJAX/Paquete Elite/MotionCam PhOD Jeweller.avif',
+                description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
+            },
+            {
+                name: 'DoorProtect Jeweller',
+                badge: 'Cantidad: 2',
+                image: 'img/Paquetes AJAX/Paquete Elite/DoorProtect Jeweller.avif',
+                description: 'Detector inalámbrico de apertura con relé reed.'
+            },
+            {
+                name: 'KeyPad Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Elite/KeyPad Jeweller.avif',
+                description: 'Teclado inalámbrico y táctil.'
+            },
+            {
+                name: 'StreetSiren Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Elite/StreetSiren Jeweller.avif',
+                description: 'Sirena inalámbrica para interiores y exteriores.'
+            },
+            {
+                name: 'SpaceControl Jeweller',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Elite/Ajax SpaceControl Jeweller.avif',
+                description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
+            },
+            {
+                name: 'DoorBell',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes AJAX/Paquete Elite/Render - Black - Ajax DoorBell-front-angled.png',
+                description: 'Video timbre con IA integrada, sensor PIR y control a través de apps.'
+            }
+        ]
+    }
+};
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function openServiceModal(title, description, imageSrc) {
     const modal = document.getElementById('serviceModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
     const modalImage = document.getElementById('modalImage');
     if (!modal || !modalTitle || !modalBody || !modalImage) return;
-    
+
+    modal.classList.remove('package-modal');
     modalTitle.textContent = title;
     modalBody.innerHTML = description;
 
@@ -23,9 +174,48 @@ function openServiceModal(title, description, imageSrc) {
     document.body.style.overflow = 'hidden';
 }
 
+function openPackageModal(packageKey) {
+    const packageData = packageModalData[packageKey];
+    const modal = document.getElementById('serviceModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalImage = document.getElementById('modalImage');
+    if (!packageData || !modal || !modalTitle || !modalBody || !modalImage) return;
+
+    modal.classList.add('package-modal');
+    modalTitle.textContent = `Componentes del paquete ${packageData.title}`;
+    modalImage.src = '';
+    modalImage.alt = '';
+    modalImage.style.display = 'none';
+    modalBody.innerHTML = `
+        <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
+        <div class="package-included">
+            <span>Monitoreo 24 hrs/7</span>
+            <span>Apps incluidas</span>
+        </div>
+        <div class="package-components-grid">
+            ${packageData.components.map((component) => `
+                <article class="package-component-card">
+                    <div class="package-component-media">
+                        <img src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}">
+                    </div>
+                    <div class="package-component-copy">
+                        <h4>${escapeHtml(component.name)} <span>${escapeHtml(component.badge)}</span></h4>
+                        <p>${escapeHtml(component.description)}</p>
+                    </div>
+                </article>
+            `).join('')}
+        </div>
+    `;
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
 function closeServiceModal() {
     const modal = document.getElementById('serviceModal');
     if (!modal) return;
+    modal.classList.remove('package-modal');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
