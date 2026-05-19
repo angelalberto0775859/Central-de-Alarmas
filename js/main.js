@@ -140,6 +140,11 @@ const packageModalData = {
     }
 };
 
+let packageGalleryState = {
+    packageKey: null,
+    index: 0
+};
+
 function escapeHtml(value) {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -157,6 +162,7 @@ function openServiceModal(title, description, imageSrc) {
     if (!modal || !modalTitle || !modalBody || !modalImage) return;
 
     modal.classList.remove('package-modal');
+    modal.classList.remove('package-gallery-modal');
     modalTitle.textContent = title;
     modalBody.innerHTML = description;
 
@@ -182,6 +188,7 @@ function openPackageModal(packageKey) {
     const modalImage = document.getElementById('modalImage');
     if (!packageData || !modal || !modalTitle || !modalBody || !modalImage) return;
 
+    modal.classList.remove('package-gallery-modal');
     modal.classList.add('package-modal');
     modalTitle.textContent = `Componentes del paquete ${packageData.title}`;
     modalImage.src = '';
@@ -192,6 +199,8 @@ function openPackageModal(packageKey) {
         <div class="package-included">
             <span>Monitoreo 24 hrs/7</span>
             <span>Apps incluidas</span>
+            <span>Instalación gratuita</span>
+            <span>Disponible en blanco o negro</span>
         </div>
         <div class="package-components-grid">
             ${packageData.components.map((component) => `
@@ -212,10 +221,75 @@ function openPackageModal(packageKey) {
     document.body.style.overflow = 'hidden';
 }
 
+function renderPackageGallerySlide() {
+    const modalBody = document.getElementById('modalBody');
+    const modalTitle = document.getElementById('modalTitle');
+    const packageData = packageModalData[packageGalleryState.packageKey];
+    if (!modalBody || !modalTitle || !packageData) return;
+
+    const total = packageData.components.length;
+    const currentIndex = ((packageGalleryState.index % total) + total) % total;
+    packageGalleryState.index = currentIndex;
+    const component = packageData.components[currentIndex];
+
+    modalTitle.textContent = `Galería ${packageData.title}`;
+    modalBody.innerHTML = `
+        <div class="package-gallery">
+            <div class="package-gallery-stage">
+                <img src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}">
+            </div>
+            <div class="package-gallery-info">
+                <div class="package-gallery-count">${currentIndex + 1} de ${total}</div>
+                <h4>${escapeHtml(component.name)}</h4>
+                <span class="package-gallery-badge">${escapeHtml(component.badge)}</span>
+                <p>${escapeHtml(component.description)}</p>
+                <div class="package-gallery-controls">
+                    <button type="button" class="package-gallery-control" onclick="changePackageGallerySlide(-1)" aria-label="Ver componente anterior">‹</button>
+                    <button type="button" class="package-gallery-control" onclick="changePackageGallerySlide(1)" aria-label="Ver siguiente componente">›</button>
+                    <div class="package-gallery-dots" aria-label="Navegación de componentes">
+                        ${packageData.components.map((_, index) => `
+                            <button type="button" class="package-gallery-dot${index === currentIndex ? ' active' : ''}" onclick="goToPackageGallerySlide(${index})" aria-label="Ver componente ${index + 1}"></button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function openPackageGallery(packageKey) {
+    const packageData = packageModalData[packageKey];
+    const modal = document.getElementById('serviceModal');
+    const modalImage = document.getElementById('modalImage');
+    if (!packageData || !modal || !modalImage) return;
+
+    packageGalleryState = { packageKey, index: 0 };
+    modal.classList.remove('package-modal');
+    modal.classList.add('package-gallery-modal');
+    modalImage.src = '';
+    modalImage.alt = '';
+    modalImage.style.display = 'none';
+    renderPackageGallerySlide();
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function changePackageGallerySlide(direction) {
+    packageGalleryState.index += direction;
+    renderPackageGallerySlide();
+}
+
+function goToPackageGallerySlide(index) {
+    packageGalleryState.index = index;
+    renderPackageGallerySlide();
+}
+
 function closeServiceModal() {
     const modal = document.getElementById('serviceModal');
     if (!modal) return;
     modal.classList.remove('package-modal');
+    modal.classList.remove('package-gallery-modal');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
@@ -234,6 +308,11 @@ if (serviceModal) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeServiceModal();
+    }
+    const modal = document.getElementById('serviceModal');
+    if (modal && modal.classList.contains('package-gallery-modal') && modal.style.display === 'block') {
+        if (e.key === 'ArrowLeft') changePackageGallerySlide(-1);
+        if (e.key === 'ArrowRight') changePackageGallerySlide(1);
     }
 });
 

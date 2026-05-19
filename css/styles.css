@@ -718,6 +718,121 @@ header.scrolled .hamburger span { background: var(--accent); }
     line-height: 1.55;
 }
 
+.service-modal.package-gallery-modal .service-modal-content {
+    max-width: 920px;
+}
+
+.package-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.package-gallery-stage {
+    min-height: 440px;
+    border-radius: var(--radius-md);
+    background: #f4f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.package-gallery-stage img {
+    width: 100%;
+    height: 390px;
+    object-fit: contain;
+    display: block;
+}
+
+.package-gallery-info {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.package-gallery-count {
+    color: var(--accent);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+}
+
+.package-gallery-info h4 {
+    color: var(--text);
+    font-size: clamp(1.45rem, 3vw, 2.25rem);
+    line-height: 1.08;
+    margin-bottom: 0.75rem;
+}
+
+.package-gallery-badge {
+    align-self: flex-start;
+    border-radius: 4px;
+    padding: 0.18rem 0.45rem;
+    background: #66cc33;
+    color: #122200;
+    font-size: 0.7rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+.package-gallery-info p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.package-gallery-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.package-gallery-control {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(6,57,112,0.18);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--accent);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, transform 0.25s;
+}
+
+.package-gallery-control:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.package-gallery-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-left: 0.2rem;
+}
+
+.package-gallery-dot {
+    width: 9px;
+    height: 9px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(6,57,112,0.22);
+    cursor: pointer;
+    padding: 0;
+}
+
+.package-gallery-dot.active {
+    background: var(--accent);
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -1033,6 +1148,30 @@ header.scrolled .hamburger span { background: var(--accent); }
     text-transform: uppercase;
     padding: 0.3rem 0.75rem;
     border-radius: 100px;
+}
+
+.package-gallery-button {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.9rem;
+    z-index: 2;
+    border: 1px solid rgba(255,255,255,0.65);
+    border-radius: var(--radius-sm);
+    background: rgba(6,20,50,0.82);
+    color: #fff;
+    min-height: 34px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(6,20,50,0.24);
+    transition: background 0.25s, transform 0.25s, border-color 0.25s;
+}
+
+.package-gallery-button:hover {
+    transform: translateY(-2px);
+    background: var(--accent);
+    border-color: var(--accent-yellow);
 }
 
 .package-body {
@@ -2267,6 +2406,18 @@ footer::after {
     .package-components-grid {
         grid-template-columns: 1fr;
     }
+
+    .package-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .package-gallery-stage {
+        min-height: 300px;
+    }
+
+    .package-gallery-stage img {
+        height: 270px;
+    }
 }
 
 @media (max-width: 639px) {
@@ -2309,6 +2460,28 @@ footer::after {
 
     .package-component-copy p {
         font-size: 0.82rem;
+    }
+
+    .package-gallery-button {
+        right: 0.7rem;
+        bottom: 0.7rem;
+        min-height: 32px;
+        padding: 0.4rem 0.62rem;
+        font-size: 0.7rem;
+    }
+
+    .package-gallery-stage {
+        min-height: 240px;
+        padding: 1rem;
+    }
+
+    .package-gallery-stage img {
+        height: 220px;
+    }
+
+    .package-gallery-controls {
+        align-items: flex-start;
+        flex-wrap: wrap;
     }
 
     .article-figure img {
