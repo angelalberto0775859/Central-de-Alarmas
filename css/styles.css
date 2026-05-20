@@ -3140,11 +3140,12 @@ footer::after {
     line-height: 1.6;
 }
 
+/* Update jobs-grid for 3 columns on desktop and equal card heights */
 .jobs-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    align-items: start;
+    align-items: stretch;
 }
 
 @media (min-width: 768px) {
@@ -3153,9 +3154,16 @@ footer::after {
     }
 }
 
+@media (min-width: 992px) {
+    .jobs-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 .job-card {
     background: var(--primary);
     border: 1px solid rgba(6, 57, 112, 0.08);
+    border-top: 5px solid var(--accent);
     border-radius: var(--radius-md);
     padding: 2.25rem;
     box-shadow: var(--shadow);
@@ -3216,10 +3224,10 @@ footer::after {
 .job-meta-details {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.85rem;
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px dashed rgba(6, 57, 112, 0.1);
+    border-bottom: 1px dashed rgba(6, 57, 112, 0.15);
 }
 
 .job-meta-details span {
@@ -3232,13 +3240,17 @@ footer::after {
 }
 
 .job-meta-icon {
-    width: 14px;
-    height: 14px;
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    max-height: 14px !important;
     opacity: 0.7;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .job-desc {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     color: var(--text);
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -3246,9 +3258,9 @@ footer::after {
 }
 
 .job-requirements {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     background: #f8fafc;
-    padding: 1.25rem;
+    padding: 1.15rem;
     border-radius: var(--radius-sm);
     border-left: 3px solid var(--accent);
 }
@@ -3269,7 +3281,7 @@ footer::after {
 }
 
 .job-requirements li {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     line-height: 1.5;
     position: relative;
@@ -3289,6 +3301,53 @@ footer::after {
     font-weight: 800;
 }
 
+/* Ofrecemos block */
+.job-perks {
+    margin-bottom: 2rem;
+    background: #fefce8; /* Soft warm yellow cream background tint */
+    padding: 1.15rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(246, 235, 23, 0.25);
+    border-left: 3px solid #eab308; /* Brand yellow border accent */
+}
+
+.job-perks h4 {
+    font-size: 0.88rem;
+    color: #854d0e; /* Dark gold/yellow-brown for readability */
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.job-perks ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.job-perks li {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.job-perks li:last-child {
+    margin-bottom: 0;
+}
+
+.job-perks li::before {
+    content: "★";
+    position: absolute;
+    left: 0;
+    color: #eab308;
+    font-size: 0.8rem;
+    top: 1px;
+}
+
 .btn-job-apply {
     display: block;
     text-align: center;
@@ -3301,12 +3360,14 @@ footer::after {
     border-radius: var(--radius-sm);
     transition: background-color 0.3s, transform 0.2s;
     box-shadow: 0 4px 12px rgba(6, 57, 112, 0.15);
+    margin-top: auto; /* Push buttons to the bottom so they align */
 }
 
 .btn-job-apply:hover {
     background-color: #04244c;
     transform: translateY(-1px);
 }
+
 
 /* CV Submission Section */
 .submit-cv-section {
