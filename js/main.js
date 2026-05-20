@@ -622,10 +622,6 @@ document.addEventListener('DOMContentLoaded', function() {
         img.decoding = 'async';
     });
 
-    document.querySelectorAll('#languageSelect, #mobileLanguageSelect').forEach((select) => {
-        select.addEventListener('change', (event) => applyTranslations(event.target.value));
-    });
-
     document.addEventListener('click', (event) => {
         const swatch = event.target.closest('.color-swatch');
         if (!swatch) return;

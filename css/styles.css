@@ -204,6 +204,19 @@ header.scrolled .language-switcher {
     color: var(--accent);
 }
 
+#google_translate_element,
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-logo-link,
+.goog-te-gadget,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+}
+
 /* Hamburger */
 .hamburger {
     display: flex;
