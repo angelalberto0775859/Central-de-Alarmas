@@ -2,9 +2,10 @@
 class FormHandler {
     constructor(formId) {
         this.form = document.getElementById(formId);
+        if (!this.form) return;
         this.submitButton = this.form.querySelector('.btn-submit');
         this.originalButtonText = this.submitButton ? this.submitButton.textContent : '';
-        
+
         this.init();
     }
     
@@ -177,13 +178,28 @@ class FormHandler {
 // Inicializar formularios cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     // Formulario de contacto principal
-    const contactoForm = new FormHandler('contact-form');
+    new FormHandler('contact-form');
     
     // Formulario de empresa (si existe en la página)
     const empresaForm = document.getElementById('contact-form-empresa');
     if (empresaForm) {
         // Crear una nueva instancia para el formulario de empresa
-        const empresaHandler = new FormHandler('contact-form-empresa');
+        new FormHandler('contact-form-empresa');
     }
+
+    document.querySelectorAll('.job-application-form').forEach((form) => {
+        if (!form.id) return;
+        new FormHandler(form.id);
+    });
 });
 
+document.addEventListener('change', function(event) {
+    const fileInput = event.target.closest('.job-application-form input[type="file"]');
+    if (!fileInput) return;
+
+    const label = fileInput.closest('.file-upload');
+    const labelText = label ? label.querySelector('.file-upload-text') : null;
+    if (!labelText) return;
+
+    labelText.textContent = fileInput.files.length ? fileInput.files[0].name : 'Adjuntar CV en PDF, DOC o DOCX';
+});
