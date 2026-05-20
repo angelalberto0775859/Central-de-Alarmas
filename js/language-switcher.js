@@ -18,10 +18,17 @@
         return languages.find((language) => language.code === code) || languages[0];
     }
 
+    function getUrlLanguage() {
+        const params = new URLSearchParams(window.location.search);
+        const language = params.get('lang');
+        return languages.some((item) => item.code === language) ? language : null;
+    }
+
     function getStoredLanguage() {
-        const storedLanguage = localStorage.getItem(storageKey);
+        const urlLanguage = getUrlLanguage();
+        const storedLanguage = urlLanguage || localStorage.getItem(storageKey);
         const language = getLanguage(storedLanguage || defaultLanguage);
-        if (storedLanguage !== language.code) {
+        if (localStorage.getItem(storageKey) !== language.code) {
             localStorage.setItem(storageKey, language.code);
         }
         return language;
@@ -101,6 +108,43 @@
 
         syncSelectOptions(switcher.querySelector('select'), false);
         return switcher;
+    }
+
+    function updateInternalLinks(code) {
+        const language = getLanguage(code);
+        document.querySelectorAll('a[href]').forEach((link) => {
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+
+            let url;
+            try {
+                url = new URL(href, window.location.href);
+            } catch (_) {
+                return;
+            }
+
+            if (url.origin !== window.location.origin) return;
+            if (!/\.html$|\/$/.test(url.pathname)) return;
+
+            if (language.code === defaultLanguage) {
+                url.searchParams.delete('lang');
+            } else {
+                url.searchParams.set('lang', language.code);
+            }
+
+            link.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+        });
+    }
+
+    function buildReloadUrl(code) {
+        const language = getLanguage(code);
+        const url = new URL(window.location.href);
+        if (language.code === defaultLanguage) {
+            url.searchParams.delete('lang');
+        } else {
+            url.searchParams.set('lang', language.code);
+        }
+        return url.toString();
     }
 
     function ensureMobileSwitcher() {
@@ -183,6 +227,8 @@
         document.querySelectorAll('.language-switcher').forEach((switcher) => {
             switcher.setAttribute('aria-label', `Cambiar idioma. Idioma actual: ${language.name}`);
         });
+
+        updateInternalLinks(language.code);
     }
 
     function applyGoogleTranslation(code, attempt = 0) {
@@ -217,7 +263,7 @@
         updateVisibleLanguage(language.code);
 
         if (options.reload) {
-            window.location.reload();
+            window.location.href = buildReloadUrl(language.code);
             return;
         }
 
