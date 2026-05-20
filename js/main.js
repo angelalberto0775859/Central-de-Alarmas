@@ -146,13 +146,13 @@ let packageGalleryState = {
 };
 
 const packageColorState = {
-    essential: 'white',
-    professional: 'white',
-    elite: 'white'
+    essential: 'black',
+    professional: 'black',
+    elite: 'black'
 };
 
 function getPackageColor(packageKey) {
-    return packageColorState[packageKey] || 'white';
+    return packageColorState[packageKey] || 'black';
 }
 
 function getPackageColorClass(packageKey) {
@@ -491,7 +491,7 @@ function openPackageModal(packageKey) {
             <span class="package-color-pill">
                 ${escapeHtml(t('packages.availableColors'))}
                 <span class="color-swatches" data-package-key="${escapeHtml(packageKey)}" aria-label="${escapeHtml(t('packages.colorAria'))}">
-                    <button type="button" class="color-swatch color-swatch-white${getPackageColor(packageKey) === 'white' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.white'))}" data-color-value="white" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}" aria-pressed="${getPackageColor(packageKey) === 'white'}"></button>
+                    <button type="button" class="color-swatch color-swatch-white${getPackageColor(packageKey) === 'white' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.white'))}" data-color-value="white" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}" aria-pressed="${getPackageColor(packageKey) === 'white'}" disabled></button>
                     <button type="button" class="color-swatch color-swatch-black${getPackageColor(packageKey) === 'black' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.black'))}" data-color-value="black" aria-label="${escapeHtml(t('packages.colorBlackAria'))}" aria-pressed="${getPackageColor(packageKey) === 'black'}"></button>
                 </span>
             </span>
@@ -723,11 +723,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('click', (event) => {
         const swatch = event.target.closest('.color-swatch');
-        if (!swatch) return;
+        if (!swatch || swatch.disabled) return;
         const group = swatch.closest('.color-swatches');
         if (!group) return;
         const packageKey = findPackageKeyFromSwatch(swatch);
         const color = swatch.dataset.colorValue || (swatch.classList.contains('color-swatch-black') ? 'black' : 'white');
+        if (color === 'white') return;
         applyPackageColor(packageKey, color);
     });
 
