@@ -155,13 +155,32 @@ header.scrolled .nav-cta {
 }
 
 .language-switcher-value {
-    min-width: 74px;
-    padding: 0.5rem 1.7rem 0.5rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.42rem;
+    min-width: 82px;
+    padding: 0.5rem 1.7rem 0.5rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 900;
     line-height: 1;
     text-align: center;
     letter-spacing: 0.02em;
+}
+
+.language-switcher-flag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3em;
+    height: 1.3em;
+    font-size: 1rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.12));
+}
+
+.language-switcher-code {
+    line-height: 1;
 }
 
 .language-switcher select {
@@ -191,6 +210,24 @@ header.scrolled .nav-cta {
     font-weight: 800;
     cursor: pointer;
     outline: none;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+}
+
+.mobile-language-switcher {
+    position: relative;
+}
+
+.mobile-language-current {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+    color: inherit;
+    font-size: 0.85rem;
+    font-weight: 900;
 }
 
 .language-switcher select option,
@@ -853,8 +890,10 @@ header.scrolled .hamburger span { background: var(--accent); }
 }
 
 .package-component-media img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     display: block;
 }
@@ -887,18 +926,35 @@ header.scrolled .hamburger span { background: var(--accent); }
     line-height: 1.55;
 }
 
+.package-components-grid.package-color-white .package-component-card {
+    background: #05070b;
+}
+
+.package-components-grid.package-color-white .package-component-media img {
+    filter: grayscale(1) invert(1) brightness(1.08) contrast(1.08);
+}
+
+.package-components-grid.package-color-white .package-component-copy h4 {
+    color: #fff;
+}
+
+.package-components-grid.package-color-white .package-component-copy p {
+    color: rgba(255,255,255,0.72);
+}
+
 .service-modal.package-gallery-modal .service-modal-content {
-    max-width: 920px;
+    max-width: min(1120px, calc(100vw - 2rem));
 }
 
 .package-gallery {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.72fr);
+    gap: clamp(1.25rem, 3vw, 2rem);
     align-items: center;
 }
 
 .package-gallery-stage {
+    position: relative;
     min-height: 440px;
     border-radius: var(--radius-md);
     background: #f4f6f8;
@@ -906,13 +962,32 @@ header.scrolled .hamburger span { background: var(--accent); }
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
+    overflow: hidden;
 }
 
 .package-gallery-stage img {
-    width: 100%;
-    height: 390px;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 390px;
     object-fit: contain;
     display: block;
+    filter: saturate(1.04) contrast(1.02);
+    transform: translateZ(0);
+    image-rendering: auto;
+    user-select: none;
+}
+
+.package-gallery-stage img.compact-render {
+    transform: translateZ(0) scale(2.35);
+}
+
+.package-gallery.package-color-white .package-gallery-stage {
+    background: #05070b;
+}
+
+.package-gallery.package-color-white .package-gallery-stage img {
+    filter: grayscale(1) invert(1) brightness(1.08) contrast(1.08);
 }
 
 .package-gallery-info {
@@ -1289,6 +1364,13 @@ header.scrolled .hamburger span { background: var(--accent); }
     box-shadow: 0 20px 50px rgba(6,57,112,0.12);
 }
 
+.package-card.package-color-white .package-img-wrap {
+    background: #05070b;
+}
+
+.package-card.package-color-white .package-img-wrap > img {
+    filter: grayscale(1) invert(1) brightness(1.08) contrast(1.08);
+}
 
 .package-img-wrap {
     position: relative;
@@ -2585,7 +2667,12 @@ footer::after {
     }
 
     .package-gallery-stage img {
-        height: 270px;
+        max-width: 100%;
+        max-height: 270px;
+    }
+
+    .package-gallery-stage img.compact-render {
+        transform: translateZ(0) scale(2);
     }
 }
 
@@ -2645,7 +2732,12 @@ footer::after {
     }
 
     .package-gallery-stage img {
-        height: 220px;
+        max-width: 100%;
+        max-height: 220px;
+    }
+
+    .package-gallery-stage img.compact-render {
+        transform: translateZ(0) scale(1.72);
     }
 
     .package-gallery-controls {

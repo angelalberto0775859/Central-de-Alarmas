@@ -139,13 +139,30 @@
             transform: translateY(-65%) rotate(45deg);
         }
         .language-switcher-value {
-            min-width: 74px;
-            padding: 0.5rem 1.7rem 0.5rem 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.42rem;
+            min-width: 82px;
+            padding: 0.5rem 1.7rem 0.5rem 0.75rem;
             font-size: 0.875rem;
             font-weight: 900;
             line-height: 1;
             text-align: center;
             letter-spacing: 0.02em;
+        }
+        .language-switcher-flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.3em;
+            height: 1.3em;
+            font-size: 1rem;
+            line-height: 1;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.12));
+        }
+        .language-switcher-code {
+            line-height: 1;
         }
         .language-switcher select {
             appearance: none;
@@ -165,6 +182,7 @@
             opacity: 0;
         }
         .mobile-language-switcher {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -177,6 +195,15 @@
             font-size: 0.95rem;
             font-weight: 700;
         }
+        .mobile-language-current {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-left: auto;
+            color: inherit;
+            font-size: 0.85rem;
+            font-weight: 900;
+        }
         .mobile-language-switcher select {
             border: 0;
             background: transparent;
@@ -186,6 +213,10 @@
             font-weight: 800;
             cursor: pointer;
             outline: none;
+            min-width: 100%;
+            opacity: 0;
+            position: absolute;
+            inset: 0;
         }
         .language-switcher select option,
         .mobile-language-switcher select option {

@@ -1,11 +1,11 @@
 (function () {
     const languages = [
-        { code: 'es', label: 'ES', name: 'Español', google: 'es' },
-        { code: 'en', label: 'EN', name: 'English', google: 'en' },
-        { code: 'fr', label: 'FR', name: 'Français', google: 'fr' },
-        { code: 'ja', label: 'JA', name: '日本語', google: 'ja' },
-        { code: 'ko', label: 'KO', name: '한국어', google: 'ko' },
-        { code: 'zh', label: 'ZH', name: '中文', google: 'zh-CN' }
+        { code: 'es', label: 'ES', name: 'Español', flag: '🇲🇽', google: 'es' },
+        { code: 'en', label: 'EN', name: 'English', flag: '🇺🇸', google: 'en' },
+        { code: 'fr', label: 'FR', name: 'Français', flag: '🇫🇷', google: 'fr' },
+        { code: 'ja', label: 'JA', name: '日本語', flag: '🇯🇵', google: 'ja' },
+        { code: 'ko', label: 'KO', name: '한국어', flag: '🇰🇷', google: 'ko' },
+        { code: 'zh', label: 'ZH', name: '中文', flag: '🇨🇳', google: 'zh-CN' }
     ];
 
     const storageKey = 'siteLanguage';
@@ -72,8 +72,15 @@
 
     function optionMarkup(useNames) {
         return languages
-            .map((language) => `<option value="${language.code}">${useNames ? language.name : language.label}</option>`)
+            .map((language) => `<option value="${language.code}">${language.flag} ${useNames ? language.name : language.label}</option>`)
             .join('');
+    }
+
+    function languageValueMarkup(language) {
+        return `
+            <span class="language-switcher-flag" aria-hidden="true">${language.flag}</span>
+            <span class="language-switcher-code">${language.label}</span>
+        `;
     }
 
     function syncSelectOptions(select, useNames) {
@@ -93,7 +100,7 @@
             switcher.className = 'language-switcher notranslate';
             switcher.setAttribute('aria-label', 'Cambiar idioma');
             switcher.innerHTML = `
-                <span class="language-switcher-value" id="languageSwitcherValue">ES</span>
+                <span class="language-switcher-value" id="languageSwitcherValue">${languageValueMarkup(getStoredLanguage())}</span>
                 <select id="languageSelect" aria-label="Cambiar idioma"></select>
             `;
             const payButton = nav.querySelector('.nav-cta');
@@ -157,11 +164,24 @@
             switcher.className = 'mobile-language-switcher notranslate';
             switcher.innerHTML = `
                 <span data-i18n="language.label">Idioma</span>
+                <span class="mobile-language-current" aria-hidden="true">${languageValueMarkup(getStoredLanguage())}</span>
                 <select id="mobileLanguageSelect" aria-label="Cambiar idioma"></select>
             `;
             mobileMenu.appendChild(switcher);
         } else {
             switcher.classList.add('notranslate');
+            if (!switcher.querySelector('.mobile-language-current')) {
+                const current = document.createElement('span');
+                current.className = 'mobile-language-current';
+                current.setAttribute('aria-hidden', 'true');
+                current.innerHTML = languageValueMarkup(getStoredLanguage());
+                const select = switcher.querySelector('select');
+                if (select) {
+                    select.insertAdjacentElement('beforebegin', current);
+                } else {
+                    switcher.appendChild(current);
+                }
+            }
         }
 
         syncSelectOptions(switcher.querySelector('select'), true);
@@ -221,7 +241,11 @@
         });
 
         document.querySelectorAll('.language-switcher-value').forEach((value) => {
-            value.textContent = language.label;
+            value.innerHTML = languageValueMarkup(language);
+        });
+
+        document.querySelectorAll('.mobile-language-current').forEach((value) => {
+            value.innerHTML = languageValueMarkup(language);
         });
 
         document.querySelectorAll('.language-switcher').forEach((switcher) => {

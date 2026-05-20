@@ -7,31 +7,31 @@ const packageModalData = {
             {
                 name: 'Hub 2 (4G) Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Essential/Hub 2 Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
                 description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionProtect Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Essential/Motion protect jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionProtect U Jeweller - Black - front.png',
                 description: 'Detector IR e inalámbrico de movimiento.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Essential/Door Protect jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'HomeSiren Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Essential/Home Siren jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
                 description: 'Sirena inalámbrica.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Essential/Ajax space control jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
@@ -49,37 +49,37 @@ const packageModalData = {
             {
                 name: 'Hub 2 Plus Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Profesional/Hub 2 Plus Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
                 description: 'Panel de control inalámbrico con soporte para fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionCam (PhOD) Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Profesional/MotionCam (PhOD) Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front.png',
                 description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 2',
-                image: 'img/Paquetes AJAX/Paquete Profesional/DoorProtect Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'KeyPad Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Profesional/KeyPad Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front.png',
                 description: 'Teclado inalámbrico y táctil.'
             },
             {
                 name: 'StreetSiren Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Profesional/Streetsiren jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
                 description: 'Sirena inalámbrico para interiores y exteriores.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Profesional/Ajax SpaceCOntrol Jewellet.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
@@ -97,37 +97,37 @@ const packageModalData = {
             {
                 name: 'Hub 2 Plus Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Elite/Hub 2 Plus Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
                 description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionCam (PhOD) Jeweller',
                 badge: 'Cantidad: 2',
-                image: 'img/Paquetes AJAX/Paquete Elite/MotionCam PhOD Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front.png',
                 description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 2',
-                image: 'img/Paquetes AJAX/Paquete Elite/DoorProtect Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'KeyPad Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Elite/KeyPad Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front.png',
                 description: 'Teclado inalámbrico y táctil.'
             },
             {
                 name: 'StreetSiren Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Elite/StreetSiren Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
                 description: 'Sirena inalámbrica para interiores y exteriores.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
-                image: 'img/Paquetes AJAX/Paquete Elite/Ajax SpaceControl Jeweller.avif',
+                image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
@@ -144,6 +144,20 @@ let packageGalleryState = {
     packageKey: null,
     index: 0
 };
+
+const packageColorState = {
+    essential: 'white',
+    professional: 'white',
+    elite: 'white'
+};
+
+function getPackageColor(packageKey) {
+    return packageColorState[packageKey] || 'white';
+}
+
+function getPackageColorClass(packageKey) {
+    return getPackageColor(packageKey) === 'white' ? ' package-color-white' : '';
+}
 
 const translations = {
     es: {
@@ -403,7 +417,17 @@ function applyTranslations(language) {
 
     const languageSwitcherValue = document.getElementById('languageSwitcherValue');
     if (languageSwitcherValue) {
-        languageSwitcherValue.textContent = currentLanguage.toUpperCase();
+        const siteLanguage = Array.isArray(window.siteLanguages)
+            ? window.siteLanguages.find((language) => language.code === currentLanguage)
+            : null;
+        if (siteLanguage && siteLanguage.flag) {
+            languageSwitcherValue.innerHTML = `
+                <span class="language-switcher-flag" aria-hidden="true">${siteLanguage.flag}</span>
+                <span class="language-switcher-code">${siteLanguage.label}</span>
+            `;
+        } else {
+            languageSwitcherValue.textContent = currentLanguage.toUpperCase();
+        }
     }
 }
 
@@ -452,6 +476,8 @@ function openPackageModal(packageKey) {
 
     modal.classList.remove('package-gallery-modal');
     modal.classList.add('package-modal');
+    modal.dataset.packageKey = packageKey;
+    modal.classList.toggle('package-color-white', getPackageColor(packageKey) === 'white');
     modalTitle.textContent = t('packages.modalTitle', { title: packageData.title });
     modalImage.src = '';
     modalImage.alt = '';
@@ -464,13 +490,13 @@ function openPackageModal(packageKey) {
             <span>${escapeHtml(t('packages.included.installation'))}</span>
             <span class="package-color-pill">
                 ${escapeHtml(t('packages.availableColors'))}
-                <span class="color-swatches" aria-label="${escapeHtml(t('packages.colorAria'))}">
-                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="${escapeHtml(t('packages.white'))}" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}"></button>
-                    <button type="button" class="color-swatch color-swatch-black" data-package-color="${escapeHtml(t('packages.black'))}" aria-label="${escapeHtml(t('packages.colorBlackAria'))}"></button>
+                <span class="color-swatches" data-package-key="${escapeHtml(packageKey)}" aria-label="${escapeHtml(t('packages.colorAria'))}">
+                    <button type="button" class="color-swatch color-swatch-white${getPackageColor(packageKey) === 'white' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.white'))}" data-color-value="white" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}" aria-pressed="${getPackageColor(packageKey) === 'white'}"></button>
+                    <button type="button" class="color-swatch color-swatch-black${getPackageColor(packageKey) === 'black' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.black'))}" data-color-value="black" aria-label="${escapeHtml(t('packages.colorBlackAria'))}" aria-pressed="${getPackageColor(packageKey) === 'black'}"></button>
                 </span>
             </span>
         </div>
-        <div class="package-components-grid">
+        <div class="package-components-grid${getPackageColorClass(packageKey)}">
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
                     <div class="package-component-media">
@@ -499,12 +525,13 @@ function renderPackageGallerySlide() {
     const currentIndex = ((packageGalleryState.index % total) + total) % total;
     packageGalleryState.index = currentIndex;
     const component = packageData.components[currentIndex];
+    const imageClass = /\.avif$/i.test(component.image) ? 'package-gallery-img compact-render' : 'package-gallery-img';
 
     modalTitle.textContent = t('packages.galleryTitle', { title: packageData.title });
     modalBody.innerHTML = `
-        <div class="package-gallery">
+        <div class="package-gallery${getPackageColorClass(packageGalleryState.packageKey)}">
             <div class="package-gallery-stage">
-                <img src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}">
+                <img class="${imageClass}" src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}" loading="eager" decoding="async" fetchpriority="high" draggable="false">
             </div>
             <div class="package-gallery-info">
                 <div class="package-gallery-count">${escapeHtml(t('gallery.count', { current: currentIndex + 1, total }))}</div>
@@ -523,6 +550,73 @@ function renderPackageGallerySlide() {
             </div>
         </div>
     `;
+
+    preloadPackageGalleryNeighbors(packageData, currentIndex);
+}
+
+function preloadPackageGalleryImage(src) {
+    if (!src) return;
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = src;
+    if (typeof image.decode === 'function') {
+        image.decode().catch(() => {});
+    }
+}
+
+function preloadPackageGalleryNeighbors(packageData, currentIndex) {
+    if (!packageData || !Array.isArray(packageData.components)) return;
+    const total = packageData.components.length;
+    [currentIndex, currentIndex + 1, currentIndex - 1].forEach((index) => {
+        const component = packageData.components[((index % total) + total) % total];
+        if (component) preloadPackageGalleryImage(component.image);
+    });
+}
+
+function preloadPackageGallery(packageData) {
+    if (!packageData || !Array.isArray(packageData.components)) return;
+    packageData.components.forEach((component) => preloadPackageGalleryImage(component.image));
+}
+
+function findPackageKeyFromSwatch(swatch) {
+    const group = swatch.closest('.color-swatches');
+    if (group && group.dataset.packageKey) return group.dataset.packageKey;
+    const card = swatch.closest('.package-card');
+    if (card && card.dataset.packageKey) return card.dataset.packageKey;
+    const modal = swatch.closest('#serviceModal');
+    if (modal && modal.dataset.packageKey) return modal.dataset.packageKey;
+    return null;
+}
+
+function setSwatchState(group, color) {
+    if (!group) return;
+    group.querySelectorAll('.color-swatch').forEach((item) => {
+        const isActive = (item.dataset.colorValue || 'white') === color;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', String(isActive));
+    });
+}
+
+function applyPackageColor(packageKey, color) {
+    if (!packageKey) return;
+    const nextColor = color === 'black' ? 'black' : 'white';
+    packageColorState[packageKey] = nextColor;
+
+    document.querySelectorAll(`.package-card[data-package-key="${packageKey}"]`).forEach((card) => {
+        card.classList.toggle('package-color-white', nextColor === 'white');
+        setSwatchState(card.querySelector('.color-swatches'), nextColor);
+    });
+
+    const modal = document.getElementById('serviceModal');
+    if (modal && modal.dataset.packageKey === packageKey) {
+        modal.classList.toggle('package-color-white', nextColor === 'white');
+        setSwatchState(modal.querySelector('.color-swatches'), nextColor);
+        if (modal.classList.contains('package-gallery-modal')) {
+            renderPackageGallerySlide();
+        } else if (modal.classList.contains('package-modal')) {
+            openPackageModal(packageKey);
+        }
+    }
 }
 
 function openPackageGallery(packageKey) {
@@ -532,8 +626,11 @@ function openPackageGallery(packageKey) {
     if (!packageData || !modal || !modalImage) return;
 
     packageGalleryState = { packageKey, index: 0 };
+    preloadPackageGallery(packageData);
     modal.classList.remove('package-modal');
     modal.classList.add('package-gallery-modal');
+    modal.dataset.packageKey = packageKey;
+    modal.classList.toggle('package-color-white', getPackageColor(packageKey) === 'white');
     modalImage.src = '';
     modalImage.alt = '';
     modalImage.style.display = 'none';
@@ -558,6 +655,8 @@ function closeServiceModal() {
     if (!modal) return;
     modal.classList.remove('package-modal');
     modal.classList.remove('package-gallery-modal');
+    modal.classList.remove('package-color-white');
+    delete modal.dataset.packageKey;
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
@@ -627,14 +726,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!swatch) return;
         const group = swatch.closest('.color-swatches');
         if (!group) return;
-        group.querySelectorAll('.color-swatch').forEach((item) => {
-            const isActive = item === swatch;
-            item.classList.toggle('active', isActive);
-            item.setAttribute('aria-pressed', String(isActive));
-        });
+        const packageKey = findPackageKeyFromSwatch(swatch);
+        const color = swatch.dataset.colorValue || (swatch.classList.contains('color-swatch-black') ? 'black' : 'white');
+        applyPackageColor(packageKey, color);
     });
 
     applyTranslations(currentLanguage);
+    Object.keys(packageColorState).forEach((packageKey) => applyPackageColor(packageKey, getPackageColor(packageKey)));
 
     handleScroll();
 });
