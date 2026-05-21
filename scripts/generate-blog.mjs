@@ -80,32 +80,166 @@ const collectionSchema = {
     }))
 };
 
-let blogHtml = fs.readFileSync('blog.html', 'utf8');
-blogHtml = blogHtml
-    .replace(
-        /<title>.*?<\/title>/,
-        '<title>Blog de seguridad, alarmas y monitoreo | Central de Alarmas</title>'
-    )
-    .replace(
-        /<meta name="description" content="[^"]*">/,
-        '<meta name="description" content="Guías de seguridad, alarmas, monitoreo 24/7, videovigilancia, control de acceso e incendios para hogares, PyMEs y empresas en México.">'
-    )
-    .replace(
-        /<meta property="og:title" content="[^"]*">/,
-        '<meta property="og:title" content="Blog de seguridad | Central de Alarmas">'
-    )
-    .replace(
-        /<meta property="og:description" content="[^"]*">/,
-        '<meta property="og:description" content="Criterios prácticos para elegir alarmas, cámaras, monitoreo y soluciones de seguridad en México.">'
-    )
-    .replace(
-        /<script type="application\/ld\+json">.*?<\/script>/,
-        `<script type="application/ld+json">${JSON.stringify(collectionSchema)}</script>`
-    )
-    .replace(
-        /<div class="blog-grid" id="blogGrid">[\s\S]*?<\/div>\s*<\/section>/,
-        `<div class="blog-grid" id="blogGrid">${posts.map((post) => card(post)).join('\n')}</div>\n        </section>`
-    );
+const blogIntro = `        <section class="blog-intro-section">
+            <div class="blog-intro-grid">
+                <div class="blog-intro-copy">
+                    <span class="section-label">Guías para decidir mejor</span>
+                    <h2>Contenido práctico sobre seguridad, alarmas y monitoreo en México.</h2>
+                    <p>En este blog encontrarás criterios claros para comparar soluciones, detectar riesgos y entender qué conviene instalar según el tipo de propiedad: casa, PyME, negocio, hotel, bodega u oficina.</p>
+                </div>
+                <div class="blog-intro-visual" aria-label="Temas del blog">
+                    <img src="img/Blog/seguridad-editorial-monitoring.png" alt="Centro de monitoreo con cámaras, alarmas y mapa de cobertura de seguridad">
+                    <div class="blog-intro-badge">
+                        <strong>15</strong>
+                        <span>guías para comparar, prevenir y decidir</span>
+                    </div>
+                    <div class="blog-intro-points">
+                    <span>Alarmas con monitoreo 24/7</span>
+                    <span>Cámaras y videovigilancia</span>
+                    <span>Control de acceso empresarial</span>
+                    <span>Prevención para hogares y negocios</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+`;
+
+const suggestionPosts = posts.slice(-6).reverse();
+const blogSuggestions = `        <section class="blog-suggestions-section">
+            <div class="blog-suggestions-header">
+                <span class="section-label">Sugerencias editoriales</span>
+                <h2>Lecturas recomendadas para seguir afinando tu seguridad.</h2>
+                <p>Estas notas avanzan automáticamente para que descubras temas clave sin perder el ritmo de lectura.</p>
+            </div>
+            <div class="blog-suggestions-carousel">
+                <div class="blog-suggestions-track" id="blogSuggestionsTrack">${suggestionPosts.map((post) => card(post)).join('\n')}</div>
+            </div>
+        </section>
+`;
+
+const blogHtml = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog de seguridad, alarmas y monitoreo | Central de Alarmas</title>
+    <meta name="description" content="Guías de seguridad, alarmas, monitoreo 24/7, videovigilancia, control de acceso e incendios para hogares, PyMEs y empresas en México.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="${siteUrl}/blog.html">
+    <meta name="theme-color" content="#063970">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blog de seguridad | Central de Alarmas">
+    <meta property="og:description" content="Criterios prácticos para elegir alarmas, cámaras, monitoreo y soluciones de seguridad en México.">
+    <meta property="og:url" content="${siteUrl}/blog.html">
+    <script type="application/ld+json">${JSON.stringify(collectionSchema)}</script>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="blog-page">
+    <header id="main-header">
+        <div class="logo">
+            <a href="index.html#inicio"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
+        </div>
+        <nav id="main-nav">
+            <a href="index.html#servicios-preview">Servicios</a>
+            <a href="index.html#packages-section">Paquetes</a>
+            <a href="index.html#nosotros">Nosotros</a>
+            <a href="index.html#contacto">Contacto</a>
+            <a href="blog.html">News</a>
+            <a href="empleos.html" data-i18n="nav.jobs">Empleos</a>
+            <a href="https://centraldealarmas.trytoku.com/" class="nav-cta">Pagar</a>
+        </nav>
+        <div class="hamburger" id="hamburger" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <main>
+        <section class="blog-hero">
+            <video autoplay muted loop playsinline preload="metadata" class="news-hero-video">
+                <source src="img/video-inicio.mp4" type="video/mp4">
+            </video>
+            <div class="news-hero-overlay"></div>
+            <div class="blog-hero-inner">
+                <span class="label-tag">Central News</span>
+                <h1>Criterio experto para proteger mejor</h1>
+                <p>Lecturas breves sobre monitoreo, videovigilancia, alertamiento y prevencion. Contenido pensado para decidir con mas claridad antes de invertir en seguridad.</p>
+                <div class="news-trust-strip" aria-label="Indicadores editoriales">
+                    <div><strong>24/7</strong><span>vision operativa</span></div>
+                    <div><strong>79+</strong><span>anos de experiencia</span></div>
+                    <div><strong>MX</strong><span>contexto local</span></div>
+                </div>
+            </div>
+            <a class="news-scroll-indicator" href="#news-list" aria-label="Ver notas de News">
+                <span></span>
+                Scroll
+            </a>
+        </section>
+
+${blogIntro}        <section class="blog-index-section" id="news-list">
+            <div class="news-toolbar">
+                <div>
+                    <span class="section-label">Biblioteca editorial</span>
+                    <h2>Temas recientes</h2>
+                </div>
+                <div class="news-topic-filters" id="topicFilters" aria-label="Filtrar articulos por tema"></div>
+            </div>
+            <p class="news-count" id="postCount"></p>
+            <div class="blog-grid" id="blogGrid">${posts.map((post) => card(post)).join('\n')}</div>
+        </section>
+
+${blogSuggestions}    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <a href="index.html#inicio"><img src="img/CDA_LOGO.svg" alt="Central de Alarmas"></a>
+                    </div>
+                    <p style="margin-top:1rem;">Empresa mexicana de seguridad electronica con mas de 79 anos protegiendo lo que mas importa.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navegacion</h4>
+                    <a href="index.html#servicios-preview">Servicios</a>
+                    <a href="index.html#nosotros">Nosotros</a>
+                    <a href="index.html#contacto">Contacto</a>
+                    <a href="blog.html">News</a>
+                    <a href="empleos.html" data-i18n="nav.jobs">Empleos</a>
+                    <a href="https://centraldealarmas.systems/" style="background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: var(--radius-sm); margin-top: 0.5rem; font-weight: 600;">Mi cuenta</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="./pdf/POLÍTICA DE ATENCIÓN A CLIENTES 2025 HOME.pdf" target="_blank">Terminos y Condiciones</a>
+                    <a href="./pdf/AVISO-DE-PRIVACIDAD.pdf" target="_blank">Politica de Privacidad</a>
+                    <h4 style="margin-top:1.5rem;">Siguenos</h4>
+                    <a target="_blank" href="https://www.facebook.com/NewCAMSA/">Facebook</a>
+                    <a target="_blank" href="https://www.instagram.com/centraldealarmas.mx/?hl=es">Instagram</a>
+                    <a target="_blank" href="https://www.linkedin.com/company/central-de-alarmas-de-m%C3%A9xico/">LinkedIn</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="gsi"><img src="img/GRUPO_LOGO.svg" alt="GSI"></div>
+                <p>© 2026 Central de Alarmas de Mexico, S.A. de C.V. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="back-to-top" aria-label="Volver arriba">
+        <div class="icon"></div>
+    </a>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
+    <script src="./js/blog-data.js" defer></script>
+    <script src="./js/blog.js" defer></script>
+    <script src="./js/language-switcher.js" defer></script>
+    <script src="./js/cookies.js" defer></script>
+    <script src="./js/main.js" defer></script>
+</body>
+</html>
+`;
 fs.writeFileSync('blog.html', blogHtml);
 
 const relatedCards = (current) => posts

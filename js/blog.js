@@ -185,6 +185,40 @@
                 track.scrollBy({ left: distance * direction, behavior: 'smooth' });
             });
         });
+
+        startAutoCarousel(track);
+    }
+
+    function setupSuggestionsCarousel() {
+        const track = document.getElementById('blogSuggestionsTrack');
+        if (!track || track.dataset.carouselReady === 'true') return;
+        track.dataset.carouselReady = 'true';
+        startAutoCarousel(track);
+    }
+
+    function startAutoCarousel(track) {
+        if (!track || track.dataset.autoCarousel === 'true') return;
+        track.dataset.autoCarousel = 'true';
+
+        let isPaused = false;
+        const pause = () => { isPaused = true; };
+        const resume = () => { isPaused = false; };
+
+        track.addEventListener('mouseenter', pause);
+        track.addEventListener('mouseleave', resume);
+        track.addEventListener('focusin', pause);
+        track.addEventListener('focusout', resume);
+
+        setInterval(() => {
+            if (isPaused || track.scrollWidth <= track.clientWidth) return;
+
+            const distance = Math.max(track.clientWidth * 0.72, 260);
+            const nearEnd = track.scrollLeft + track.clientWidth + distance >= track.scrollWidth - 8;
+            track.scrollTo({
+                left: nearEnd ? 0 : track.scrollLeft + distance,
+                behavior: 'smooth'
+            });
+        }, 4200);
     }
 
     function renderArticleFooter() {
@@ -224,6 +258,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         renderBlogList();
         renderArticle();
+        setupSuggestionsCarousel();
         renderArticleFooter();
     });
 })();
