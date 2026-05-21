@@ -86,9 +86,14 @@ const blogIntro = `        <section class="blog-intro-section">
                     <span class="section-label">Guías para decidir mejor</span>
                     <h2>Contenido práctico sobre seguridad, alarmas y monitoreo en México.</h2>
                     <p>En este blog encontrarás criterios claros para comparar soluciones, detectar riesgos y entender qué conviene instalar según el tipo de propiedad: casa, PyME, negocio, hotel, bodega u oficina.</p>
+                    <div class="blog-intro-meta" aria-label="Enfoque editorial">
+                        <span>Evaluación de riesgo</span>
+                        <span>Compra inteligente</span>
+                        <span>Mantenimiento y prevención</span>
+                    </div>
                 </div>
                 <div class="blog-intro-visual" aria-label="Temas del blog">
-                    <img src="img/Blog/seguridad-editorial-monitoring.png" alt="Centro de monitoreo con cámaras, alarmas y mapa de cobertura de seguridad">
+                    <img src="img/Blog/blog-editorial-security-hub.jpg" alt="Consultoría de seguridad con cámaras, sensores, control de acceso y planeación de cobertura">
                     <div class="blog-intro-badge">
                         <strong>15</strong>
                         <span>guías para comparar, prevenir y decidir</span>

@@ -30,7 +30,7 @@ window.CDABlogPosts = [
         category: 'Guía',
         date: '15 mayo 2026',
         readTime: '4 min',
-        image: 'img/Servicios/Monitoreo.jpg',
+        image: 'img/Blog/blog-editorial-security-hub.jpg',
         excerpt: 'Un sistema de seguridad integra sensores, comunicacion y monitoreo para detectar riesgos y activar una respuesta a tiempo.',
         intro: 'La seguridad ya no depende de un solo dispositivo. Un sistema bien disenado coordina deteccion, verificacion y respuesta para proteger hogares, negocios y operaciones completas.',
         sections: [
@@ -80,7 +80,7 @@ window.CDABlogPosts = [
         category: 'Hospitalidad',
         date: '15 mayo 2026',
         readTime: '4 min',
-        image: 'img/Servicios/ControlDeAcceso.jpg',
+        image: 'img/Blog/hotel-cameras.jpg',
         excerpt: 'La videovigilancia en hoteles protege accesos, areas comunes, personal y huespedes sin invadir espacios privados.',
         intro: 'En hoteleria, la seguridad debe sentirse discreta. Las camaras ayudan a cuidar la experiencia del huesped y a mantener control operativo en zonas de alto movimiento.',
         sections: [
@@ -234,7 +234,7 @@ window.CDABlogPosts = [
         category: 'Videovigilancia',
         date: '15 mayo 2026',
         readTime: '4 min',
-        image: 'img/Paquetes/Ajax2.png',
+        image: 'img/Blog/camera-maintenance.jpg',
         excerpt: 'La imagen borrosa puede deberse a lente sucio, mala ubicacion, enfoque, compresion o configuracion de red.',
         intro: 'Una camara instalada no garantiza una imagen util. Si el video se ve borroso, conviene revisar causas fisicas, tecnicas y de configuracion.',
         sections: [
@@ -259,7 +259,7 @@ window.CDABlogPosts = [
         category: 'Hogar',
         date: '15 mayo 2026',
         readTime: '4 min',
-        image: 'img/Paquetes/proseries.jpg',
+        image: 'img/Blog/home-camera-buying.jpg',
         excerpt: 'Antes de comprar camaras para casa, define cobertura, almacenamiento, monitoreo y soporte tecnico.',
         intro: 'Comprar camaras parece sencillo, pero elegir solo por precio puede dejar puntos ciegos o equipos sin soporte. La compra debe partir de lo que quieres proteger.',
         sections: [
@@ -342,7 +342,7 @@ window.CDABlogPosts = [
         category: 'Videovigilancia',
         date: '21 mayo 2026',
         readTime: '5 min',
-        image: 'img/Servicios/ValorAgregado/MantenimientoPreventivo.jpg',
+        image: 'img/Blog/camera-maintenance.jpg',
         excerpt: 'El mantenimiento de cámaras de seguridad evita imagen borrosa, grabaciones perdidas, fallas de red y puntos ciegos en momentos críticos.',
         intro: 'Una camara instalada no significa que el sistema siga funcionando bien meses despues. Polvo, humedad, cambios de red y almacenamiento saturado pueden dejarte sin evidencia justo cuando la necesitas.',
         sections: [
