@@ -197,7 +197,7 @@
     }
 
     function addGooglePreconnects() {
-        ['https://translate.google.com', 'https://translate.googleapis.com'].forEach((href) => {
+        ['https://translate.google.com', 'https://translate.googleapis.com', 'https://www.gstatic.com'].forEach((href) => {
             if (document.querySelector(`link[rel="preconnect"][href="${href}"]`)) return;
             const link = document.createElement('link');
             link.rel = 'preconnect';
@@ -309,8 +309,25 @@
         document.querySelectorAll('#languageSelect, #mobileLanguageSelect').forEach((select) => {
             if (select.dataset.languageBound === 'true') return;
             select.dataset.languageBound = 'true';
-            select.addEventListener('change', (event) => setLanguage(event.target.value, { reload: true }));
+            select.addEventListener('pointerdown', loadGoogleTranslate, { once: true, passive: true });
+            select.addEventListener('focus', loadGoogleTranslate, { once: true });
+            select.addEventListener('change', (event) => setLanguage(event.target.value));
         });
+    }
+
+    function warmGoogleTranslateWhenIdle() {
+        if (!document.body || document.body.dataset.prewarmTranslate !== 'true') return;
+        const warm = () => {
+            ensureGoogleTranslateElement();
+            loadGoogleTranslate();
+        };
+
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(warm, { timeout: 1600 });
+            return;
+        }
+
+        setTimeout(warm, 1200);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -323,6 +340,8 @@
         if (initialLanguage.code !== defaultLanguage) {
             loadGoogleTranslate();
             applyGoogleTranslation(initialLanguage.code);
+        } else {
+            warmGoogleTranslateWhenIdle();
         }
     });
 

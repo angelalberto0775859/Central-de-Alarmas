@@ -449,6 +449,9 @@ function applyTranslations(language) {
     }
 }
 
+window.applyTranslations = applyTranslations;
+window.siteTranslations = translations;
+
 function escapeHtml(value) {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -825,3 +828,5 @@ if (word2Element) {
     // Iniciar el ciclo
     setInterval(changeWord, 3000);
 }
+
+applyTranslations(currentLanguage);

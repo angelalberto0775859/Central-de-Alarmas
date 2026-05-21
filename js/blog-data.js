@@ -277,5 +277,121 @@ window.CDABlogPosts = [
             }
         ],
         takeaway: 'La mejor compra es la que resuelve tu riesgo real, no la que promete mas especificaciones.'
+    },
+    {
+        slug: 'alarma-casa-monitoreo-24-7',
+        title: 'Alarma para casa con monitoreo 24/7: qué debe incluir',
+        category: 'Hogar',
+        date: '21 mayo 2026',
+        readTime: '6 min',
+        image: 'img/Paquetes AJAX/Paquete Essential/Essential.png',
+        excerpt: 'Una alarma para casa con monitoreo 24/7 debe combinar sensores, comunicacion estable, protocolo de respuesta y soporte tecnico.',
+        intro: 'Buscar una alarma para casa no deberia terminar en comprar el equipo mas barato. La diferencia real esta en la deteccion, la comunicacion y la respuesta que existe cuando ocurre una alerta.',
+        sections: [
+            {
+                heading: 'Sensores adecuados para cada acceso',
+                body: 'Puertas, ventanas, patios, cocheras y zonas interiores no tienen el mismo riesgo. Un sistema correcto combina sensores de apertura, movimiento y dispositivos de alerta segun los puntos vulnerables de la casa.'
+            },
+            {
+                heading: 'Comunicacion confiable',
+                body: 'El panel necesita enviar senales aunque falle una condicion normal. Por eso conviene revisar conectividad, respaldo electrico y configuracion para que la alarma no dependa de un solo punto debil.'
+            },
+            {
+                heading: 'Monitoreo y protocolo',
+                body: 'El valor del monitoreo 24/7 es que una alerta no queda abandonada en una notificacion. La central recibe, valida y da seguimiento con contactos y procedimientos definidos.'
+            },
+            {
+                heading: 'Instalacion y soporte',
+                body: 'Una mala instalacion provoca falsas alarmas, zonas sin cobertura o equipos mal configurados. El soporte tecnico y el mantenimiento son parte del sistema, no un extra.'
+            }
+        ],
+        takeaway: 'Una alarma para casa debe comprarse como servicio de proteccion, no solo como una caja con sensores.'
+    },
+    {
+        slug: 'control-acceso-empresas-mexico',
+        title: 'Control de acceso para empresas en México: cuándo conviene instalarlo',
+        category: 'Empresas',
+        date: '21 mayo 2026',
+        readTime: '6 min',
+        image: 'img/Servicios/ControlDeAcceso.jpg',
+        excerpt: 'El control de acceso ayuda a ordenar entradas, proteger zonas restringidas y dejar evidencia de movimientos dentro de una empresa.',
+        intro: 'En una empresa, saber quien entra, a que hora y a que zonas puede acceder deja de ser un detalle administrativo. Es una capa de seguridad operativa y de control interno.',
+        sections: [
+            {
+                heading: 'Cuando las llaves ya no son suficientes',
+                body: 'Las llaves fisicas se duplican, se pierden y rara vez dejan trazabilidad. Un sistema de control de acceso permite administrar permisos por usuario, horario y area.'
+            },
+            {
+                heading: 'Zonas que suelen requerir control',
+                body: 'Bodegas, oficinas administrativas, cuartos de sistemas, cajas, estacionamientos, archivos y areas de operacion critica suelen beneficiarse de accesos controlados.'
+            },
+            {
+                heading: 'Integracion con videovigilancia',
+                body: 'Cuando el acceso se conecta con camaras, es mas facil revisar eventos: quien entro, en que momento y que ocurrio despues.'
+            },
+            {
+                heading: 'Escalabilidad y mantenimiento',
+                body: 'Una empresa puede iniciar con puertas clave y crecer a mas sedes o usuarios. Lo importante es elegir una solucion que no se vuelva dificil de administrar al aumentar la operacion.'
+            }
+        ],
+        takeaway: 'El control de acceso conviene cuando la empresa necesita permisos claros, evidencia y menos dependencia de llaves fisicas.'
+    },
+    {
+        slug: 'mantenimiento-camaras-seguridad',
+        title: 'Mantenimiento de cámaras de seguridad: señales de que tu sistema necesita revisión',
+        category: 'Videovigilancia',
+        date: '21 mayo 2026',
+        readTime: '5 min',
+        image: 'img/Servicios/ValorAgregado/MantenimientoPreventivo.jpg',
+        excerpt: 'El mantenimiento de cámaras de seguridad evita imagen borrosa, grabaciones perdidas, fallas de red y puntos ciegos en momentos críticos.',
+        intro: 'Una camara instalada no significa que el sistema siga funcionando bien meses despues. Polvo, humedad, cambios de red y almacenamiento saturado pueden dejarte sin evidencia justo cuando la necesitas.',
+        sections: [
+            {
+                heading: 'Imagen borrosa o con manchas',
+                body: 'Lentes sucios, domos rayados, humedad o reflejos pueden afectar la nitidez. Una revision fisica suele resolver problemas que no se corrigen desde la aplicacion.'
+            },
+            {
+                heading: 'Grabaciones incompletas',
+                body: 'Si faltan horas de video, puede haber problemas de disco, configuracion, energia o red. La revision preventiva confirma que el sistema este grabando como debe.'
+            },
+            {
+                heading: 'Cambios en el entorno',
+                body: 'Un anaquel nuevo, una lona, vegetacion o una remodelacion pueden crear puntos ciegos. La ubicacion de camaras debe revisarse cuando cambia el espacio.'
+            },
+            {
+                heading: 'Actualizaciones y respaldo',
+                body: 'Firmware, usuarios, contrasenas y acceso remoto tambien requieren control. El mantenimiento reduce riesgos de falla tecnica y de configuracion insegura.'
+            }
+        ],
+        takeaway: 'Un sistema de videovigilancia sin mantenimiento puede aparentar seguridad mientras pierde calidad, cobertura o grabacion.'
+    },
+    {
+        slug: 'seguridad-pymes-alarmas-camaras',
+        title: 'Seguridad para PyMEs: cómo combinar alarmas, cámaras y monitoreo',
+        category: 'PyMEs',
+        date: '21 mayo 2026',
+        readTime: '6 min',
+        image: 'img/Servicios/ValorAgregado/SolucionesIntegrales.jpg',
+        excerpt: 'La seguridad para PyMEs mejora cuando alarmas, cámaras y monitoreo trabajan juntos bajo un protocolo simple y medible.',
+        intro: 'Una PyME necesita proteger inventario, personal, clientes y continuidad operativa sin complicar su dia a dia. La clave esta en integrar capas de seguridad utiles, no en acumular equipos.',
+        sections: [
+            {
+                heading: 'Primero define los riesgos',
+                body: 'No tiene el mismo riesgo una tienda, consultorio, restaurante, bodega u oficina. Antes de cotizar equipo, conviene identificar horarios criticos, accesos, valores y puntos vulnerables.'
+            },
+            {
+                heading: 'Alarmas para detectar',
+                body: 'Sensores de apertura, movimiento, botones de panico y sirenas ayudan a detectar eventos de intrusión o emergencia en momentos donde no siempre hay supervision.'
+            },
+            {
+                heading: 'Camaras para verificar',
+                body: 'La videovigilancia permite revisar lo ocurrido, validar alertas y documentar incidentes con clientes, proveedores o personal.'
+            },
+            {
+                heading: 'Monitoreo para responder',
+                body: 'El monitoreo 24/7 ordena la respuesta: recepcion de senal, validacion, contactos, seguimiento y reporte. Sin protocolo, la tecnologia pierde fuerza.'
+            }
+        ],
+        takeaway: 'Para una PyME, la mejor seguridad es la que reduce riesgos reales sin volver complicada la operacion diaria.'
     }
 ];
