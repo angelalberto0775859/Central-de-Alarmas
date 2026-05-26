@@ -8,36 +8,42 @@ const packageModalData = {
                 name: 'Hub 2 (4G) Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller W.png',
                 description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionProtect Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionProtect U Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionProtect U Jeweller - White - front clean.png',
                 description: 'Detector IR e inalámbrico de movimiento.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front W.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'HomeSiren Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled W.png',
                 description: 'Sirena inalámbrica.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front W.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
                 name: 'TurretCam (5 Mp/2.8 mm)',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquete Essential/Render - Ajax TurretCam - Black - front3 4.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
             }
         ]
@@ -50,42 +56,49 @@ const packageModalData = {
                 name: 'Hub 2 Plus Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller W.png',
                 description: 'Panel de control inalámbrico con soporte para fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionCam (PhOD) Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front W.png',
                 description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 2',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front W.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'KeyPad Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front W.png',
                 description: 'Teclado inalámbrico y táctil.'
             },
             {
                 name: 'StreetSiren Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled W.png',
                 description: 'Sirena inalámbrico para interiores y exteriores.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front W.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
                 name: 'TurretCam (5 Mp/2.8 mm)',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquete Profesional/Render - Ajax TurretCam - Black - front3 4.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
             }
         ]
@@ -98,36 +111,42 @@ const packageModalData = {
                 name: 'Hub 2 Plus Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Hub 2 (4G) Jeweller W.png',
                 description: 'Panel de control inalámbrico con soporte para la fotoverificación. Admite Wi-Fi, Ethernet y dos tarjetas SIM (2G/3G/LTE).'
             },
             {
                 name: 'MotionCam (PhOD) Jeweller',
                 badge: 'Cantidad: 2',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax MotionCam U (PhOD) Jeweller - Black - front W.png',
                 description: 'Detector PIR e inalámbrico de movimiento con posibilidades ampliadas de verificación fotográfica.'
             },
             {
                 name: 'DoorProtect Jeweller',
                 badge: 'Cantidad: 2',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorProtect U Jeweller - Black - front W.png',
                 description: 'Detector inalámbrico de apertura con relé reed.'
             },
             {
                 name: 'KeyPad Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax KeyPad Plus Jeweller-Black-front W.png',
                 description: 'Teclado inalámbrico y táctil.'
             },
             {
                 name: 'StreetSiren Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled W.png',
                 description: 'Sirena inalámbrica para interiores y exteriores.'
             },
             {
                 name: 'SpaceControl Jeweller',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/ajax-superior-spacecontrol-black-front W.png',
                 description: 'Mando inalámbrico con botón de pánico y control de los modos de seguridad.'
             },
             {
@@ -454,7 +473,7 @@ function openPackageModal(packageKey) {
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
                     <div class="package-component-media">
-                        <img src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}">
+                        <img src="${escapeHtml(getPackageComponentImage(component, packageKey))}" alt="${escapeHtml(component.name)}">
                     </div>
                     <div class="package-component-copy">
                         <h4>${escapeHtml(component.name)} <span>${escapeHtml(component.badge)}</span></h4>
@@ -488,13 +507,14 @@ function renderPackageGallerySlide() {
     const currentIndex = ((packageGalleryState.index % total) + total) % total;
     packageGalleryState.index = currentIndex;
     const component = packageData.components[currentIndex];
-    const imageClass = /\.avif$/i.test(component.image) ? 'package-gallery-img compact-render' : 'package-gallery-img';
+    const componentImage = getPackageComponentImage(component, packageGalleryState.packageKey);
+    const imageClass = /\.avif$/i.test(componentImage) ? 'package-gallery-img compact-render' : 'package-gallery-img';
 
     modalTitle.textContent = t('packages.galleryTitle', { title: packageData.title });
     modalBody.innerHTML = `
         <div class="package-gallery">
             <div class="package-gallery-stage">
-                <img class="${imageClass}" src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}" loading="eager" decoding="async" fetchpriority="high" draggable="false">
+                <img class="${imageClass}" src="${escapeHtml(componentImage)}" alt="${escapeHtml(component.name)}" loading="eager" decoding="async" fetchpriority="high" draggable="false">
             </div>
             <div class="package-gallery-info">
                 <div class="package-gallery-count">${escapeHtml(t('gallery.count', { current: currentIndex + 1, total }))}</div>
@@ -527,18 +547,27 @@ function preloadPackageGalleryImage(src) {
     }
 }
 
+function getPackageComponentImage(component, packageKey) {
+    if (!component) return '';
+    const color = getPackageColor(packageKey);
+    return color === 'white' && component.imageWhite ? component.imageWhite : component.image;
+}
+
 function preloadPackageGalleryNeighbors(packageData, currentIndex) {
     if (!packageData || !Array.isArray(packageData.components)) return;
     const total = packageData.components.length;
     [currentIndex, currentIndex + 1, currentIndex - 1].forEach((index) => {
         const component = packageData.components[((index % total) + total) % total];
-        if (component) preloadPackageGalleryImage(component.image);
+        if (component) preloadPackageGalleryImage(getPackageComponentImage(component, packageGalleryState.packageKey));
     });
 }
 
-function preloadPackageGallery(packageData) {
+function preloadPackageGallery(packageData, packageKey) {
     if (!packageData || !Array.isArray(packageData.components)) return;
-    packageData.components.forEach((component) => preloadPackageGalleryImage(component.image));
+    packageData.components.forEach((component) => {
+        preloadPackageGalleryImage(getPackageComponentImage(component, packageKey));
+        if (component.imageWhite) preloadPackageGalleryImage(component.imageWhite);
+    });
 }
 
 function findPackageKeyFromSwatch(swatch) {
@@ -639,7 +668,7 @@ function openPackageGallery(packageKey) {
     if (!packageData || !modal || !modalImage) return;
 
     packageGalleryState = { packageKey, index: 0 };
-    preloadPackageGallery(packageData);
+    preloadPackageGallery(packageData, packageKey);
     modal.classList.remove('package-modal');
     modal.classList.add('package-gallery-modal');
     modal.dataset.packageKey = packageKey;
