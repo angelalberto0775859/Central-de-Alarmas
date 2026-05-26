@@ -889,6 +889,11 @@ header.scrolled .hamburger span { background: var(--accent); }
     background: #f0f0f0;
 }
 
+.package-ajax-system-card {
+    border: 1px solid rgba(6, 57, 112, 0.12);
+    background: linear-gradient(135deg, rgba(6, 57, 112, 0.08), rgba(102, 204, 51, 0.1));
+}
+
 .package-component-media {
     display: flex;
     align-items: center;

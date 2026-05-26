@@ -5,22 +5,29 @@ class FormHandler {
         if (!this.form) return;
         this.submitButton = this.form.querySelector('.btn-submit');
         this.originalButtonText = this.submitButton ? this.submitButton.textContent : '';
+        this.cacheKey = `cdaFormDraft:${window.location.pathname}:${formId}`;
 
         this.init();
     }
     
     init() {
         if (!this.form) return;
+        this.restoreCachedFields();
         
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleSubmit();
         });
         
-        // Limpiar errores al escribir
-        this.form.querySelectorAll('input, select, textarea').forEach(field => {
+        this.getCacheableFields().forEach(field => {
             field.addEventListener('input', () => {
                 this.clearFieldError(field);
+                this.cacheFields();
+            });
+
+            field.addEventListener('change', () => {
+                this.clearFieldError(field);
+                this.cacheFields();
             });
         });
     }
@@ -49,6 +56,8 @@ class FormHandler {
             if (data.exito) {
                 this.showSuccess(data.mensaje);
                 this.form.reset();
+                this.clearCachedFields();
+                this.resetFileLabels();
                 // Resetear reCAPTCHA
                 if (typeof grecaptcha !== 'undefined') {
                     grecaptcha.reset();
@@ -60,6 +69,72 @@ class FormHandler {
         .catch(() => {
             this.setLoading(false);
             this.showError('Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
+        });
+    }
+
+    getCacheableFields() {
+        return Array.from(this.form.querySelectorAll('input, select, textarea')).filter(field => {
+            if (!field.name || field.disabled) return false;
+            if (field.classList.contains('ghost')) return false;
+
+            const type = (field.type || '').toLowerCase();
+            return !['button', 'file', 'hidden', 'password', 'reset', 'submit'].includes(type);
+        });
+    }
+
+    restoreCachedFields() {
+        let cachedValues = null;
+
+        try {
+            cachedValues = JSON.parse(localStorage.getItem(this.cacheKey) || '{}');
+        } catch (error) {
+            this.clearCachedFields();
+            return;
+        }
+
+        this.getCacheableFields().forEach(field => {
+            if (!Object.prototype.hasOwnProperty.call(cachedValues, field.name)) return;
+
+            if (field.type === 'checkbox' || field.type === 'radio') {
+                field.checked = cachedValues[field.name] === field.value;
+            } else {
+                field.value = cachedValues[field.name];
+            }
+
+            field.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    }
+
+    cacheFields() {
+        const values = {};
+
+        this.getCacheableFields().forEach(field => {
+            if (field.type === 'checkbox' || field.type === 'radio') {
+                if (field.checked) values[field.name] = field.value;
+                return;
+            }
+
+            values[field.name] = field.value;
+        });
+
+        try {
+            localStorage.setItem(this.cacheKey, JSON.stringify(values));
+        } catch (error) {
+            this.clearCachedFields();
+        }
+    }
+
+    clearCachedFields() {
+        try {
+            localStorage.removeItem(this.cacheKey);
+        } catch (error) {
+            // Si el navegador bloquea storage, el formulario debe seguir funcionando.
+        }
+    }
+
+    resetFileLabels() {
+        this.form.querySelectorAll('.file-upload-text').forEach(label => {
+            label.textContent = 'Adjuntar CV en PDF, DOC o DOCX';
         });
     }
     

@@ -2,9 +2,6 @@
     const languages = [
         { code: 'es', label: 'ES', name: 'Español', flag: '🇲🇽', google: 'es' },
         { code: 'en', label: 'EN', name: 'English', flag: '🇺🇸', google: 'en' },
-        { code: 'fr', label: 'FR', name: 'Français', flag: '🇫🇷', google: 'fr' },
-        { code: 'ja', label: 'JA', name: '日本語', flag: '🇯🇵', google: 'ja' },
-        { code: 'ko', label: 'KO', name: '한국어', flag: '🇰🇷', google: 'ko' },
         { code: 'zh', label: 'ZH', name: '中文', flag: '🇨🇳', google: 'zh-CN' }
     ];
 
