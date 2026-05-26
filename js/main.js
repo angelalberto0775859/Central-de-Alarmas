@@ -43,7 +43,7 @@ const packageModalData = {
                 name: 'TurretCam (5 Mp/2.8 mm)',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquete Essential/Render - Ajax TurretCam - Black - front3 4.png',
-                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean W.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
             }
         ]
@@ -98,7 +98,7 @@ const packageModalData = {
                 name: 'TurretCam (5 Mp/2.8 mm)',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquete Profesional/Render - Ajax TurretCam - Black - front3 4.png',
-                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean W.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
             }
         ]
@@ -153,6 +153,7 @@ const packageModalData = {
                 name: 'DoorBell',
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquete Elite/Render - Black - Ajax DoorBell-front-angled.png',
+                imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorBell - White - front angled clean.png',
                 description: 'Video timbre con IA integrada, sensor PIR y control a través de apps.'
             }
         ]
