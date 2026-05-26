@@ -8,6 +8,7 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://centraldealarmas.com.mx/vacantes/ejecutivo-cobranza.html">
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="jobs-page job-detail-page">
     <header id="main-header">
@@ -92,10 +93,16 @@
                         <div class="form-group"><input type="tel" name="telefono" placeholder="Teléfono *" required><span class="error-message">El teléfono es obligatorio.</span></div>
                         <div class="form-group"><input type="text" name="ciudad" placeholder="Ciudad / Estado *" required><span class="error-message">Indica tu ciudad.</span></div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group"><select name="sexo" class="job-gender-select" required><option value="" disabled selected>Sexo *</option><option>Hombre</option><option>Mujer</option><option>Prefiero no decir</option></select><span class="error-message">Selecciona una opción.</span></div>
+                        <div class="form-group job-military-field" hidden><select name="cartilla_militar_liberada"><option value="" disabled selected>Cartilla militar liberada *</option><option>Sí</option><option>No</option><option>En trámite</option></select><span class="error-message">Indica si cuenta con cartilla militar liberada.</span></div>
+                    </div>
+                    <div class="form-group"><select name="nivel_estudios" required><option value="" disabled selected>Nivel de estudios *</option><option>Licenciatura trunca</option><option>Licenciatura concluida</option><option>Maestría</option><option>Doctorado</option></select><span class="error-message">Para esta vacante se requiere licenciatura o superior.</span></div>
                     <div class="form-group"><select name="experiencia" required><option value="" disabled selected>Experiencia en cobranza *</option><option>Menos de 1 año</option><option>1 a 2 años</option><option>Más de 2 años</option><option>Más de 5 años</option></select><span class="error-message">Selecciona tu experiencia.</span></div>
                     <div class="form-group"><input type="text" name="disponibilidad" placeholder="Disponibilidad para entrevista"></div>
                     <div class="form-group"><textarea name="mensaje" rows="4" placeholder="Cuéntanos tu experiencia con cobranza, CRM o clientes corporativos"></textarea></div>
                     <label class="file-upload"><input type="file" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><span class="file-upload-text">Adjuntar CV en PDF, DOC o DOCX</span></label>
+                    <div class="g-recaptcha" data-sitekey="6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G"></div>
                     <button type="submit" class="btn-submit">Enviar postulación</button>
                 </form>
             </aside>

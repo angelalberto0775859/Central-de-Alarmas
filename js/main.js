@@ -151,12 +151,51 @@ const packageColorState = {
     elite: 'black'
 };
 
+const packageColorImages = {
+    essential: {
+        black: 'img/Paquetes AJAX/Paquete Essential/Essential.png',
+        white: 'img/Paquetes AJAX/Paquete Essential/Essential W Card.png'
+    },
+    professional: {
+        black: 'img/Paquetes AJAX/Paquete Profesional/Profesional.png',
+        white: 'img/Paquetes AJAX/Paquete Profesional/Profesional W Card.png'
+    },
+    elite: {
+        black: 'img/Paquetes AJAX/Paquete Elite/Elite.png',
+        white: 'img/Paquetes AJAX/Paquete Elite/Elite W Card.png'
+    }
+};
+
+const branchLocations = {
+    cdmx: {
+        title: 'CDMX',
+        address: '5 de Febrero 283 Col. Obrera. Cuauhtémoc, CP. 06800 CDMX',
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20CDMX'
+    },
+    puebla: {
+        title: 'Puebla',
+        address: 'Av. 17 Poniente, #916 int. 8, C.P. 72090 Col. Centro Puebla, Puebla',
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20Puebla'
+    },
+    guadalajara: {
+        title: 'Guadalajara',
+        address: 'C. José María Vigil 2312 - Interior 5, Italia Providencia, 44656 Guadalajara, Jal.',
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20Guadalajara'
+    },
+    monterrey: {
+        title: 'Monterrey',
+        address: 'Av. Paseo de los Leones No. 860. Local 2A, Col. Leones, C.P. 64600, Monterrey, Nuevo León',
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20Monterrey'
+    },
+    queretaro: {
+        title: 'Querétaro',
+        address: 'Av. México 61 N, Plaza de las Américas, Querétaro, Qro. C.P. 76050',
+        mapUrl: 'https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20Quer%C3%A9taro'
+    }
+};
+
 function getPackageColor(packageKey) {
     return packageColorState[packageKey] || 'black';
-}
-
-function getPackageColorClass(packageKey) {
-    return getPackageColor(packageKey) === 'white' ? ' package-color-white' : '';
 }
 
 const translations = {
@@ -498,7 +537,6 @@ function openPackageModal(packageKey) {
     modal.classList.remove('package-gallery-modal');
     modal.classList.add('package-modal');
     modal.dataset.packageKey = packageKey;
-    modal.classList.toggle('package-color-white', getPackageColor(packageKey) === 'white');
     modalTitle.textContent = t('packages.modalTitle', { title: packageData.title });
     modalImage.src = '';
     modalImage.alt = '';
@@ -512,12 +550,12 @@ function openPackageModal(packageKey) {
             <span class="package-color-pill">
                 ${escapeHtml(t('packages.availableColors'))}
                 <span class="color-swatches" data-package-key="${escapeHtml(packageKey)}" aria-label="${escapeHtml(t('packages.colorAria'))}">
-                    <button type="button" class="color-swatch color-swatch-white${getPackageColor(packageKey) === 'white' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.white'))}" data-color-value="white" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}" aria-pressed="${getPackageColor(packageKey) === 'white'}" disabled></button>
+                    <button type="button" class="color-swatch color-swatch-white${getPackageColor(packageKey) === 'white' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.white'))}" data-color-value="white" aria-label="${escapeHtml(t('packages.colorWhiteAria'))}" aria-pressed="${getPackageColor(packageKey) === 'white'}"></button>
                     <button type="button" class="color-swatch color-swatch-black${getPackageColor(packageKey) === 'black' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.black'))}" data-color-value="black" aria-label="${escapeHtml(t('packages.colorBlackAria'))}" aria-pressed="${getPackageColor(packageKey) === 'black'}"></button>
                 </span>
             </span>
         </div>
-        <div class="package-components-grid${getPackageColorClass(packageKey)}">
+        <div class="package-components-grid">
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
                     <div class="package-component-media">
@@ -550,7 +588,7 @@ function renderPackageGallerySlide() {
 
     modalTitle.textContent = t('packages.galleryTitle', { title: packageData.title });
     modalBody.innerHTML = `
-        <div class="package-gallery${getPackageColorClass(packageGalleryState.packageKey)}">
+        <div class="package-gallery">
             <div class="package-gallery-stage">
                 <img class="${imageClass}" src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}" loading="eager" decoding="async" fetchpriority="high" draggable="false">
             </div>
@@ -618,19 +656,33 @@ function setSwatchState(group, color) {
     });
 }
 
+function getPackageColorImage(card, packageKey, color) {
+    if (card && color === 'white' && card.dataset.imageWhite) return card.dataset.imageWhite;
+    if (card && color === 'black' && card.dataset.imageBlack) return card.dataset.imageBlack;
+    return packageColorImages[packageKey] ? packageColorImages[packageKey][color] : null;
+}
+
+function updatePackageCardImage(card, packageKey, color) {
+    const image = card ? card.querySelector('[data-package-image], .package-img-wrap > img') : null;
+    const colorImage = getPackageColorImage(card, packageKey, color);
+    if (!image || !colorImage) return;
+
+    image.src = colorImage;
+    image.classList.toggle('package-image-white', color === 'white');
+}
+
 function applyPackageColor(packageKey, color) {
     if (!packageKey) return;
     const nextColor = color === 'black' ? 'black' : 'white';
     packageColorState[packageKey] = nextColor;
 
     document.querySelectorAll(`.package-card[data-package-key="${packageKey}"]`).forEach((card) => {
-        card.classList.toggle('package-color-white', nextColor === 'white');
+        updatePackageCardImage(card, packageKey, nextColor);
         setSwatchState(card.querySelector('.color-swatches'), nextColor);
     });
 
     const modal = document.getElementById('serviceModal');
     if (modal && modal.dataset.packageKey === packageKey) {
-        modal.classList.toggle('package-color-white', nextColor === 'white');
         setSwatchState(modal.querySelector('.color-swatches'), nextColor);
         if (modal.classList.contains('package-gallery-modal')) {
             renderPackageGallerySlide();
@@ -638,6 +690,42 @@ function applyPackageColor(packageKey, color) {
             openPackageModal(packageKey);
         }
     }
+}
+
+window.applyPackageColor = applyPackageColor;
+
+function openBranchCard(branchKey) {
+    const branch = branchLocations[branchKey];
+    const card = document.querySelector('.branch-card');
+    if (!branch || !card) return;
+
+    const title = card.querySelector('h3');
+    const address = card.querySelector('p');
+    const link = card.querySelector('a');
+    if (title) title.textContent = branch.title;
+    if (address) address.textContent = branch.address;
+    if (link) {
+        link.href = branch.mapUrl;
+        link.textContent = 'Ver ficha en Maps';
+    }
+
+    card.hidden = false;
+    card.dataset.activeBranch = branchKey;
+    document.querySelectorAll('.branch-marker').forEach((marker) => {
+        const isActive = marker.dataset.branch === branchKey;
+        marker.classList.toggle('active', isActive);
+        marker.setAttribute('aria-expanded', String(isActive));
+    });
+}
+
+function closeBranchCard() {
+    const card = document.querySelector('.branch-card');
+    if (!card) return;
+    card.hidden = true;
+    document.querySelectorAll('.branch-marker').forEach((marker) => {
+        marker.classList.remove('active');
+        marker.setAttribute('aria-expanded', 'false');
+    });
 }
 
 function openPackageGallery(packageKey) {
@@ -651,7 +739,6 @@ function openPackageGallery(packageKey) {
     modal.classList.remove('package-modal');
     modal.classList.add('package-gallery-modal');
     modal.dataset.packageKey = packageKey;
-    modal.classList.toggle('package-color-white', getPackageColor(packageKey) === 'white');
     modalImage.src = '';
     modalImage.alt = '';
     modalImage.style.display = 'none';
@@ -676,7 +763,6 @@ function closeServiceModal() {
     if (!modal) return;
     modal.classList.remove('package-modal');
     modal.classList.remove('package-gallery-modal');
-    modal.classList.remove('package-color-white');
     delete modal.dataset.packageKey;
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -743,13 +829,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('click', (event) => {
+        const branchMarker = event.target.closest('.branch-marker');
+        if (branchMarker && branchMarker.dataset.branch) {
+            event.stopPropagation();
+            openBranchCard(branchMarker.dataset.branch);
+            return;
+        }
+
+        if (event.target.closest('.branch-card-close')) {
+            closeBranchCard();
+            return;
+        }
+
         const swatch = event.target.closest('.color-swatch');
         if (!swatch || swatch.disabled) return;
         const group = swatch.closest('.color-swatches');
         if (!group) return;
         const packageKey = findPackageKeyFromSwatch(swatch);
         const color = swatch.dataset.colorValue || (swatch.classList.contains('color-swatch-black') ? 'black' : 'white');
-        if (color === 'white') return;
         applyPackageColor(packageKey, color);
     });
 

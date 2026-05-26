@@ -101,7 +101,7 @@
             <div class="content">
                 <h1 data-aos="fade-in">
                     <span id="dynamic-text-container">
-                        <span id="word1">Alarmas</span>
+                        <span id="word1">Seguridad</span>
                     </span>
                     para tu
                     <span id="dynamic-text-container2">
@@ -276,9 +276,9 @@
             </div>
             <div class="packages-grid">
                 <!-- Paquetes visibles: Hogar, Hogar y PyMES, Negocio -->
-                <div class="package-card" data-package-key="essential" data-aos="fade-up" data-aos-delay="100">
+                <div class="package-card" data-package-key="essential" data-image-black="img/Paquetes AJAX/Paquete Essential/Essential.png" data-image-white="img/Paquetes AJAX/Paquete Essential/Essential W Card.png" data-aos="fade-up" data-aos-delay="100">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Essential/Essential.png" alt="Paquete Essential">
+                        <img src="img/Paquetes AJAX/Paquete Essential/Essential.png" alt="Paquete Essential" data-package-image>
                         <span class="package-tag">Hogar</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('essential')" aria-label="Ver galería de componentes del paquete Essential" data-i18n="packages.galleryButton">
                             Galería
@@ -297,9 +297,9 @@
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
-                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" disabled></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro"></button>
+                                <span class="color-swatches" data-package-key="essential" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('essential', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('essential', 'black')"></button>
                                 </span>
                             </li>
                         </ul>
@@ -373,9 +373,9 @@
                 </div>
 
                 <!-- Paquetes guardados con hidden para reactivarlos después si se necesitan. -->
-                <div class="package-card" data-package-key="professional" data-aos="fade-up" data-aos-delay="200">
+                <div class="package-card" data-package-key="professional" data-image-black="img/Paquetes AJAX/Paquete Profesional/Profesional.png" data-image-white="img/Paquetes AJAX/Paquete Profesional/Profesional W Card.png" data-aos="fade-up" data-aos-delay="200">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Profesional/Profesional.png" alt="Paquete Profesional">
+                        <img src="img/Paquetes AJAX/Paquete Profesional/Profesional.png" alt="Paquete Profesional" data-package-image>
                         <span class="package-tag">Hogar y PyMES</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('professional')" aria-label="Ver galería de componentes del paquete Profesional" data-i18n="packages.galleryButton">
                             Galería
@@ -394,9 +394,9 @@
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
-                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" disabled></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro"></button>
+                                <span class="color-swatches" data-package-key="professional" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('professional', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('professional', 'black')"></button>
                                 </span>
                             </li>
                         </ul>
@@ -441,9 +441,9 @@
                     </div>
                 </div>
 
-                <div class="package-card" data-package-key="elite" data-aos="fade-up" data-aos-delay="300">
+                <div class="package-card" data-package-key="elite" data-image-black="img/Paquetes AJAX/Paquete Elite/Elite.png" data-image-white="img/Paquetes AJAX/Paquete Elite/Elite W Card.png" data-aos="fade-up" data-aos-delay="300">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Elite/Elite.png" alt="Paquete Elite">
+                        <img src="img/Paquetes AJAX/Paquete Elite/Elite.png" alt="Paquete Elite" data-package-image>
                         <span class="package-tag">Negocio</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('elite')" aria-label="Ver galería de componentes del paquete Elite" data-i18n="packages.galleryButton">
                             Galería
@@ -462,9 +462,9 @@
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
-                                <span class="color-swatches" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" disabled></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro"></button>
+                                <span class="color-swatches" data-package-key="elite" aria-label="Colores disponibles: blanco y negro">
+                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('elite', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('elite', 'black')"></button>
                                 </span>
                             </li>
                         </ul>
@@ -587,6 +587,38 @@
                 </div>
                 <div class="map-container" data-aos="fade-left" data-aos-delay="100">
                     <img src="img/mapa-v2.svg" alt="Presencia en México" class="mexico-map">
+                    <button type="button" class="branch-marker branch-marker-cdmx active" data-branch="cdmx" data-branch-label="CDMX" aria-label="Ver sucursal CDMX" aria-expanded="true">
+                        <span class="branch-marker-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-7h6v7M9 10h.01M12 10h.01M15 10h.01"/></svg>
+                        </span>
+                    </button>
+                    <button type="button" class="branch-marker branch-marker-puebla" data-branch="puebla" data-branch-label="Puebla" aria-label="Ver sucursal Puebla" aria-expanded="false">
+                        <span class="branch-marker-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.4 7-11a7 7 0 0 0-14 0c0 6.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                        </span>
+                    </button>
+                    <button type="button" class="branch-marker branch-marker-guadalajara" data-branch="guadalajara" data-branch-label="GDL" aria-label="Ver sucursal Guadalajara" aria-expanded="false">
+                        <span class="branch-marker-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M6 20V9l6-5 6 5v11M9 20v-6h6v6M9 10h6"/></svg>
+                        </span>
+                    </button>
+                    <button type="button" class="branch-marker branch-marker-monterrey" data-branch="monterrey" data-branch-label="MTY" aria-label="Ver sucursal Monterrey" aria-expanded="false">
+                        <span class="branch-marker-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M7 19V8l5-3 5 3v11M9.5 11h5M9.5 14h5"/></svg>
+                        </span>
+                    </button>
+                    <button type="button" class="branch-marker branch-marker-queretaro" data-branch="queretaro" data-branch-label="QRO" aria-label="Ver sucursal Querétaro" aria-expanded="false">
+                        <span class="branch-marker-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 5v10H4V8l8-5ZM8 18v-7h8v7"/></svg>
+                        </span>
+                    </button>
+                    <article class="branch-card" data-active-branch="cdmx" aria-live="polite">
+                        <button type="button" class="branch-card-close" aria-label="Cerrar sucursal">×</button>
+                        <span class="branch-card-label">Sucursal</span>
+                        <h3>CDMX</h3>
+                        <p>5 de Febrero 283 Col. Obrera. Cuauhtémoc, CP. 06800 CDMX</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Central%20de%20Alarmas%20CDMX" target="_blank" rel="noopener">Ver ficha en Maps</a>
+                    </article>
                 </div>
             </div>
 
@@ -658,28 +690,29 @@
         <section id="por-que">
             <div class="por-que-header" data-aos="fade-in">
                 <span class="section-label">¿Por qué elegirnos?</span>
-                <h2>Lo que nos hace únicos</h2>
+                <h2>Monitoreo con las mejores apps del mercado</h2>
+                <p>Conectamos tu infraestructura actual a una operación profesional de monitoreo, validando compatibilidad, protocolos y escalamiento antes de recomendar cambios innecesarios.</p>
             </div>
             <div class="por-que-grid">
                 <div class="valor-item" data-aos="fade-up" data-aos-delay="100">
                     <div class="valor-num">01</div>
-                    <h3>Tecnología de vanguardia</h3>
-                    <p>Equipos de la más alta calidad con sensores inteligentes, cámaras HD y paneles de control modernos.</p>
+                    <h3>Plataformas de monitoreo profesional</h3>
+                    <p>Operamos señales de alarma, videoverificación, eventos técnicos, aperturas, cierres y seguimiento de incidencias desde apps especializadas.</p>
                 </div>
                 <div class="valor-item" data-aos="fade-up" data-aos-delay="150">
                     <div class="valor-num">02</div>
-                    <h3>Monitoreo 24/7</h3>
-                    <p>Central de monitoreo activa las 24 horas, los 365 días del año para responder ante cualquier evento.</p>
+                    <h3>Migración técnica sin reemplazo forzado</h3>
+                    <p>Revisamos paneles, comunicadores, cámaras y usuarios para migrar la operación cuando el equipo actual pueda integrarse con seguridad.</p>
                 </div>
                 <div class="valor-item" data-aos="fade-up" data-aos-delay="200">
                     <div class="valor-num">03</div>
-                    <h3>Experiencia comprobada</h3>
-                    <p>Más de 77 años protegiendo hogares y negocios en toda la República Mexicana.</p>
+                    <h3>Compatibilidad por protocolo y marca</h3>
+                    <p>Analizamos formatos de comunicación, app instalada, zonas, usuarios y eventos para conservar lo útil y documentar lo que sí conviene actualizar.</p>
                 </div>
                 <div class="valor-item" data-aos="fade-up" data-aos-delay="250">
                     <div class="valor-num">04</div>
-                    <h3>Soporte dedicado</h3>
-                    <p>Asesoría comercial y técnica personalizada. Estamos contigo antes, durante y después de la instalación.</p>
+                    <h3>Central receptora y escalamiento 24/7</h3>
+                    <p>Atendemos eventos con bitácora, prioridades, contactos autorizados y escalamiento operativo para hogares, negocios y cuentas corporativas.</p>
                 </div>
             </div>
         </section>
@@ -701,7 +734,6 @@
                 <div class="cert-item" data-aos="fade-up" data-aos-delay="100"><img src="img/Certificaciones/Logo-LEAN-6XMA.png" alt="Certificacion 6"></div>
                 <div class="cert-item" data-aos="fade-up" data-aos-delay="150"><img src="img/Certificaciones/Logo-Lenel.png" alt="Certificacion 7"></div>
                 <div class="cert-item" data-aos="fade-up" data-aos-delay="200"><img src="img/Certificaciones/Logo-Notifier.png" alt="Certificacion 8"></div>
-                <div class="cert-item" data-aos="fade-up" data-aos-delay="250"><img src="img/Certificaciones/Logo-Seproban.svg" alt="Certificacion 9"></div>
                 <div class="cert-item" data-aos="fade-up" data-aos-delay="300"><img src="img/Certificaciones/Logo-DNV.png" alt="Certificacion 10"></div>
             </div>
         </section>
@@ -936,7 +968,7 @@
 
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
     <script src="./js/language-switcher.js" defer></script>
-    <script src="./js/main.js" defer></script>
+    <script src="./js/main.js?v=20260526-white-packages" defer></script>
     <script src="./js/cookies.js" defer></script>
     <script src="./js/form-handler.js" defer></script>
 </body>

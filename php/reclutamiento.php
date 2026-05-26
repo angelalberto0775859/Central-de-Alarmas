@@ -11,6 +11,11 @@ function responder($exito, $mensaje) {
     exit;
 }
 
+function nivelCumpleLicenciatura($nivel) {
+    $nivelesValidos = ['Licenciatura trunca', 'Licenciatura concluida', 'Maestría', 'Doctorado'];
+    return in_array($nivel, $nivelesValidos, true);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(403);
     responder(false, 'Acceso denegado.');
@@ -20,12 +25,28 @@ if (!empty($_POST['empresa'])) {
     responder(false, 'No fue posible enviar la solicitud.');
 }
 
+$recaptchaRespuesta = $_POST['g-recaptcha-response'] ?? '';
+if ($recaptchaRespuesta === '') {
+    responder(false, 'Por favor, completa la verificacion de Google.');
+}
+
+$recaptchaSecret = '6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G';
+$recaptchaVerificacion = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptchaSecret) . '&response=' . urlencode($recaptchaRespuesta));
+$recaptchaDatos = $recaptchaVerificacion ? json_decode($recaptchaVerificacion, true) : null;
+
+if (empty($recaptchaDatos['success'])) {
+    responder(false, 'No se pudo validar la verificacion de Google. Intenta nuevamente.');
+}
+
 $datos = [
     'vacante' => limpiarCampo($_POST['vacante'] ?? ''),
     'nombre' => limpiarCampo($_POST['nombre'] ?? ''),
     'correo' => limpiarCampo($_POST['correo'] ?? ''),
     'telefono' => limpiarCampo($_POST['telefono'] ?? ''),
     'ciudad' => limpiarCampo($_POST['ciudad'] ?? ''),
+    'sexo' => limpiarCampo($_POST['sexo'] ?? ''),
+    'cartilla_militar_liberada' => limpiarCampo($_POST['cartilla_militar_liberada'] ?? ''),
+    'nivel_estudios' => limpiarCampo($_POST['nivel_estudios'] ?? ''),
     'experiencia' => limpiarCampo($_POST['experiencia'] ?? ''),
     'disponibilidad' => limpiarCampo($_POST['disponibilidad'] ?? ''),
     'mensaje' => limpiarCampo($_POST['mensaje'] ?? '')
@@ -37,10 +58,18 @@ if ($datos['nombre'] === '') $errores[] = 'nombre';
 if ($datos['correo'] === '' || !filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) $errores[] = 'correo';
 if ($datos['telefono'] === '') $errores[] = 'telefono';
 if ($datos['ciudad'] === '') $errores[] = 'ciudad';
+if ($datos['sexo'] === '') $errores[] = 'sexo';
+if ($datos['sexo'] === 'Hombre' && $datos['cartilla_militar_liberada'] === '') $errores[] = 'cartilla militar liberada';
+if ($datos['nivel_estudios'] === '') $errores[] = 'nivel de estudios';
 if ($datos['experiencia'] === '') $errores[] = 'experiencia';
 
 if (!empty($errores)) {
     responder(false, 'Por favor, revisa los campos obligatorios: ' . implode(', ', $errores) . '.');
+}
+
+$vacantesConBachillerato = ['Monitorista', 'Técnico Instalador'];
+if (!in_array($datos['vacante'], $vacantesConBachillerato, true) && !nivelCumpleLicenciatura($datos['nivel_estudios'])) {
+    responder(false, 'Para esta vacante se requiere licenciatura o nivel superior.');
 }
 
 $archivoAdjunto = null;
@@ -88,6 +117,9 @@ $mensajeHTML = "
             <p><strong>Correo:</strong> {$datos['correo']}</p>
             <p><strong>Telefono:</strong> {$datos['telefono']}</p>
             <p><strong>Ciudad:</strong> {$datos['ciudad']}</p>
+            <p><strong>Sexo:</strong> {$datos['sexo']}</p>
+            <p><strong>Cartilla militar liberada:</strong> {$datos['cartilla_militar_liberada']}</p>
+            <p><strong>Nivel de estudios:</strong> {$datos['nivel_estudios']}</p>
             <p><strong>Experiencia:</strong> {$datos['experiencia']}</p>
             <p><strong>Disponibilidad:</strong> {$datos['disponibilidad']}</p>
             <p><strong>Mensaje:</strong><br>" . nl2br($datos['mensaje']) . "</p>

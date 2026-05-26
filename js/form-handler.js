@@ -194,6 +194,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('change', function(event) {
+    const genderSelect = event.target.closest('.job-gender-select');
+    if (genderSelect) {
+        const form = genderSelect.closest('.job-application-form');
+        const militaryField = form ? form.querySelector('.job-military-field') : null;
+        const militarySelect = militaryField ? militaryField.querySelector('select') : null;
+        const isMale = genderSelect.value === 'Hombre';
+
+        if (militaryField && militarySelect) {
+            militaryField.hidden = !isMale;
+            militarySelect.required = isMale;
+            if (!isMale) {
+                militarySelect.value = '';
+                militarySelect.classList.remove('error');
+                const errorMessage = militaryField.querySelector('.error-message');
+                if (errorMessage) errorMessage.style.display = 'none';
+            }
+        }
+    }
+
     const fileInput = event.target.closest('.job-application-form input[type="file"]');
     if (!fileInput) return;
 
