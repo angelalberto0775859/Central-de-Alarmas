@@ -484,7 +484,7 @@ function openPackageModal(packageKey) {
             `).join('')}
             <article class="package-component-card package-ajax-system-card">
                 <div class="package-component-media">
-                    <img src="img/Paquetes/ajax3.webp" alt="${escapeHtml(t('packages.ajaxCard.title'))}">
+                    <img src="img/Apps/ajax-security-system.jpeg" alt="${escapeHtml(t('packages.ajaxCard.title'))}">
                 </div>
                 <div class="package-component-copy">
                     <h4>${escapeHtml(t('packages.ajaxCard.title'))} <span>${escapeHtml(t('packages.ajaxCard.badge'))}</span></h4>
