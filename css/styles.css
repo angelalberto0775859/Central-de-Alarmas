@@ -1843,7 +1843,7 @@ header.scrolled .hamburger span { background: var(--accent); }
     gap: 1.25rem;
     max-width: 1180px;
     margin: 3rem auto 0;
-    align-items: center;
+    align-items: stretch;
 }
 
 .cert-item {
@@ -1853,14 +1853,10 @@ header.scrolled .hamburger span { background: var(--accent); }
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 1 clamp(145px, 15vw, 185px);
-    aspect-ratio: 1.55;
+    flex: 0 1 calc((100% - 5rem) / 5);
+    aspect-ratio: 1.45;
     transition: transform 0.3s, box-shadow 0.3s;
     min-height: 120px;
-}
-
-.cert-item--wide {
-    flex-basis: clamp(230px, 24vw, 310px);
 }
 
 .cert-item:hover {
@@ -1869,14 +1865,16 @@ header.scrolled .hamburger span { background: var(--accent); }
 }
 
 .certificaciones-grid img {
-    width: 100%;
+    width: auto;
+    max-width: 84%;
     height: auto;
-    max-height: 80px;
+    max-height: 66px;
     object-fit: contain;
 }
 
 .cert-item--wide img {
-    max-height: 68px;
+    max-width: 72%;
+    max-height: 44px;
 }
 
 /* ─── CONTACTO ─── */
@@ -3483,12 +3481,12 @@ footer::after {
     }
 
     .cert-item {
-        flex-basis: calc(50% - 0.5rem);
+        flex-basis: calc((100% - 1rem) / 2);
         min-height: 112px;
     }
 
     .cert-item--wide {
-        flex-basis: 100%;
+        flex-basis: calc((100% - 1rem) / 2);
     }
 
     .blog-hero {
