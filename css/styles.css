@@ -1837,12 +1837,13 @@ header.scrolled .hamburger span { background: var(--accent); }
 }
 
 .certificaciones-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.25rem;
-    max-width: 1100px;
+    max-width: 1180px;
     margin: 3rem auto 0;
-    align-items: stretch;
+    align-items: center;
 }
 
 .cert-item {
@@ -1852,8 +1853,14 @@ header.scrolled .hamburger span { background: var(--accent); }
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 0 1 clamp(145px, 15vw, 185px);
+    aspect-ratio: 1.55;
     transition: transform 0.3s, box-shadow 0.3s;
     min-height: 120px;
+}
+
+.cert-item--wide {
+    flex-basis: clamp(230px, 24vw, 310px);
 }
 
 .cert-item:hover {
@@ -1866,6 +1873,10 @@ header.scrolled .hamburger span { background: var(--accent); }
     height: auto;
     max-height: 80px;
     object-fit: contain;
+}
+
+.cert-item--wide img {
+    max-height: 68px;
 }
 
 /* ─── CONTACTO ─── */
@@ -3467,9 +3478,17 @@ footer::after {
     
     /* Certifications */
     .certificaciones-grid {
-        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         padding: 0 1.5rem;
+    }
+
+    .cert-item {
+        flex-basis: calc(50% - 0.5rem);
+        min-height: 112px;
+    }
+
+    .cert-item--wide {
+        flex-basis: 100%;
     }
 
     .blog-hero {
@@ -3590,7 +3609,6 @@ footer::after {
         gap: 1.5rem;
     }
     .packages-grid { grid-template-columns: repeat(2, 1fr); }
-    .certificaciones-grid { grid-template-columns: repeat(3, 1fr); }
     .blog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .cookie-banner { grid-template-columns: 1fr auto; align-items: center; }
 }
@@ -3628,7 +3646,6 @@ footer::after {
 
 @media (min-width: 1024px) {
     .packages-grid { grid-template-columns: repeat(3, 1fr); }
-    .certificaciones-grid { grid-template-columns: repeat(5, 1fr); }
     .por-que-grid { grid-template-columns: repeat(4, 1fr); }
     .preview-cards { 
         gap: 3rem;
