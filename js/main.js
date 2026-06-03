@@ -662,6 +662,128 @@ function closeBranchCard() {
     });
 }
 
+function initCertificationsCarousel() {
+    const carousel = document.querySelector('[data-cert-carousel]');
+    if (!carousel || carousel.dataset.ready === 'true') return;
+
+    const viewport = carousel.querySelector('.cert-carousel-viewport');
+    const track = carousel.querySelector('.certificaciones-track');
+    const prevButton = carousel.querySelector('[data-cert-prev]');
+    const nextButton = carousel.querySelector('[data-cert-next]');
+    const dotsWrap = carousel.querySelector('[data-cert-dots]');
+    if (!viewport || !track || !prevButton || !nextButton || !dotsWrap) return;
+
+    carousel.dataset.ready = 'true';
+    const items = Array.from(track.querySelectorAll('.cert-item'));
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let dots = [];
+    let pageOffsets = [0];
+    let pageCount = 1;
+    let activePage = 0;
+    let autoplayId = null;
+    let userPaused = false;
+
+    const getStep = () => {
+        const firstItem = items[0];
+        if (!firstItem) return viewport.clientWidth;
+        const itemWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(getComputedStyle(track).gap) || 0;
+        const visibleItems = Math.max(1, Math.round((viewport.clientWidth + gap) / (itemWidth + gap)));
+        return Math.max(itemWidth + gap, visibleItems * (itemWidth + gap));
+    };
+
+    const scrollToPage = (pageIndex) => {
+        const nextPage = Math.max(0, Math.min(pageIndex, pageCount - 1));
+        viewport.scrollTo({ left: pageOffsets[nextPage] || 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    };
+
+    const updateState = () => {
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        activePage = pageOffsets.reduce((closestIndex, offset, index) => {
+            const closestDistance = Math.abs(viewport.scrollLeft - pageOffsets[closestIndex]);
+            const nextDistance = Math.abs(viewport.scrollLeft - offset);
+            return nextDistance < closestDistance ? index : closestIndex;
+        }, 0);
+
+        prevButton.disabled = viewport.scrollLeft <= 2;
+        nextButton.disabled = viewport.scrollLeft >= maxScroll - 2;
+
+        dots.forEach((dot, index) => {
+            const isActive = index === activePage;
+            dot.classList.toggle('active', isActive);
+            dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        });
+    };
+
+    const buildDots = () => {
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        const step = getStep();
+        pageOffsets = [0];
+        for (let offset = step; offset < maxScroll; offset += step) {
+            pageOffsets.push(offset);
+        }
+        if (maxScroll > 0) pageOffsets.push(maxScroll);
+        pageOffsets = [...new Set(pageOffsets.map((offset) => Math.round(offset)))];
+        pageCount = pageOffsets.length;
+        dotsWrap.innerHTML = '';
+        dots = Array.from({ length: pageCount }, (_, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'cert-carousel-dot';
+            dot.setAttribute('aria-label', `Ir al grupo ${index + 1} de certificaciones`);
+            dot.addEventListener('click', () => {
+                userPaused = true;
+                scrollToPage(index);
+            });
+            dotsWrap.appendChild(dot);
+            return dot;
+        });
+        dotsWrap.hidden = pageCount <= 1;
+        updateState();
+    };
+
+    const stopAutoplay = () => {
+        if (autoplayId) window.clearInterval(autoplayId);
+        autoplayId = null;
+    };
+
+    const startAutoplay = () => {
+        stopAutoplay();
+        if (prefersReducedMotion || pageCount <= 1 || userPaused) return;
+        autoplayId = window.setInterval(() => {
+            const nextPage = activePage >= pageCount - 1 ? 0 : activePage + 1;
+            scrollToPage(nextPage);
+        }, 3600);
+    };
+
+    prevButton.addEventListener('click', () => {
+        userPaused = true;
+        scrollToPage(activePage - 1);
+    });
+
+    nextButton.addEventListener('click', () => {
+        userPaused = true;
+        scrollToPage(activePage + 1);
+    });
+
+    viewport.addEventListener('scroll', () => {
+        window.requestAnimationFrame(updateState);
+    }, { passive: true });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', startAutoplay);
+
+    window.addEventListener('resize', () => {
+        buildDots();
+        startAutoplay();
+    });
+
+    buildDots();
+    startAutoplay();
+}
+
 function openPackageGallery(packageKey) {
     const packageData = packageModalData[packageKey];
     const modal = document.getElementById('serviceModal');
@@ -786,6 +908,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     applyTranslations(currentLanguage);
     Object.keys(packageColorState).forEach((packageKey) => applyPackageColor(packageKey, getPackageColor(packageKey)));
+    initCertificationsCarousel();
 
     handleScroll();
 });
