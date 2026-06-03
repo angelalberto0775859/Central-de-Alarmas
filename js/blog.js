@@ -237,6 +237,7 @@
                         <h4>Navegacion</h4>
                         <a href="../index.html#servicios-preview">Servicios</a>
                         <a href="../index.html#nosotros">Nosotros</a>
+                        <a href="../index.html#certificaciones">Certificaciones</a>
                         <a href="../index.html#contacto">Contacto</a>
                         <a href="../blog.html">News</a>
                     </div>
