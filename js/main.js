@@ -676,12 +676,20 @@ function initCertificationsCarousel() {
     carousel.dataset.ready = 'true';
     const items = Array.from(track.querySelectorAll('.cert-item'));
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const firstAutoplayDelay = 1400;
+    const autoplayDelay = 5200;
+    const interactionPause = 7000;
     let dots = [];
     let pageOffsets = [0];
     let pageCount = 1;
     let activePage = 0;
     let autoplayId = null;
-    let userPaused = false;
+    let resumeId = null;
+
+    const autoplayTick = () => {
+        const nextPage = activePage >= pageCount - 1 ? 0 : activePage + 1;
+        scrollToPage(nextPage);
+    };
 
     const getStep = () => {
         const firstItem = items[0];
@@ -732,7 +740,7 @@ function initCertificationsCarousel() {
             dot.className = 'cert-carousel-dot';
             dot.setAttribute('aria-label', `Ir al grupo ${index + 1} de certificaciones`);
             dot.addEventListener('click', () => {
-                userPaused = true;
+                pauseThenResume();
                 scrollToPage(index);
             });
             dotsWrap.appendChild(dot);
@@ -743,26 +751,33 @@ function initCertificationsCarousel() {
     };
 
     const stopAutoplay = () => {
-        if (autoplayId) window.clearInterval(autoplayId);
+        if (autoplayId) window.clearTimeout(autoplayId);
         autoplayId = null;
     };
 
-    const startAutoplay = () => {
+    const startAutoplay = (delay = autoplayDelay) => {
         stopAutoplay();
-        if (prefersReducedMotion || pageCount <= 1 || userPaused) return;
-        autoplayId = window.setInterval(() => {
-            const nextPage = activePage >= pageCount - 1 ? 0 : activePage + 1;
-            scrollToPage(nextPage);
-        }, 3600);
+        if (prefersReducedMotion || pageCount <= 1) return;
+        autoplayId = window.setTimeout(() => {
+            autoplayTick();
+            startAutoplay();
+        }, delay);
+    };
+
+    const pauseThenResume = () => {
+        stopAutoplay();
+        if (resumeId) window.clearTimeout(resumeId);
+        if (prefersReducedMotion || pageCount <= 1) return;
+        resumeId = window.setTimeout(startAutoplay, interactionPause);
     };
 
     prevButton.addEventListener('click', () => {
-        userPaused = true;
+        pauseThenResume();
         scrollToPage(activePage - 1);
     });
 
     nextButton.addEventListener('click', () => {
-        userPaused = true;
+        pauseThenResume();
         scrollToPage(activePage + 1);
     });
 
@@ -770,10 +785,16 @@ function initCertificationsCarousel() {
         window.requestAnimationFrame(updateState);
     }, { passive: true });
 
-    carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', startAutoplay);
-    carousel.addEventListener('focusin', stopAutoplay);
-    carousel.addEventListener('focusout', startAutoplay);
+    carousel.addEventListener('mouseenter', () => {
+        if (resumeId) window.clearTimeout(resumeId);
+        stopAutoplay();
+    });
+    carousel.addEventListener('mouseleave', () => startAutoplay());
+    carousel.addEventListener('focusin', () => {
+        if (resumeId) window.clearTimeout(resumeId);
+        stopAutoplay();
+    });
+    carousel.addEventListener('focusout', () => startAutoplay());
 
     window.addEventListener('resize', () => {
         buildDots();
@@ -781,7 +802,10 @@ function initCertificationsCarousel() {
     });
 
     buildDots();
-    startAutoplay();
+    window.setTimeout(() => {
+        buildDots();
+        startAutoplay(firstAutoplayDelay);
+    }, 250);
 }
 
 function openPackageGallery(packageKey) {
