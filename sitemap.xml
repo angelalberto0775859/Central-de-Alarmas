@@ -25,6 +25,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://centraldealarmas.com.mx/contigo/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://centraldealarmas.com.mx/vacantes/monitorista.html</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>

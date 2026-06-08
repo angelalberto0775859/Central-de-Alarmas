@@ -1,0 +1,77 @@
+//  by: lrlopz para Sepsa Custodias
+//  Hecho con un chingo de <3
+//  Generales
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+    font-family: 'Poppins', sans-serif;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+    padding: 0;
+    margin: 0;
+}
+
+img {
+    width: 100%;
+}
+
+// Pho
+@media (max-width: 767px) {
+    //
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    p {
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Poppins', sans-serif;
+    }
+    //
+    @import "pho";
+}
+
+// Tab
+@media (min-width: 768px) {
+    //
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    p {
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Poppins', sans-serif;
+    }
+    //
+    @import "tab";
+}
+
+// Des
+@media (min-width: 1024px) {
+    //
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    p {
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Poppins', sans-serif;
+    }
+    //
+    @import "des";
+}
