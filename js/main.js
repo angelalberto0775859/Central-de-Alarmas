@@ -85,7 +85,7 @@ const packageModalData = {
                 badge: 'Cantidad: 1',
                 image: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled.png',
                 imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax HomeSiren U Jeweller - Black - front angled W.png',
-                description: 'Sirena inalámbrico para interiores y exteriores.'
+                description: 'Sirena inalámbrica para interiores y exteriores.'
             },
             {
                 name: 'SpaceControl Jeweller',
@@ -421,85 +421,85 @@ function escapeHtml(value) {
 const certificationDetails = {
     alas: {
         title: 'ALAS',
-        description: 'Asociacion Latinoamericana de Seguridad. Refuerza la profesionalizacion del sector mediante educacion, networking, estandares e impulso a la industria de seguridad en America Latina y el Caribe.',
+        description: 'Asociación Latinoamericana de Seguridad. Refuerza la profesionalización del sector mediante educación, networking, estándares e impulso a la industria de seguridad en América Latina y el Caribe.',
         sourceLabel: 'ALAS',
         sourceUrl: 'https://alas-la.org/'
     },
     ajax: {
         title: 'AJAX Systems',
-        description: 'Fabricante europeo de sistemas profesionales de seguridad, intrusion, automatizacion y videovigilancia. Su ecosistema destaca por integraciones, gestion desde app y tecnologia inalambrica para instalaciones modernas.',
+        description: 'Fabricante europeo de sistemas profesionales de seguridad, intrusión, automatización y videovigilancia. Su ecosistema destaca por integraciones, gestión desde app y tecnología inalámbrica para instalaciones modernas.',
         sourceLabel: 'Ajax Systems',
         sourceUrl: 'https://ajax.systems/'
     },
     bosch: {
         title: 'Bosch Security and Safety Systems',
-        description: 'Marca global de soluciones para seguridad, video, deteccion de incendio, intrusion, comunicaciones y automatizacion de edificios. Aporta respaldo tecnico para proyectos donde la confiabilidad operativa es critica.',
+        description: 'Marca global de soluciones para seguridad, video, detección de incendio, intrusión, comunicaciones y automatización de edificios. Aporta respaldo técnico para proyectos donde la confiabilidad operativa es crítica.',
         sourceLabel: 'Bosch Security',
         sourceUrl: 'https://www.boschsecurity.com/'
     },
     dmp: {
         title: 'DMP',
-        description: 'Digital Monitoring Products desarrolla paneles y plataformas que integran intrusion, incendio comercial, control de acceso y comunicacion hacia centrales de monitoreo.',
+        description: 'Digital Monitoring Products desarrolla paneles y plataformas que integran intrusión, incendio comercial, control de acceso y comunicación hacia centrales de monitoreo.',
         sourceLabel: 'DMP',
         sourceUrl: 'https://www.dmp.com/'
     },
     esr: {
         title: 'Empresa Socialmente Responsable',
-        description: 'Distintivo promovido por Cemefi para reconocer practicas de responsabilidad social empresarial. Comunica compromiso con gestion responsable, etica, comunidad y sostenibilidad.',
+        description: 'Distintivo promovido por Cemefi para reconocer prácticas de responsabilidad social empresarial. Comunica compromiso con gestión responsable, ética, comunidad y sostenibilidad.',
         sourceLabel: 'Cemefi',
         sourceUrl: 'https://www.cemefi.org/'
     },
     iso9001: {
         title: 'ISO 9001',
-        description: 'Norma internacional para sistemas de gestion de calidad. Ayuda a estandarizar procesos, medir mejora continua y sostener una operacion enfocada en cumplir requisitos del cliente.',
+        description: 'Norma internacional para sistemas de gestión de calidad. Ayuda a estandarizar procesos, medir mejora continua y sostener una operación enfocada en cumplir requisitos del cliente.',
         sourceLabel: 'ISO',
         sourceUrl: 'https://www.iso.org/standard/62085.html'
     },
     leanSixSigma: {
         title: 'Lean Six Sigma',
-        description: 'Metodologia de mejora de procesos que combina reduccion de desperdicio con control de variacion. En operacion de seguridad, su valor esta en procesos mas consistentes, medibles y eficientes.',
+        description: 'Metodología de mejora de procesos que combina reducción de desperdicio con control de variación. En operación de seguridad, su valor está en procesos más consistentes, medibles y eficientes.',
         sourceLabel: 'ASQ',
         sourceUrl: 'https://asq.org/quality-resources/six-sigma'
     },
     lenel: {
         title: 'LenelS2',
-        description: 'Plataforma de control de acceso fisico y gestion de seguridad. OnGuard permite unificar acceso, video y datos de seguridad en soluciones escalables para organizaciones de distintos tamanos.',
+        description: 'Plataforma de control de acceso físico y gestión de seguridad. OnGuard permite unificar acceso, video y datos de seguridad en soluciones escalables para organizaciones de distintos tamaños.',
         sourceLabel: 'LenelS2',
         sourceUrl: 'https://www.lenels2.com/en/security-products/onguard'
     },
     notifier: {
         title: 'NOTIFIER by Honeywell',
-        description: 'Linea de Honeywell especializada en deteccion y alarma contra incendio. Sus soluciones estan orientadas a instalaciones complejas que requieren respuesta rapida y alta confiabilidad.',
+        description: 'Línea de Honeywell especializada en detección y alarma contra incendio. Sus soluciones están orientadas a instalaciones complejas que requieren respuesta rápida y alta confiabilidad.',
         sourceLabel: 'Honeywell NOTIFIER',
         sourceUrl: 'https://buildings.honeywell.com/us/en/brands/our-brands/notifier'
     },
     dnv: {
         title: 'DNV',
-        description: 'Organismo global de aseguramiento y certificacion de sistemas de gestion. Su respaldo ayuda a validar conformidad con normas internacionales y practicas de gestion basadas en riesgo.',
+        description: 'Organismo global de aseguramiento y certificación de sistemas de gestión. Su respaldo ayuda a validar conformidad con normas internacionales y prácticas de gestión basadas en riesgo.',
         sourceLabel: 'DNV',
         sourceUrl: 'https://www.dnv.com/assurance/Management-Systems/index.html'
     },
     urfog: {
         title: 'UR Fog',
-        description: 'Fabricante de sistemas antirrobo por niebla de seguridad. La niebla reduce visibilidad en segundos para disuadir intrusion y proteger zonas de alto valor cuando una alarma se activa.',
+        description: 'Fabricante de sistemas antirrobo por niebla de seguridad. La niebla reduce visibilidad en segundos para disuadir intrusión y proteger zonas de alto valor cuando una alarma se activa.',
         sourceLabel: 'UR Fog',
         sourceUrl: 'https://www.urfog.com/en/'
     },
     honeywell: {
         title: 'Honeywell',
-        description: 'Proveedor global de automatizacion de edificios, seguridad, incendio y life safety. Su ecosistema conecta sistemas criticos para mejorar respuesta, operacion y proteccion de instalaciones.',
+        description: 'Proveedor global de automatización de edificios, seguridad, incendio y life safety. Su ecosistema conecta sistemas críticos para mejorar respuesta, operación y protección de instalaciones.',
         sourceLabel: 'Honeywell Buildings',
         sourceUrl: 'https://buildings.honeywell.com/us/en/automation'
     },
     yonusa: {
         title: 'YONUSA',
-        description: 'Marca mexicana enfocada en seguridad perimetral, cercos electricos, sistemas de alarma y control remoto. Su capacitacion para instaladores suma respaldo tecnico en soluciones de perimetro.',
+        description: 'Marca mexicana enfocada en seguridad perimetral, cercos eléctricos, sistemas de alarma y control remoto. Su capacitación para instaladores suma respaldo técnico en soluciones de perímetro.',
         sourceLabel: 'YONUSA',
         sourceUrl: 'https://yonusa.com/'
     },
     sermex: {
         title: 'SERMEX',
-        description: 'Empresa mexicana de seguridad electronica con trayectoria en videovigilancia, tecnologias de seguridad y proyectos especializados. Su experiencia complementa soluciones integrales para entornos de alta exigencia.',
+        description: 'Empresa mexicana de seguridad electrónica con trayectoria en videovigilancia, tecnologías de seguridad y proyectos especializados. Su experiencia complementa soluciones integrales para entornos de alta exigencia.',
         sourceLabel: 'SERMEX',
         sourceUrl: 'https://sermex.mx/'
     }
