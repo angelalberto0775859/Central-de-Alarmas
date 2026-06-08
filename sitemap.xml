@@ -31,6 +31,48 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://centraldealarmas.com.mx/vcard/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/CDA/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/CDA/mauro_lopez.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/CDA/said_karam.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/CDA/francisco_ventura.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/Alarmas_vigilancia/david_ysunza.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://centraldealarmas.com.mx/vcard/Mistica_excelencia/gerardo_alejandre.html</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://centraldealarmas.com.mx/vacantes/monitorista.html</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
