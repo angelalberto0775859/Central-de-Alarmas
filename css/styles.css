@@ -27,6 +27,11 @@ body {
     overflow-x: hidden;
 }
 
+main > section:not(#inicio) {
+    content-visibility: auto;
+    contain-intrinsic-size: 760px;
+}
+
 body::before {
     content: '';
     display: none;
@@ -517,7 +522,7 @@ header.scrolled .hamburger span { background: var(--accent); }
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../img/fondo_2.svg');
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 1px, transparent 1px);
     background-repeat: repeat;
     background-position: center top;
     background-size: 900px auto;
@@ -2308,7 +2313,7 @@ textarea.error {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../img/fondo_2.svg');
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 1px, transparent 1px);
     background-position: center;
     background-size: 900px auto;
     opacity: 0.03;
@@ -2688,7 +2693,7 @@ textarea.error {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../img/fondo_2.svg');
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 1px, transparent 1px);
     background-size: 620px auto;
     background-position: center;
     opacity: 0.035;
@@ -3940,7 +3945,7 @@ footer::after {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../img/fondo_2.svg');
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 1px, transparent 1px);
     background-size: 820px auto;
     background-position: center;
     opacity: 0.055;
@@ -4296,7 +4301,7 @@ footer::after {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../img/fondo_2.svg');
+    background-image: radial-gradient(rgba(6, 57, 112, 0.08) 1px, transparent 1px);
     background-position: center;
     background-size: 900px auto;
     opacity: 0.03;

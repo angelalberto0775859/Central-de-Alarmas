@@ -173,16 +173,16 @@ const packageColorState = {
 
 const packageColorImages = {
     essential: {
-        black: 'img/Paquetes AJAX/Paquete Essential/Essential.png',
-        white: 'img/Paquetes AJAX/Paquete Essential/Essential W Card.png'
+        black: 'img/optimized/essential-card.jpg',
+        white: 'img/optimized/essential-white-card.jpg'
     },
     professional: {
-        black: 'img/Paquetes AJAX/Paquete Profesional/Profesional.png',
-        white: 'img/Paquetes AJAX/Paquete Profesional/Profesional W Card.png'
+        black: 'img/optimized/profesional-card.jpg',
+        white: 'img/optimized/profesional-white-card.jpg'
     },
     elite: {
-        black: 'img/Paquetes AJAX/Paquete Elite/Elite.png',
-        white: 'img/Paquetes AJAX/Paquete Elite/Elite W Card.png'
+        black: 'img/optimized/elite-card.jpg',
+        white: 'img/optimized/elite-white-card.jpg'
     }
 };
 
@@ -602,7 +602,7 @@ function openPackageModal(packageKey) {
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
                     <div class="package-component-media">
-                        <img src="${escapeHtml(getPackageComponentImage(component, packageKey))}" alt="${escapeHtml(component.name)}">
+                        <img src="${escapeHtml(getPackageComponentImage(component, packageKey))}" alt="${escapeHtml(component.name)}" loading="lazy" decoding="async">
                     </div>
                     <div class="package-component-copy">
                         <h4>${escapeHtml(component.name)} <span>${escapeHtml(component.badge)}</span></h4>
@@ -612,7 +612,7 @@ function openPackageModal(packageKey) {
             `).join('')}
             <article class="package-component-card package-ajax-system-card">
                 <div class="package-component-media">
-                    <img src="img/Apps/ajax-security-system.jpeg" alt="${escapeHtml(t('packages.ajaxCard.title'))}">
+                    <img src="img/Apps/ajax-security-system.jpeg" alt="${escapeHtml(t('packages.ajaxCard.title'))}" loading="lazy" decoding="async">
                 </div>
                 <div class="package-component-copy">
                     <h4>${escapeHtml(t('packages.ajaxCard.title'))} <span>${escapeHtml(t('packages.ajaxCard.badge'))}</span></h4>
@@ -688,14 +688,6 @@ function preloadPackageGalleryNeighbors(packageData, currentIndex) {
     [currentIndex, currentIndex + 1, currentIndex - 1].forEach((index) => {
         const component = packageData.components[((index % total) + total) % total];
         if (component) preloadPackageGalleryImage(getPackageComponentImage(component, packageGalleryState.packageKey));
-    });
-}
-
-function preloadPackageGallery(packageData, packageKey) {
-    if (!packageData || !Array.isArray(packageData.components)) return;
-    packageData.components.forEach((component) => {
-        preloadPackageGalleryImage(getPackageComponentImage(component, packageKey));
-        if (component.imageWhite) preloadPackageGalleryImage(component.imageWhite);
     });
 }
 
@@ -943,7 +935,6 @@ function openPackageGallery(packageKey) {
     if (!packageData || !modal || !modalImage) return;
 
     packageGalleryState = { packageKey, index: 0 };
-    preloadPackageGallery(packageData, packageKey);
     modal.classList.remove('package-modal');
     modal.classList.remove('certification-modal');
     modal.classList.add('package-gallery-modal');
@@ -1014,14 +1005,66 @@ if (window.AOS) {
 const header = document.getElementById('main-header');
 const backToTop = document.getElementById('back-to-top');
 const hasTransparentHero = Boolean(document.querySelector('#inicio video, .blog-hero video, .news-hero-video'));
+let scrollTicking = false;
 
 function handleScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    document.body.style.backgroundPosition = `${scrollTop * 0.1}px ${scrollTop * 0.05}px`;
     if (header) {
         header.classList.toggle('scrolled', !hasTransparentHero || scrollTop > 24);
     }
     if (backToTop) backToTop.classList.toggle('visible', scrollTop > 100);
+    scrollTicking = false;
+}
+
+function requestScrollUpdate() {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(handleScroll);
+}
+
+function loadDeferredHeroVideo() {
+    const video = document.getElementById('background-video');
+    if (!video || video.dataset.loaded === 'true') return;
+    const source = video.querySelector('source[data-src]');
+    if (!source) return;
+    source.src = source.dataset.src;
+    source.removeAttribute('data-src');
+    video.dataset.loaded = 'true';
+    video.load();
+    video.play().catch(() => {});
+}
+
+function loadRecaptcha() {
+    if (!document.querySelector('.g-recaptcha') || document.querySelector('script[data-recaptcha-loader]')) return;
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    script.dataset.recaptchaLoader = 'true';
+    document.head.appendChild(script);
+}
+
+function scheduleNonCriticalResources() {
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach((eventName) => {
+        window.addEventListener(eventName, loadDeferredHeroVideo, { once: true, passive: true });
+    });
+
+    const contactForm = document.querySelector('#contact-form, .job-application-form');
+    if (contactForm) {
+        ['focusin', 'pointerenter', 'touchstart'].forEach((eventName) => {
+            contactForm.addEventListener(eventName, loadRecaptcha, { once: true, passive: true });
+        });
+    }
+
+    if ('IntersectionObserver' in window && contactForm) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+                loadRecaptcha();
+                observer.disconnect();
+            }
+        }, { rootMargin: '500px 0px' });
+        observer.observe(contactForm);
+    }
 }
 
 // Refrescar AOS cuando se carga la página y aplicar carga diferida de imágenes
@@ -1037,6 +1080,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         img.decoding = 'async';
     });
+
+    scheduleNonCriticalResources();
 
     document.addEventListener('click', (event) => {
         const branchMarker = event.target.closest('.branch-marker');
@@ -1073,9 +1118,8 @@ document.addEventListener('DOMContentLoaded', function() {
     handleScroll();
 });
 
-window.addEventListener('scroll', () => {
-    requestAnimationFrame(handleScroll);
-}, { passive: true });
+window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+handleScroll();
 
 // ─── MOBILE MENU ───
 const hamburger = document.getElementById('hamburger');

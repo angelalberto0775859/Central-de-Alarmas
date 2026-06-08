@@ -14,10 +14,10 @@
     <link rel="preconnect" href="https://translate.google.com" crossorigin>
     <link rel="preconnect" href="https://translate.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preload" href="./css/styles.css" as="style">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="./css/styles.css" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="preload" href="./css/styles.min.css?v=20260608-perf" as="style">
+    <link rel="preload" href="https://unpkg.com/aos@next/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"></noscript>
+    <link rel="stylesheet" href="./css/styles.min.css?v=20260608-perf" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -33,12 +33,12 @@
     }
     </script>
 </head>
-<body data-prewarm-translate="true">
+<body>
 
     <!-- HEADER -->
     <header id="main-header">
         <div class="logo">
-            <a href="#inicio"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
+            <a href="#inicio"><img src="img/cda-logo-f.svg" alt="Central de Alarmas" fetchpriority="high" decoding="async"></a>
         </div>
         <nav id="main-nav">
             <a href="#servicios-preview" data-i18n="nav.services">Servicios</a>
@@ -88,8 +88,8 @@
 
         <!-- ─── HERO ─── -->
         <section id="inicio">
-            <video autoplay muted loop playsinline preload="metadata" id="background-video">
-                <source src="img/video-inicio.mp4" type="video/mp4">
+            <video autoplay muted loop playsinline preload="none" poster="img/optimized/hero-poster.jpg" fetchpriority="high" id="background-video">
+                <source data-src="img/optimized/video-inicio-720.mp4" type="video/mp4">
             </video>
             <div class="video-overlay"></div>
 
@@ -271,9 +271,9 @@
             </div>
             <div class="packages-grid">
                 <!-- Paquetes visibles: Hogar, Hogar y PyMES, Negocio -->
-                <div class="package-card" data-package-key="essential" data-image-black="img/Paquetes AJAX/Paquete Essential/Essential.png" data-image-white="img/Paquetes AJAX/Paquete Essential/Essential W Card.png" data-aos="fade-up" data-aos-delay="100">
+                <div class="package-card" data-package-key="essential" data-image-black="img/optimized/essential-card.jpg" data-image-white="img/optimized/essential-white-card.jpg" data-aos="fade-up" data-aos-delay="100">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Essential/Essential.png" alt="Paquete Essential" data-package-image>
+                        <img src="img/optimized/essential-card.jpg" alt="Paquete Essential" data-package-image loading="lazy" decoding="async" width="900" height="600">
                         <span class="package-tag">Hogar</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('essential')" aria-label="Ver galería de componentes del paquete Essential" data-i18n="packages.galleryButton">
                             Galería
@@ -313,7 +313,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="200">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/descarga.jpeg" alt="Paquete Hogar Seguro">
+                        <img src="img/Paquetes/descarga.jpeg" alt="Paquete Hogar Seguro" loading="lazy" decoding="async">
                         <span class="package-tag">Hogar</span>
                     </div>
                     <div class="package-body">
@@ -341,7 +341,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="300">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/descarga (1).jpeg" alt="Paquete Total">
+                        <img src="img/Paquetes/descarga (1).jpeg" alt="Paquete Total" loading="lazy" decoding="async">
                         <span class="package-tag">Hogar</span>
                     </div>
                     <div class="package-body">
@@ -368,9 +368,9 @@
                 </div>
 
                 <!-- Paquetes guardados con hidden para reactivarlos después si se necesitan. -->
-                <div class="package-card" data-package-key="professional" data-image-black="img/Paquetes AJAX/Paquete Profesional/Profesional.png" data-image-white="img/Paquetes AJAX/Paquete Profesional/Profesional W Card.png" data-aos="fade-up" data-aos-delay="200">
+                <div class="package-card" data-package-key="professional" data-image-black="img/optimized/profesional-card.jpg" data-image-white="img/optimized/profesional-white-card.jpg" data-aos="fade-up" data-aos-delay="200">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Profesional/Profesional.png" alt="Paquete Profesional" data-package-image>
+                        <img src="img/optimized/profesional-card.jpg" alt="Paquete Profesional" data-package-image loading="lazy" decoding="async" width="900" height="600">
                         <span class="package-tag">Hogar y PyMES</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('professional')" aria-label="Ver galería de componentes del paquete Profesional" data-i18n="packages.galleryButton">
                             Galería
@@ -410,7 +410,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="150">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/Ajax2.png" alt="Paquete Premium">
+                        <img src="img/Paquetes/Ajax2.png" alt="Paquete Premium" loading="lazy" decoding="async">
                         <span class="package-tag">Negocio</span>
                     </div>
                     <div class="package-body">
@@ -436,9 +436,9 @@
                     </div>
                 </div>
 
-                <div class="package-card" data-package-key="elite" data-image-black="img/Paquetes AJAX/Paquete Elite/Elite.png" data-image-white="img/Paquetes AJAX/Paquete Elite/Elite W Card.png" data-aos="fade-up" data-aos-delay="300">
+                <div class="package-card" data-package-key="elite" data-image-black="img/optimized/elite-card.jpg" data-image-white="img/optimized/elite-white-card.jpg" data-aos="fade-up" data-aos-delay="300">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes AJAX/Paquete Elite/Elite.png" alt="Paquete Elite" data-package-image>
+                        <img src="img/optimized/elite-card.jpg" alt="Paquete Elite" data-package-image loading="lazy" decoding="async" width="900" height="450">
                         <span class="package-tag">Negocio</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('elite')" aria-label="Ver galería de componentes del paquete Elite" data-i18n="packages.galleryButton">
                             Galería
@@ -478,7 +478,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="250">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/alarma_incendio.jpg" alt="Sistema contra incendios">
+                        <img src="img/optimized/alarma-incendio-card.jpg" alt="Sistema contra incendios" loading="lazy" decoding="async" width="900" height="600">
                         <span class="package-tag">Enterprise</span>
                     </div>
                     <div class="package-body">
@@ -505,7 +505,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="300">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/control_acceso.jpg" alt="Control de acceso">
+                        <img src="img/Paquetes/control_acceso.jpg" alt="Control de acceso" loading="lazy" decoding="async">
                         <span class="package-tag">Enterprise</span>
                     </div>
                     <div class="package-body">
@@ -533,7 +533,7 @@
 
                 <div class="package-card" hidden data-aos="fade-up" data-aos-delay="350">
                     <div class="package-img-wrap">
-                        <img src="img/Paquetes/gps.jpg" alt="GPS">
+                        <img src="img/optimized/gps-card.jpg" alt="GPS" loading="lazy" decoding="async" width="900" height="545">
                         <span class="package-tag">Enterprise</span>
                     </div>
                     <div class="package-body">
@@ -581,7 +581,7 @@
                     </a>
                 </div>
                 <div class="map-container" data-aos="fade-left" data-aos-delay="100">
-                    <img src="img/mapa-v2.svg" alt="Presencia en México" class="mexico-map">
+                    <img src="img/mapa-v2.svg" alt="Presencia en México" class="mexico-map" loading="lazy" decoding="async">
                     <button type="button" class="branch-marker branch-marker-cdmx active" data-branch="cdmx" data-branch-label="CDMX" aria-label="Ver sucursal CDMX" aria-expanded="true">
                         <span class="branch-marker-icon">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-7h6v7M9 10h.01M12 10h.01M15 10h.01"/></svg>
@@ -622,58 +622,58 @@
                 <div class="logos-slider">
                     <div class="logos-track">
                         <!-- Primera tanda de logos -->
-                        <img src="img/Partners/Alsea.png" alt="Partner 1" class="partner-alsea">
-                        <img src="img/Partners/Bardahl.png" alt="Partner 2" class="partner-bardahl">
-                        <img src="img/Partners/Burgerking.png" alt="Partner 3" class="partner-burgerking">
-                        <img src="img/Partners/Cantia.png" alt="Partner 4" class="partner-cantia">
-                        <img src="img/Partners/Chilis.png" alt="Partner 5" class="partner-chilis">
-                        <img src="img/Partners/CorazondeBarro.png" alt="Partner 6" class="partner-corazondebarro">
-                        <img src="img/Partners/Dominos.png" alt="Partner 7" class="partner-dominos">
-                        <img src="img/Partners/ElPalacioDeHierro.png" alt="Partner 8" class="partner-elpalaciodehierro">
-                        <img src="img/Partners/Lumen.png" alt="Partner 9" class="partner-lumen">
-                        <img src="img/Partners/Macstore.png" alt="Partner 10" class="partner-macstore">
-                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz">
-                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven">
-                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot">
-                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga">
-                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega">
-                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang">
-                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma">
-                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana">
-                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks">
-                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips">
+                        <img src="img/Partners/Alsea.png" alt="Partner 1" class="partner-alsea" loading="lazy" decoding="async">
+                        <img src="img/Partners/Bardahl.png" alt="Partner 2" class="partner-bardahl" loading="lazy" decoding="async">
+                        <img src="img/Partners/Burgerking.png" alt="Partner 3" class="partner-burgerking" loading="lazy" decoding="async">
+                        <img src="img/Partners/Cantia.png" alt="Partner 4" class="partner-cantia" loading="lazy" decoding="async">
+                        <img src="img/Partners/Chilis.png" alt="Partner 5" class="partner-chilis" loading="lazy" decoding="async">
+                        <img src="img/Partners/CorazondeBarro.png" alt="Partner 6" class="partner-corazondebarro" loading="lazy" decoding="async">
+                        <img src="img/Partners/Dominos.png" alt="Partner 7" class="partner-dominos" loading="lazy" decoding="async">
+                        <img src="img/Partners/ElPalacioDeHierro.png" alt="Partner 8" class="partner-elpalaciodehierro" loading="lazy" decoding="async">
+                        <img src="img/Partners/Lumen.png" alt="Partner 9" class="partner-lumen" loading="lazy" decoding="async">
+                        <img src="img/Partners/Macstore.png" alt="Partner 10" class="partner-macstore" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven" loading="lazy" decoding="async">
+                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega" loading="lazy" decoding="async">
+                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang" loading="lazy" decoding="async">
+                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma" loading="lazy" decoding="async">
+                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana" loading="lazy" decoding="async">
+                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks" loading="lazy" decoding="async">
+                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips" loading="lazy" decoding="async">
                         
                         <!-- Segunda tanda duplicada para loop infinito -->
-                        <img src="img/Partners/Alsea.png" alt="Partner 1" class="partner-alsea">
-                        <img src="img/Partners/Bardahl.png" alt="Partner 2" class="partner-bardahl">
-                        <img src="img/Partners/Burgerking.png" alt="Partner 3" class="partner-burgerking">
-                        <img src="img/Partners/Cantia.png" alt="Partner 4" class="partner-cantia">
-                        <img src="img/Partners/Chilis.png" alt="Partner 5" class="partner-chilis">
-                        <img src="img/Partners/CorazondeBarro.png" alt="Partner 6" class="partner-corazondebarro">
-                        <img src="img/Partners/Dominos.png" alt="Partner 7" class="partner-dominos">
-                        <img src="img/Partners/ElPalacioDeHierro.png" alt="Partner 8" class="partner-elpalaciodehierro">
-                        <img src="img/Partners/Lumen.png" alt="Partner 9" class="partner-lumen">
-                        <img src="img/Partners/Macstore.png" alt="Partner 10" class="partner-macstore">
-                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz">
-                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven">
-                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot">
-                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga">
-                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega">
-                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang">
-                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma">
-                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana">
-                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks">
-                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips">
-                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz">
-                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven">
-                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot">
-                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga">
-                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega">
-                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang">
-                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma">
-                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana">
-                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks">
-                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips">
+                        <img src="img/Partners/Alsea.png" alt="Partner 1" class="partner-alsea" loading="lazy" decoding="async">
+                        <img src="img/Partners/Bardahl.png" alt="Partner 2" class="partner-bardahl" loading="lazy" decoding="async">
+                        <img src="img/Partners/Burgerking.png" alt="Partner 3" class="partner-burgerking" loading="lazy" decoding="async">
+                        <img src="img/Partners/Cantia.png" alt="Partner 4" class="partner-cantia" loading="lazy" decoding="async">
+                        <img src="img/Partners/Chilis.png" alt="Partner 5" class="partner-chilis" loading="lazy" decoding="async">
+                        <img src="img/Partners/CorazondeBarro.png" alt="Partner 6" class="partner-corazondebarro" loading="lazy" decoding="async">
+                        <img src="img/Partners/Dominos.png" alt="Partner 7" class="partner-dominos" loading="lazy" decoding="async">
+                        <img src="img/Partners/ElPalacioDeHierro.png" alt="Partner 8" class="partner-elpalaciodehierro" loading="lazy" decoding="async">
+                        <img src="img/Partners/Lumen.png" alt="Partner 9" class="partner-lumen" loading="lazy" decoding="async">
+                        <img src="img/Partners/Macstore.png" alt="Partner 10" class="partner-macstore" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven" loading="lazy" decoding="async">
+                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega" loading="lazy" decoding="async">
+                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang" loading="lazy" decoding="async">
+                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma" loading="lazy" decoding="async">
+                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana" loading="lazy" decoding="async">
+                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks" loading="lazy" decoding="async">
+                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mercedes-Benz.png" alt="Partner 1" class="partner-mercedesbenz" loading="lazy" decoding="async">
+                        <img src="img/Partners/Mundojoven.png" alt="Partner 2" class="partner-mundojoven" loading="lazy" decoding="async">
+                        <img src="img/Partners/OfficeDepot.png" alt="Partner 3" class="partner-officedepot" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BALENCIAGA.png" alt="Partner 4" class="partner-balenciaga" loading="lazy" decoding="async">
+                        <img src="img/Partners/PART_BOTTEGA.png" alt="Partner 5" class="partner-bottega" loading="lazy" decoding="async">
+                        <img src="img/Partners/PFChangs.png" alt="Partner 6" class="partner-pfchang" loading="lazy" decoding="async">
+                        <img src="img/Partners/Puma.png" alt="Partner 7" class="partner-puma" loading="lazy" decoding="async">
+                        <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana" loading="lazy" decoding="async">
+                        <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks" loading="lazy" decoding="async">
+                        <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips" loading="lazy" decoding="async">
                     </div>
                 </div>
             </div>
@@ -697,22 +697,22 @@
                 </div>
                 <div class="monitoring-apps-grid" aria-label="Aplicaciones compatibles para monitoreo">
                     <article class="monitoring-app-card">
-                        <img src="img/Apps/ajax-security-system.jpeg" alt="Ajax Security System">
+                        <img src="img/Apps/ajax-security-system.jpeg" alt="Ajax Security System" loading="lazy" decoding="async">
                         <h4>Ajax Security System</h4>
                         <p>Control de intrusión, cámaras y eventos inteligentes desde ecosistema Ajax.</p>
                     </article>
                     <article class="monitoring-app-card">
-                        <img src="img/Apps/connect-alarm.jpeg" alt="Connect Alarm">
+                        <img src="img/Apps/connect-alarm.jpeg" alt="Connect Alarm" loading="lazy" decoding="async">
                         <h4>Connect Alarm</h4>
                         <p>Recepción de alertas y operación móvil para instalaciones residenciales y negocio.</p>
                     </article>
                     <article class="monitoring-app-card">
-                        <img src="img/Apps/total-connect-2.jpeg" alt="Total Connect 2.0">
+                        <img src="img/Apps/total-connect-2.jpeg" alt="Total Connect 2.0" loading="lazy" decoding="async">
                         <h4>Total Connect 2.0</h4>
                         <p>Automatización, notificaciones y administración remota de eventos críticos.</p>
                     </article>
                     <article class="monitoring-app-card">
-                        <img src="img/Apps/alarm-com.jpeg" alt="Alarm.com">
+                        <img src="img/Apps/alarm-com.jpeg" alt="Alarm.com" loading="lazy" decoding="async">
                         <h4>Alarm.com</h4>
                         <p>Seguridad conectada con señales, video y seguimiento desde una sola plataforma.</p>
                     </article>
@@ -757,20 +757,20 @@
                 </button>
                 <div class="cert-carousel-viewport" tabindex="0" aria-label="Carrusel de certificaciones y distintivos">
                     <div class="certificaciones-track">
-                        <button class="cert-item" type="button" data-cert-id="alas" aria-label="Ver detalles de ALAS"><img src="img/Certificaciones/Logo-ALAS.png" alt="ALAS"></button>
-                        <button class="cert-item cert-item--ajax" type="button" data-cert-id="ajax" aria-label="Ver detalles de AJAX Systems"><img src="img/Certificaciones/Logo-Ajax.png" alt="AJAX Systems"></button>
-                        <button class="cert-item" type="button" data-cert-id="bosch" aria-label="Ver detalles de Bosch"><img src="img/Certificaciones/Logo-Bosch.png" alt="Bosch"></button>
-                        <button class="cert-item" type="button" data-cert-id="dmp" aria-label="Ver detalles de DMP"><img src="img/Certificaciones/Logo-DMP.png" alt="DMP"></button>
-                        <button class="cert-item" type="button" data-cert-id="esr" aria-label="Ver detalles de Empresa Socialmente Responsable"><img src="img/Certificaciones/Logo-ESR.png" alt="Empresa Socialmente Responsable"></button>
-                        <button class="cert-item" type="button" data-cert-id="iso9001" aria-label="Ver detalles de ISO 9001"><img src="img/Certificaciones/Logo-ISO9001.png" alt="ISO 9001"></button>
-                        <button class="cert-item" type="button" data-cert-id="leanSixSigma" aria-label="Ver detalles de Lean Six Sigma"><img src="img/Certificaciones/Logo-LEAN-6XMA.png" alt="Lean Six Sigma"></button>
-                        <button class="cert-item" type="button" data-cert-id="lenel" aria-label="Ver detalles de Lenel"><img src="img/Certificaciones/Logo-Lenel.png" alt="Lenel"></button>
-                        <button class="cert-item" type="button" data-cert-id="notifier" aria-label="Ver detalles de Notifier"><img src="img/Certificaciones/Logo-Notifier.png" alt="Notifier"></button>
-                        <button class="cert-item" type="button" data-cert-id="dnv" aria-label="Ver detalles de DNV"><img src="img/Certificaciones/Logo-DNV.png" alt="DNV"></button>
-                        <button class="cert-item cert-item--wide" type="button" data-cert-id="urfog" aria-label="Ver detalles de UR Fog Security Fogging Systems"><img src="img/Certificaciones/Logo-UR-Fog.jpeg" alt="UR Fog Security Fogging Systems"></button>
-                        <button class="cert-item cert-item--wide" type="button" data-cert-id="honeywell" aria-label="Ver detalles de Honeywell"><img src="img/Certificaciones/Logo-Honeywell.jpeg" alt="Honeywell"></button>
-                        <button class="cert-item" type="button" data-cert-id="yonusa" aria-label="Ver detalles de YONUSA"><img src="img/Certificaciones/Logo-YONUSA.png" alt="YONUSA"></button>
-                        <button class="cert-item" type="button" data-cert-id="sermex" aria-label="Ver detalles de SERMEX"><img src="img/Certificaciones/Logo-SERMEX.svg" alt="SERMEX"></button>
+                        <button class="cert-item" type="button" data-cert-id="alas" aria-label="Ver detalles de ALAS"><img src="img/Certificaciones/Logo-ALAS.png" alt="ALAS" loading="lazy" decoding="async"></button>
+                        <button class="cert-item cert-item--ajax" type="button" data-cert-id="ajax" aria-label="Ver detalles de AJAX Systems"><img src="img/Certificaciones/Logo-Ajax.png" alt="AJAX Systems" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="bosch" aria-label="Ver detalles de Bosch"><img src="img/Certificaciones/Logo-Bosch.png" alt="Bosch" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="dmp" aria-label="Ver detalles de DMP"><img src="img/Certificaciones/Logo-DMP.png" alt="DMP" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="esr" aria-label="Ver detalles de Empresa Socialmente Responsable"><img src="img/Certificaciones/Logo-ESR.png" alt="Empresa Socialmente Responsable" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="iso9001" aria-label="Ver detalles de ISO 9001"><img src="img/Certificaciones/Logo-ISO9001.png" alt="ISO 9001" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="leanSixSigma" aria-label="Ver detalles de Lean Six Sigma"><img src="img/Certificaciones/Logo-LEAN-6XMA.png" alt="Lean Six Sigma" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="lenel" aria-label="Ver detalles de Lenel"><img src="img/Certificaciones/Logo-Lenel.png" alt="Lenel" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="notifier" aria-label="Ver detalles de Notifier"><img src="img/Certificaciones/Logo-Notifier.png" alt="Notifier" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="dnv" aria-label="Ver detalles de DNV"><img src="img/Certificaciones/Logo-DNV.png" alt="DNV" loading="lazy" decoding="async"></button>
+                        <button class="cert-item cert-item--wide" type="button" data-cert-id="urfog" aria-label="Ver detalles de UR Fog Security Fogging Systems"><img src="img/Certificaciones/Logo-UR-Fog.jpeg" alt="UR Fog Security Fogging Systems" loading="lazy" decoding="async"></button>
+                        <button class="cert-item cert-item--wide" type="button" data-cert-id="honeywell" aria-label="Ver detalles de Honeywell"><img src="img/Certificaciones/Logo-Honeywell.jpeg" alt="Honeywell" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="yonusa" aria-label="Ver detalles de YONUSA"><img src="img/Certificaciones/Logo-YONUSA.png" alt="YONUSA" loading="lazy" decoding="async"></button>
+                        <button class="cert-item" type="button" data-cert-id="sermex" aria-label="Ver detalles de SERMEX"><img src="img/Certificaciones/Logo-SERMEX.svg" alt="SERMEX" loading="lazy" decoding="async"></button>
                     </div>
                 </div>
                 <button class="cert-carousel-btn cert-carousel-btn--next" type="button" data-cert-next aria-label="Ver más certificaciones">
@@ -912,7 +912,7 @@
             <div class="footer-top">
                 <div class="footer-brand">
                     <div class="logo">
-                        <a href="#inicio"><img src="img/CDA_LOGO.svg" alt="Central de Alarmas"></a>
+                        <a href="#inicio"><img src="img/CDA_LOGO.svg" alt="Central de Alarmas" loading="lazy" decoding="async"></a>
                     </div>
                     <p style="margin-top:1rem;">Empresa mexicana de seguridad electrónica con más de 79 años protegiendo lo que más importa.</p>
                 </div>
@@ -980,7 +980,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <div class="gsi"><img src="img/GRUPO_LOGO.svg" alt="GSI"></div>
+                <div class="gsi"><img src="img/GRUPO_LOGO.svg" alt="GSI" loading="lazy" decoding="async"></div>
                 <p>© 2026 Central de Alarmas de México, S.A. de C.V. Todos los derechos reservados.</p>
             </div>
         </div>
@@ -1017,9 +1017,8 @@
     -->
 
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
-    <script src="./js/language-switcher.js" defer></script>
-    <script src="./js/main.js?v=20260526-component-colors" defer></script>
-    <script src="./js/cookies.js" defer></script>
-    <script src="./js/form-handler.js?v=20260526-form-cache" defer></script>
+    <script src="./js/language-switcher.min.js?v=20260608-perf" defer></script>
+    <script src="./js/main.min.js?v=20260608-perf" defer></script>
+    <script src="./js/forms-runtime.min.js?v=20260608-perf" defer></script>
 </body>
 </html>
