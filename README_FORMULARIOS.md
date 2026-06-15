@@ -34,7 +34,7 @@ Los formularios utilizan Google reCAPTCHA v2. La clave visible en el HTML es la 
 RECAPTCHA_SECRET=tu_clave_secreta_de_google
 ```
 
-Si `RECAPTCHA_SECRET` no está configurada, el formulario de contacto principal seguirá enviando el mensaje sin romper la respuesta JSON, pero no validará reCAPTCHA del lado del servidor.
+Si `RECAPTCHA_SECRET` no está configurada, los formularios seguirán enviando el mensaje sin romper la respuesta JSON, pero no validarán reCAPTCHA del lado del servidor. Esta misma verificación se comparte entre contacto, empresa y reclutamiento.
 
 ## Estructura de Archivos
 

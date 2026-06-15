@@ -1,6 +1,8 @@
 <?php
 $destinatario = 'reclutamiento@centraldealarmas.com.mx';
 
+require_once __DIR__ . '/recaptcha.php';
+
 function limpiarCampo($valor) {
     return htmlspecialchars(trim(stripslashes($valor ?? '')), ENT_QUOTES, 'UTF-8');
 }
@@ -25,16 +27,7 @@ if (!empty($_POST['empresa'])) {
     responder(false, 'No fue posible enviar la solicitud.');
 }
 
-$recaptchaRespuesta = $_POST['g-recaptcha-response'] ?? '';
-if ($recaptchaRespuesta === '') {
-    responder(false, 'Por favor, completa la verificacion de Google.');
-}
-
-$recaptchaSecret = '6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G';
-$recaptchaVerificacion = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptchaSecret) . '&response=' . urlencode($recaptchaRespuesta));
-$recaptchaDatos = $recaptchaVerificacion ? json_decode($recaptchaVerificacion, true) : null;
-
-if (empty($recaptchaDatos['success'])) {
+if (!cdaValidarRecaptcha($_POST)) {
     responder(false, 'No se pudo validar la verificacion de Google. Intenta nuevamente.');
 }
 

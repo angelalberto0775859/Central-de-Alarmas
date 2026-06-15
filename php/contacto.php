@@ -2,7 +2,8 @@
 // Configuración
 $destinatario = 'salducin@centraldealarmas.com.mx';
 $asunto = 'Nuevo Mensaje de Contacto - Central de Alarmas';
-$recaptcha_secret = getenv('RECAPTCHA_SECRET') ?: '';
+
+require_once __DIR__ . '/recaptcha.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 
@@ -24,55 +25,41 @@ function limpiarDatos($data) {
 // Función de validación
 function validarFormulario($datos) {
     $errores = [];
-    
+
     if (empty($datos['nombre'])) {
         $errores[] = 'El nombre es obligatorio';
     }
-    
+
     if (empty($datos['correo']) || !filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
         $errores[] = 'El correo electrónico no es válido';
     }
-    
+
     if (empty($datos['telefono'])) {
         $errores[] = 'El teléfono es obligatorio';
     }
-    
+
     if (empty($datos['servicios'])) {
         $errores[] = 'Debes seleccionar un servicio';
     }
-    
+
     if (empty($datos['estado'])) {
         $errores[] = 'Debes seleccionar un estado';
     }
-    
+
     if (empty($datos['mensaje'])) {
         $errores[] = 'El mensaje es obligatorio';
     }
-    
+
     return $errores;
 }
 
 // Verificar si el formulario fue enviado por POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Verificar reCAPTCHA solo cuando el servidor tenga configurada la clave secreta.
-    // La clave visible en el HTML es publica y no sirve como secret para siteverify.
-    if ($recaptcha_secret !== '') {
-        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
-
-        if ($recaptcha_response === '') {
-            responder(false, 'Por favor, verifica que no eres un robot.');
-        }
-
-        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) . '&response=' . urlencode($recaptcha_response);
-        $response = @file_get_contents($verifyUrl);
-        $responseKeys = $response ? json_decode($response, true) : null;
-
-        if (empty($responseKeys['success'])) {
-            responder(false, 'Por favor, verifica que no eres un robot.');
-        }
+    if (!cdaValidarRecaptcha($_POST)) {
+        responder(false, 'Por favor, verifica que no eres un robot.');
     }
-    
+
     // Limpiar y validar datos
     $datos = [
         'nombre' => limpiarDatos($_POST['nombre'] ?? ''),
@@ -83,14 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'mensaje' => limpiarDatos($_POST['mensaje'] ?? ''),
         'titulo' => limpiarDatos($_POST['titulo'] ?? '')
     ];
-    
+
     // Validar formulario
     $errores = validarFormulario($datos);
-    
+
     if (!empty($errores)) {
         responder(false, 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores));
     }
-    
+
     // Crear mensaje HTML
     $mensajeHTML = "
     <html>
@@ -145,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $headers .= 'From: ' . $destinatario . "\r\n";
     $headers .= 'Reply-To: ' . $datos['correo'] . "\r\n";
     $headers .= 'Cc: ' . $datos['correo'] . "\r\n";
-    
+
     // Enviar correo
     if (mail($destinatario, $asunto, $mensajeHTML, $headers)) {
         responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');

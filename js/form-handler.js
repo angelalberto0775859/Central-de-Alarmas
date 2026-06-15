@@ -9,16 +9,16 @@ class FormHandler {
 
         this.init();
     }
-    
+
     init() {
         if (!this.form) return;
         this.restoreCachedFields();
-        
+
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleSubmit();
         });
-        
+
         this.getCacheableFields().forEach(field => {
             field.addEventListener('input', () => {
                 this.clearFieldError(field);
@@ -31,45 +31,55 @@ class FormHandler {
             });
         });
     }
-    
-    handleSubmit() {
+
+    async handleSubmit() {
         // Validar formulario
-        if (!this.validateForm()) {
+        if (!this.validateForm() || !this.validateRecaptcha()) {
             return;
         }
-        
+
         // Deshabilitar botón y mostrar loading
         this.setLoading(true);
-        
+
         // Obtener datos del formulario
         const formData = new FormData(this.form);
-        
-        // Enviar formulario
-        fetch(this.form.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
+
+        try {
+            const response = await fetch(this.form.action, {
+                method: 'POST',
+                body: formData
+            });
+            const responseText = await response.text();
+            let data = null;
+
+            try {
+                data = JSON.parse(responseText);
+            } catch (error) {
+                throw new Error('Respuesta inválida del servidor');
+            }
+
             this.setLoading(false);
-            
+
+            if (!response.ok) {
+                this.resetRecaptcha();
+                this.showError(data.mensaje || 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
+                return;
+            }
+
             if (data.exito) {
                 this.showSuccess(data.mensaje);
                 this.form.reset();
                 this.clearCachedFields();
                 this.resetFileLabels();
-                // Resetear reCAPTCHA
-                if (typeof grecaptcha !== 'undefined') {
-                    grecaptcha.reset();
-                }
+                this.resetRecaptcha();
             } else {
-                this.showError(data.mensaje);
+                this.resetRecaptcha();
+                this.showError(data.mensaje || 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
             }
-        })
-        .catch(() => {
+        } catch (error) {
             this.setLoading(false);
             this.showError('Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
-        });
+        }
     }
 
     getCacheableFields() {
@@ -137,11 +147,11 @@ class FormHandler {
             label.textContent = 'Adjuntar CV en PDF, DOC o DOCX';
         });
     }
-    
+
     validateForm() {
         let isValid = true;
         const requiredFields = this.form.querySelectorAll('[required]');
-        
+
         requiredFields.forEach(field => {
             if (!field.value.trim()) {
                 this.showFieldError(field, 'Este campo es obligatorio');
@@ -153,26 +163,40 @@ class FormHandler {
                 this.clearFieldError(field);
             }
         });
-        
+
         return isValid;
     }
-    
+
+    validateRecaptcha() {
+        if (!this.form.querySelector('.g-recaptcha')) {
+            return true;
+        }
+
+        const response = this.form.querySelector('[name="g-recaptcha-response"]');
+        if (response && response.value.trim()) {
+            return true;
+        }
+
+        this.showError('Por favor, verifica que no eres un robot.');
+        return false;
+    }
+
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-    
+
     showFieldError(field, message) {
         this.clearFieldError(field);
         field.classList.add('error');
-        
+
         const errorElement = field.parentNode.querySelector('.error-message');
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
         }
     }
-    
+
     clearFieldError(field) {
         field.classList.remove('error');
         const errorElement = field.parentNode.querySelector('.error-message');
@@ -180,10 +204,10 @@ class FormHandler {
             errorElement.style.display = 'none';
         }
     }
-    
+
     setLoading(loading) {
         if (!this.submitButton) return;
-        
+
         if (loading) {
             this.submitButton.disabled = true;
             this.submitButton.textContent = 'Enviando...';
@@ -194,21 +218,27 @@ class FormHandler {
             this.submitButton.style.opacity = '1';
         }
     }
-    
+
     showSuccess(message) {
         this.showNotification(message, 'success');
     }
-    
+
     showError(message) {
         this.showNotification(message, 'error');
     }
-    
+
+    resetRecaptcha() {
+        if (typeof grecaptcha !== 'undefined') {
+            grecaptcha.reset();
+        }
+    }
+
     showNotification(message, type) {
         // Crear elemento de notificación
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.textContent = message;
-        
+
         // Estilos
         notification.style.cssText = `
             position: fixed;
@@ -224,20 +254,20 @@ class FormHandler {
             max-width: 300px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         `;
-        
+
         if (type === 'success') {
             notification.style.background = '#10b981';
         } else {
             notification.style.background = '#ef4444';
         }
-        
+
         document.body.appendChild(notification);
-        
+
         // Animar entrada
         setTimeout(() => {
             notification.style.transform = 'translateX(0)';
         }, 100);
-        
+
         // Remover después de 5 segundos
         setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
@@ -254,7 +284,7 @@ class FormHandler {
 document.addEventListener('DOMContentLoaded', function() {
     // Formulario de contacto principal
     new FormHandler('contact-form');
-    
+
     // Formulario de empresa (si existe en la página)
     const empresaForm = document.getElementById('contact-form-empresa');
     if (empresaForm) {

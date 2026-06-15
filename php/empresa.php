@@ -3,6 +3,18 @@
 $destinatario = 'salducin@centraldealarmas.com.mx';
 $asunto = 'Nuevo Mensaje de Contacto Empresarial - Central de Alarmas';
 
+require_once __DIR__ . '/recaptcha.php';
+
+header('Content-Type: application/json; charset=UTF-8');
+
+function responder($exito, $mensaje) {
+    echo json_encode([
+        'exito' => $exito,
+        'mensaje' => $mensaje
+    ]);
+    exit;
+}
+
 // Cabeceras para correo HTML
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -21,76 +33,59 @@ function limpiarDatos($data) {
 // Función de validación
 function validarFormulario($datos) {
     $errores = [];
-    
+
     if (empty($datos['nombre'])) {
         $errores[] = 'El nombre es obligatorio';
     }
-    
+
     if (empty($datos['correo']) || !filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
         $errores[] = 'El correo electrónico no es válido';
     }
-    
+
     if (empty($datos['telefono'])) {
         $errores[] = 'El teléfono es obligatorio';
     }
-    
+
     if (empty($datos['servicios'])) {
         $errores[] = 'Debes seleccionar un servicio';
     }
-    
+
     if (empty($datos['estado'])) {
         $errores[] = 'Debes seleccionar un estado';
     }
-    
+
     if (empty($datos['mensaje'])) {
         $errores[] = 'El mensaje es obligatorio';
     }
-    
+
     return $errores;
 }
 
 // Verificar si el formulario fue enviado por POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Verificar reCAPTCHA
-    $recaptcha_secret = '6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G';
-    $recaptcha_response = $_POST['g-recaptcha-response'];
-    
-    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $recaptcha_response);
-    $responseKeys = json_decode($response, true);
-    
-    if (intval($responseKeys["success"]) !== 1) {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Por favor, verifica que no eres un robot.'
-        ];
-        echo json_encode($respuesta);
-        exit;
+
+    if (!cdaValidarRecaptcha($_POST)) {
+        responder(false, 'Por favor, verifica que no eres un robot.');
     }
-    
+
     // Limpiar y validar datos
     $datos = [
-        'nombre' => limpiarDatos($_POST['nombre']),
-        'correo' => limpiarDatos($_POST['correo']),
-        'telefono' => limpiarDatos($_POST['telefono']),
-        'servicios' => limpiarDatos($_POST['servicios']),
-        'estado' => limpiarDatos($_POST['estado']),
-        'mensaje' => limpiarDatos($_POST['mensaje']),
-        'titulo' => limpiarDatos($_POST['titulo'])
+        'nombre' => limpiarDatos($_POST['nombre'] ?? ''),
+        'correo' => limpiarDatos($_POST['correo'] ?? ''),
+        'telefono' => limpiarDatos($_POST['telefono'] ?? ''),
+        'servicios' => limpiarDatos($_POST['servicios'] ?? ''),
+        'estado' => limpiarDatos($_POST['estado'] ?? ''),
+        'mensaje' => limpiarDatos($_POST['mensaje'] ?? ''),
+        'titulo' => limpiarDatos($_POST['titulo'] ?? '')
     ];
-    
+
     // Validar formulario
     $errores = validarFormulario($datos);
-    
+
     if (!empty($errores)) {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores)
-        ];
-        echo json_encode($respuesta);
-        exit;
+        responder(false, 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores));
     }
-    
+
     // Crear mensaje HTML
     $mensajeHTML = "
     <html>
@@ -140,25 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </body>
     </html>";
-    
+
     // Enviar correo
     if (mail($destinatario, $asunto, $mensajeHTML, $headers)) {
-        $respuesta = [
-            'exito' => true,
-            'mensaje' => '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.'
-        ];
+        responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
     } else {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.'
-        ];
+        responder(false, 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
     }
-    
-    echo json_encode($respuesta);
-    exit;
 } else {
     // Si alguien intenta acceder directamente al archivo
     http_response_code(403);
-    echo 'Acceso denegado';
+    responder(false, 'Acceso denegado');
 }
 ?>
