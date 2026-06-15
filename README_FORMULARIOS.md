@@ -28,11 +28,13 @@ $destinatario = 'nuevo-correo@ejemplo.com';
 ```
 
 ### Configuración de reCAPTCHA
-Los formularios utilizan Google reCAPTCHA v2. La clave secreta está configurada en ambos archivos PHP:
+Los formularios utilizan Google reCAPTCHA v2. La clave visible en el HTML es la clave pública del sitio. La clave secreta no debe guardarse en el repositorio; configúrala en el servidor como variable de entorno:
 
-```php
-$recaptcha_secret = '6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G';
+```bash
+RECAPTCHA_SECRET=tu_clave_secreta_de_google
 ```
+
+Si `RECAPTCHA_SECRET` no está configurada, el formulario de contacto principal seguirá enviando el mensaje sin romper la respuesta JSON, pero no validará reCAPTCHA del lado del servidor.
 
 ## Estructura de Archivos
 

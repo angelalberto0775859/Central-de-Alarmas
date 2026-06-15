@@ -2,6 +2,17 @@
 // Configuración
 $destinatario = 'salducin@centraldealarmas.com.mx';
 $asunto = 'Nuevo Mensaje de Contacto - Central de Alarmas';
+$recaptcha_secret = getenv('RECAPTCHA_SECRET') ?: '';
+
+header('Content-Type: application/json; charset=UTF-8');
+
+function responder($exito, $mensaje) {
+    echo json_encode([
+        'exito' => $exito,
+        'mensaje' => $mensaje
+    ]);
+    exit;
+}
 
 function limpiarDatos($data) {
     $data = trim($data);
@@ -43,44 +54,41 @@ function validarFormulario($datos) {
 
 // Verificar si el formulario fue enviado por POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Verificar reCAPTCHA
-    $recaptcha_secret = '6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G';
-    $recaptcha_response = $_POST['g-recaptcha-response'];
-    
-    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $recaptcha_response);
-    $responseKeys = json_decode($response, true);
-    
-    if (intval($responseKeys["success"]) !== 1) {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Por favor, verifica que no eres un robot.'
-        ];
-        echo json_encode($respuesta);
-        exit;
+
+    // Verificar reCAPTCHA solo cuando el servidor tenga configurada la clave secreta.
+    // La clave visible en el HTML es publica y no sirve como secret para siteverify.
+    if ($recaptcha_secret !== '') {
+        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
+
+        if ($recaptcha_response === '') {
+            responder(false, 'Por favor, verifica que no eres un robot.');
+        }
+
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) . '&response=' . urlencode($recaptcha_response);
+        $response = @file_get_contents($verifyUrl);
+        $responseKeys = $response ? json_decode($response, true) : null;
+
+        if (empty($responseKeys['success'])) {
+            responder(false, 'Por favor, verifica que no eres un robot.');
+        }
     }
     
     // Limpiar y validar datos
     $datos = [
-        'nombre' => limpiarDatos($_POST['nombre']),
-        'correo' => limpiarDatos($_POST['correo']),
-        'telefono' => limpiarDatos($_POST['telefono']),
-        'servicios' => limpiarDatos($_POST['servicios']),
-        'estado' => limpiarDatos($_POST['estado']),
-        'mensaje' => limpiarDatos($_POST['mensaje']),
-        'titulo' => limpiarDatos($_POST['titulo'])
+        'nombre' => limpiarDatos($_POST['nombre'] ?? ''),
+        'correo' => limpiarDatos($_POST['correo'] ?? ''),
+        'telefono' => limpiarDatos($_POST['telefono'] ?? ''),
+        'servicios' => limpiarDatos($_POST['servicios'] ?? ''),
+        'estado' => limpiarDatos($_POST['estado'] ?? ''),
+        'mensaje' => limpiarDatos($_POST['mensaje'] ?? ''),
+        'titulo' => limpiarDatos($_POST['titulo'] ?? '')
     ];
     
     // Validar formulario
     $errores = validarFormulario($datos);
     
     if (!empty($errores)) {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores)
-        ];
-        echo json_encode($respuesta);
-        exit;
+        responder(false, 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores));
     }
     
     // Crear mensaje HTML
@@ -140,22 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Enviar correo
     if (mail($destinatario, $asunto, $mensajeHTML, $headers)) {
-        $respuesta = [
-            'exito' => true,
-            'mensaje' => '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.'
-        ];
+        responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
     } else {
-        $respuesta = [
-            'exito' => false,
-            'mensaje' => 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.'
-        ];
+        responder(false, 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
     }
-    
-    echo json_encode($respuesta);
-    exit;
 } else {
     // Si alguien intenta acceder directamente al archivo
     http_response_code(403);
-    echo 'Acceso denegado';
+    responder(false, 'Acceso denegado');
 }
 ?>
