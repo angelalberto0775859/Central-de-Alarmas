@@ -19,7 +19,6 @@
     <link rel="preload" href="https://unpkg.com/aos@next/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"></noscript>
     <link rel="stylesheet" href="./css/styles.min.css?v=20260608-perf" />
-    <link rel="stylesheet" href="./css/equipment-viewer.css?v=20260618-3d" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -275,23 +274,6 @@
                 <span class="label-tag" data-i18n="packages.eyebrow">Nuestros paquetes</span>
                 <h2 data-i18n="packages.title">Encuentra el plan perfecto para ti</h2>
                 <p data-i18n="packages.subtitle">Desde protección básica hasta soluciones corporativas completas.</p>
-            </div>
-            <div class="equipment-viewer" data-aos="fade-up" data-aos-delay="80" aria-label="Visor 3D de elementos de seguridad">
-                <div class="equipment-viewer-stage">
-                    <canvas id="equipment3dCanvas" aria-label="Modelo 3D interactivo del equipo seleccionado"></canvas>
-                    <div class="equipment-viewer-hint" id="equipmentViewerHint">Cargando modelo 3D</div>
-                </div>
-                <div class="equipment-viewer-panel">
-                    <span class="label-tag">Visor 3D</span>
-                    <h3 id="equipmentViewerTitle">Hub 2 Plus Jeweller</h3>
-                    <p id="equipmentViewerDescription">Panel central para coordinar sensores, cámaras y alertas desde una sola operación.</p>
-                    <div class="equipment-viewer-controls" aria-label="Seleccionar elemento 3D">
-                        <button type="button" class="equipment-viewer-button active" data-viewer-device="hub" aria-pressed="true">Hub</button>
-                        <button type="button" class="equipment-viewer-button" data-viewer-device="doorprotect" aria-pressed="false">DoorProtect</button>
-                        <button type="button" class="equipment-viewer-button" data-viewer-device="motioncam" aria-pressed="false">MotionCam</button>
-                        <button type="button" class="equipment-viewer-button" data-viewer-device="keypad" aria-pressed="false">Teclado</button>
-                    </div>
-                </div>
             </div>
             <div class="packages-grid">
                 <!-- Paquetes visibles: Hogar, Hogar y PyMES, Negocio -->
@@ -1043,15 +1025,6 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
     <script src="./js/language-switcher.min.js?v=20260608-perf" defer></script>
     <script src="./js/main.min.js?v=20260608-poster-v2" defer></script>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/"
-            }
-        }
-    </script>
-    <script type="module" src="./js/equipment-viewer.js?v=20260618-models"></script>
     <script src="./js/forms-runtime.min.js?v=20260608-perf" defer></script>
 </body>
 </html>
