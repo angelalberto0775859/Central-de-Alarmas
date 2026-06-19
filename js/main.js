@@ -455,6 +455,12 @@ const certificationDetails = {
         sourceLabel: 'ISO',
         sourceUrl: 'https://www.iso.org/standard/62085.html'
     },
+    jci: {
+        title: 'Johnson Controls',
+        description: 'Proveedor global de tecnología para edificios, seguridad, incendio, control de acceso y automatización. Sus soluciones respaldan proyectos que requieren integración, operación continua y soporte especializado.',
+        sourceLabel: 'Johnson Controls',
+        sourceUrl: 'https://www.johnsoncontrols.com/'
+    },
     leanSixSigma: {
         title: 'Lean Six Sigma',
         description: 'Metodología de mejora de procesos que combina reducción de desperdicio con control de variación. En operación de seguridad, su valor está en procesos más consistentes, medibles y eficientes.',
