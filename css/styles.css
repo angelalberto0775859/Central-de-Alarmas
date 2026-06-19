@@ -2092,6 +2092,8 @@ header.scrolled .hamburger span { background: var(--accent); }
     padding: 2.5rem;
     box-shadow: 0 4px 24px rgba(0,0,0,0.06);
     position: relative;
+    width: 100%;
+    min-width: 0;
 }
 
 form {
@@ -2104,9 +2106,13 @@ form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
+    min-width: 0;
 }
 
-.form-group { position: relative; }
+.form-group {
+    position: relative;
+    min-width: 0;
+}
 
 @media (max-width: 900px) {
     .form-row {
@@ -2135,6 +2141,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 textarea { resize: vertical; min-height: 120px; }
+
+.g-recaptcha {
+    max-width: 100%;
+    overflow: hidden;
+    transform-origin: left top;
+}
 
 .ghost { display: none; }
 
@@ -3688,10 +3700,40 @@ footer::after {
     }
 
     /* Contact */
+    #contacto {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        overflow-x: clip;
+    }
+
     .contacto-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 0 1.5rem;
+        gap: 1.5rem;
+        padding: 0;
+        width: 100%;
+    }
+
+    .contact-form-wrap {
+        width: calc(100vw - 2rem);
+        padding: 1rem;
+        border-radius: var(--radius-sm);
+        max-width: 100%;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    #contact-form {
+        gap: 1rem;
+    }
+
+    .form-row {
+        gap: 1rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.85rem 0.9rem;
     }
     
     /* Certifications */
@@ -3806,6 +3848,7 @@ footer::after {
     
     /* Forms */
     .form-group input,
+    .form-group select,
     .form-group textarea {
         font-size: 16px; /* Prevents zoom on iOS */
     }
@@ -3814,6 +3857,17 @@ footer::after {
     .mexico-map {
         max-width: 100%;
         height: 300px;
+    }
+}
+
+@media (max-width: 360px) {
+    .contact-form-wrap {
+        padding: 0.875rem;
+    }
+
+    #contact-form .g-recaptcha {
+        transform: scale(0.84);
+        margin-bottom: -12px;
     }
 }
 
