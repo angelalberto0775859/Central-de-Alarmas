@@ -459,7 +459,7 @@ const certificationDetails = {
         title: 'Johnson Controls',
         description: 'Proveedor global de tecnología para edificios, seguridad, incendio, control de acceso y automatización. Sus soluciones respaldan proyectos que requieren integración, operación continua y soporte especializado.',
         sourceLabel: 'Johnson Controls',
-        sourceUrl: 'https://www.johnsoncontrols.com/'
+        sourceUrl: 'https://www.johnsoncontrols.com/security'
     },
     leanSixSigma: {
         title: 'Lean Six Sigma',
@@ -817,13 +817,21 @@ function initCertificationsCarousel() {
         scrollToPage(nextPage);
     };
 
-    const getStep = () => {
-        const firstItem = items[0];
-        if (!firstItem) return viewport.clientWidth;
-        const itemWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(getComputedStyle(track).gap) || 0;
-        const visibleItems = Math.max(1, Math.round((viewport.clientWidth + gap) / (itemWidth + gap)));
-        return Math.max(itemWidth + gap, visibleItems * (itemWidth + gap));
+    const getPageOffsets = () => {
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        const visibleRight = viewport.clientWidth;
+        const offsets = [0];
+
+        items.forEach((item) => {
+            const itemLeft = Math.round(item.offsetLeft);
+            const itemRight = itemLeft + item.offsetWidth;
+            if (itemRight > visibleRight) {
+                offsets.push(Math.min(itemLeft, maxScroll));
+            }
+        });
+
+        if (maxScroll > 0) offsets.push(maxScroll);
+        return [...new Set(offsets.map((offset) => Math.round(offset)))].sort((a, b) => a - b);
     };
 
     const scrollToPage = (pageIndex) => {
@@ -850,14 +858,7 @@ function initCertificationsCarousel() {
     };
 
     const buildDots = () => {
-        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-        const step = getStep();
-        pageOffsets = [0];
-        for (let offset = step; offset < maxScroll; offset += step) {
-            pageOffsets.push(offset);
-        }
-        if (maxScroll > 0) pageOffsets.push(maxScroll);
-        pageOffsets = [...new Set(pageOffsets.map((offset) => Math.round(offset)))];
+        pageOffsets = getPageOffsets();
         pageCount = pageOffsets.length;
         dotsWrap.innerHTML = '';
         dots = Array.from({ length: pageCount }, (_, index) => {
