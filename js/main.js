@@ -485,12 +485,6 @@ const certificationDetails = {
         sourceLabel: 'DNV',
         sourceUrl: 'https://www.dnv.com/assurance/Management-Systems/index.html'
     },
-    urfog: {
-        title: 'UR Fog',
-        description: 'Fabricante de sistemas antirrobo por niebla de seguridad. La niebla reduce visibilidad en segundos para disuadir intrusión y proteger zonas de alto valor cuando una alarma se activa.',
-        sourceLabel: 'UR Fog',
-        sourceUrl: 'https://www.urfog.com/en/'
-    },
     honeywell: {
         title: 'Honeywell',
         description: 'Proveedor global de automatización de edificios, seguridad, incendio y life safety. Su ecosistema conecta sistemas críticos para mejorar respuesta, operación y protección de instalaciones.',
