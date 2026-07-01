@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Central de Alarmas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+    <!-- Side Navigation -->
+    <nav class="side-navigation">
+        <div class="side-nav-container">
+            <div class="side-nav-indicators">
+                <button class="side-nav-indicator active" data-section="nosotros">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Inicio</span>
+                </button>
+                <button class="side-nav-indicator" data-section="historia">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Central de Alarmas</span>
+                </button>
+                <button class="side-nav-indicator" data-section="certificaciones">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Certificaciones</span>
+                </button>
+                <button class="side-nav-indicator" data-section="soluciones">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Soluciones</span>
+                </button>
+                <button class="side-nav-indicator" data-section="servicios">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Servicios</span>
+                </button>
+                <button class="side-nav-indicator" data-section="valor-agregado">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Valor agregado</span>
+                </button>
+                <button class="side-nav-indicator" data-section="socios">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Socios</span>
+                </button>
+                <button class="side-nav-indicator" data-section="contacto">
+                    <span class="indicator-dot"></span>
+                    <span class="indicator-label">Contacto</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main-content slides-container">
+        <!-- Hero/Portada Section -->
+        <section id="nosotros" class="section hero-section slide">
+            <div class="container">
+                <div class="hero-content">
+                    <img src="./img/CDA_LOGO.svg" 
+                         alt="Logo Central de Alarmas" class="hero-logo">
+                    <h1 class="hero-title">Soluciones tecnológicas en seguridad.</h1>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="historia" class="section about-section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Nuestra Historia</h2>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="about-description">
+                            Empresa 100% mexicana que forma parte de <img src="./img/Logotipo-para-web_EMPRESA-DE-GSI.png" alt="Logo" style="height: 1em; vertical-align: middle; margin: 0 5px;"> 
+                            Ofrecemos sistemas de seguridad a hogares, PyMES y corporativos desde 1947. Nuestro objetivo es brindar seguridad a todas las familias mexicanas.
+                        </p>
+
+                        <div class="features">
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <svg class="feature-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 class="feature-title">Innovación Constante</h4>
+                                    <p class="feature-description">
+                                        Mantenemos un enfoque constante en la innovación y mejora continua.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <svg class="feature-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h4 class="feature-title">Equipo Experto</h4>
+                                    <p class="feature-description">
+                                        Contamos con profesionales altamente calificados y especializados.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-image">
+                        <img src="./img/1621.jpg" 
+                             alt="Nuestro equipo" class="about-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certificaciones" class="section certifications-section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Certificaciones | Distintivos</h2>
+                    <p class="section-subtitle">Nuestras credenciales y reconocimientos en la industria</p>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-wrapper">
+                        <div class="carousel-track" id="certifications-carousel">
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-ISO9001.png" alt="ISO 9001" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-DNV.png" alt="DNV" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-Bosch.png" alt="Bosch" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-DMP.png" alt="DMP" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-ESR.png" alt="ESR" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-LEAN-6XMA.png" alt="LEAN 6XMA" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-Lenel.png" alt="Lenel" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-Notifier.png" alt="Notifier" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-Seproban.svg" alt="Seproban" class="certification-image"></div>
+                            <div class="certification-logo"><img src="./img/Certificaciones/Logo-ALAS.png" alt="ALAS" class="certification-image"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solutions Section -->
+        <section id="soluciones" class="section solutions-section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Soluciones</h2>
+                    <p class="section-subtitle">Brindamos soluciones que se adaptan a las necesidades de cada uno de nuestros clientes. Nos enfocamos en crear entornos seguros y protegidos con tecnología de última generación.</p>
+                </div>
+
+                <div class="solutions-grid">
+                    <a href="../sg_hogar.html" target="_blank" class="solution-link">
+                        <div class="solution-card">
+                            <div class="solution-icon">
+                                <svg class="solution-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                            </div>
+                            <h3 class="solution-title">Hogar</h3>
+                            <p class="solution-description">Contamos con diferentes sistemas de seguridad que te ayudarán a disuadir a posibles delincuentes y/o prevenir situaciones de riesgo. </p>
+                        </div>
+                    </a>
+
+                    <a href="../sg_pymes.html" target="_blank" class="solution-link">
+                        <div class="solution-card">
+                            <div class="solution-icon">
+                                <svg class="solution-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
+                            <h3 class="solution-title">PyMES</h3>
+                            <p class="solution-description">Sistemas de seguridad diseñados para disuadir posibles amenazas que dañen tu patrimonio.</p>
+                        </div>
+                    </a>
+
+                    <a href="../sg_empresa.html" target="_blank" class="solution-link">
+                        <div class="solution-card">
+                            <div class="solution-icon">
+                                <svg class="solution-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="solution-title">Empresa</h3>
+                            <p class="solution-description">Diseñamos estrategias de seguridad que se adapten a las necesidades de tu empresa a través de un protocolo de seguridad.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="servicios" class="section services-section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Servicios</h2>
+                    <p class="section-subtitle">Ofrecemos una amplia gama de servicios especializados para impulsar el crecimiento de su empresa</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card" data-service="monitoreo">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Monitoreo 24/7</h3>
+                        <p class="service-description">Vigilancia continua de sus sistemas de seguridad con personal especializado disponible las 24 horas del día.</p>
+                    </div>
+
+                    <div class="service-card" data-service="control-acceso">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Control de Acceso</h3>
+                        <p class="service-description">Sistemas avanzados para gestionar y controlar el acceso a instalaciones con máxima seguridad.</p>
+                    </div>
+
+                    <div class="service-card" data-service="intrusion">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Sistema de Intrusión</h3>
+                        <p class="service-description">Detección temprana de intrusiones no autorizadas con alertas inmediatas y respuesta automática.</p>
+                    </div>
+
+                    <div class="service-card" data-service="incendios">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Detección de Incendios</h3>
+                        <p class="service-description">Sistemas de detección temprana de incendios con notificación automática a cuerpos de emergencia.</p>
+                    </div>
+
+                    <div class="service-card" data-service="niebla">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Niebla de Seguridad</h3>
+                        <p class="service-description">Sistema de niebla que reduce la visibilidad para disuadir intrusiones y proteger bienes valiosos.</p>
+                    </div>
+
+                    <div class="service-card" data-service="videovigilancia">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Videovigilancia</h3>
+                        <p class="service-description">Cámaras de alta definición con grabación continua y monitoreo remoto para máxima seguridad.</p>
+                    </div>
+
+                    <div class="service-card" data-service="sismico">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Alertamiento Sísmico</h3>
+                        <p class="service-description">Sistemas de detección sísmica con alertas tempranas para proteger vidas y bienes.</p>
+                    </div>
+
+                    <div class="service-card" data-service="antenas">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Antenas</h3>
+                        <p class="service-description">Sistemas de comunicación inalámbrica para garantizar conectividad y transmisión de datos en tiempo real.</p>
+                    </div>
+
+                    <div class="service-card" data-service="videoverificacion">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Videoverificación</h3>
+                        <p class="service-description">Verificación visual de alarmas mediante cámaras para reducir falsas alarmas y mejorar la respuesta.</p>
+                    </div>
+
+                    <div class="service-card" data-service="rastreo-gps">
+                        <div class="service-icon">
+                            <svg class="service-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Rastreo GPS</h3>
+                        <p class="service-description">Localización y seguimiento en tiempo real de vehículos y activos móviles para mayor seguridad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Valor Agregado Section (nuevo slide) -->
+        <section id="valor-agregado" class="section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Servicio de Valor Agregado</h2>
+                    <p class="section-subtitle">Complementos que potencian la operación y el control de tus sistemas.</p>
+                </div>
+                    <div class="value-added-grid">
+                        <div class="value-added-card" data-service="acceso-web">
+                            <div class="value-added-icon">
+                                <svg class="value-added-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                </svg>
+                            </div>
+                            <h4 class="value-added-service-title">Acceso Web Corporativo</h4>
+                            <p class="value-added-service-description">Plataforma web para gestión remota y monitoreo de sistemas de seguridad desde cualquier dispositivo.</p>
+                        </div>
+                        <div class="value-added-card" data-service="soluciones-integrales">
+                            <div class="value-added-icon">
+                                <svg class="value-added-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                            </div>
+                            <h4 class="value-added-service-title">Soluciones Integrales</h4>
+                            <p class="service-description">Diseño e implementación de sistemas de seguridad completos adaptados a necesidades específicas.</p>
+                        </div>
+
+                        <div class="value-added-card" data-service="analisis-riesgo">
+                            <div class="value-added-icon">
+                                <svg class="value-added-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h4 class="value-added-service-title">Análisis de Riesgo</h4>
+                            <p class="value-added-service-description">Evaluación profesional de vulnerabilidades y diseño de estrategias de seguridad personalizadas.</p>
+                        </div>
+
+                        <div class="value-added-card" data-service="mantenimiento-preventivo">
+                            <div class="value-added-icon">
+                                <svg class="value-added-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <h4 class="value-added-service-title">Mantenimiento Preventivo</h4>
+                            <p class="value-added-service-description">Programas de mantenimiento regular para garantizar el funcionamiento óptimo de todos los sistemas.</p>
+                        </div>
+                    </div>
+            </div>
+        </section>
+
+        <!-- Verticales de Negocio Section -->
+        <section id="socios" class="section business-verticals-section slide">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Verticales de Negocio</h2>
+                    <p class="section-subtitle">Soluciones especializadas para diferentes sectores empresariales</p>
+                </div>
+                <!-- Meta-slider controls -->
+                <div class="meta-slider-controls">
+                    <button class="meta-slider-btn meta-slider-btn-prev" onclick="moveMetaSlide(-1)">
+                        &#8592;
+                    </button>
+                    <button class="meta-slider-btn meta-slider-btn-next" onclick="moveMetaSlide(1)">
+                        &#8594;
+                    </button>
+                </div>
+                <!-- Meta-slider container -->
+                <div class="meta-slider-container">
+                    <div class="meta-slider-track" id="metaSliderTrack">
+                        <!-- Slide 1: Hospitality Carousel -->
+                        <div class="meta-slide">
+                            <div class="vertical-category">
+                                <h3 class="vertical-subtitle">Hospitality</h3>
+                                <div class="carousel-container">
+                                    <div class="carousel-wrapper">
+                                        <div class="carousel-track" id="hospitality-carousel">
+                                            <div class="partner-logo">
+                                                <img src="./img/Alsea.png" alt="Alsea" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Vips.png" alt="Vips" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/CorazondeBarro.png" alt="Corazón de Barro" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Italiannis.png" alt="Italiannis" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Burgerking.png" alt="Burger King" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Dominos.png" alt="Dominos" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Starbucks.png" alt="Starbucks" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Mundojoven.png" alt="Mundo Joven" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PFChangs.png" alt="PFChangs" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Chilis.png" alt="Chilis" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Porton.png" alt="Porton" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/McDonalds.png" alt="McDonalds" class="partner-image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel('hospitality-carousel', -1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M15 18l-6-6 6-6"/>
+                                        </svg>
+                                    </button>
+                                    <button class="carousel-btn carousel-btn-next" onclick="moveCarousel('hospitality-carousel', 1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 18l6-6-6-6"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 2: Retail Carousel -->
+                        <div class="meta-slide">
+                            <div class="vertical-category">
+                                <h3 class="vertical-subtitle">Retail</h3>
+                                <div class="carousel-container">
+                                    <div class="carousel-wrapper">
+                                        <div class="carousel-track" id="retail-carousel">
+                                            <div class="partner-logo">
+                                                <img src="./img/Soriana.png" alt="Soriana" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/OfficeDepot.png" alt="Office Depot" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Vianney.png" alt="Vianney" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Bardahl.png" alt="Bardahl" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Puma.png" alt="Puma" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Sephora.png" alt="Sephora" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Cantia.png" alt="Cantia" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Swarovski.png" alt="Swarovski" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Macstore.png" alt="MacStore" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Lumen.png" alt="Lumen" class="partner-image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel('retail-carousel', -1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M15 18l-6-6 6-6"/>
+                                        </svg>
+                                    </button>
+                                    <button class="carousel-btn carousel-btn-next" onclick="moveCarousel('retail-carousel', 1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 18l6-6-6-6"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 3: Traslados (Fixed) -->
+                        <div class="meta-slide">
+                            <div class="vertical-category">
+                                <h3 class="vertical-subtitle">Traslados</h3>
+                                <div class="translados-grid">
+                                    <div class="partner-logo">
+                                        <img src="./img/Cometra.png" alt="Cometra" class="partner-image">
+                                    </div>
+                                    <div class="partner-logo">
+                                        <img src="./img/Sepsa.png" alt="Sepsa" class="partner-image">
+                                    </div>
+                                    <div class="partner-logo">
+                                        <img src="./img/Logotipo-para-web_EMPRESA-DE-GSI.png" alt="GSI" class="partner-image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 4: Premium Brands Carousel -->
+                        <div class="meta-slide">
+                            <div class="vertical-category">
+                                <h3 class="vertical-subtitle">Marcas Premium</h3>
+                                <div class="carousel-container">
+                                    <div class="carousel-wrapper">
+                                        <div class="carousel-track" id="premium-carousel">
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_OMEGA.png" alt="Omega" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_BOTTEGA.png" alt="Bottega Veneta" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Mercedes-Benz.png" alt="Mercedes Benz" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_PRADA.png" alt="Prada" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_BULGARI.png" alt="Bulgari" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_BALENCIAGA.png" alt="Balenciaga" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_NESPRESSO.png" alt="Nespresso" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PART_POWELLATO.png" alt="Powellato" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/PalacioDeHierro.png" alt="El Palacio de Hierro" class="partner-image">
+                                            </div>
+                                            <div class="partner-logo">
+                                                <img src="./img/Ferragamo.svg" alt="Ferragamo" class="partner-image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel('premium-carousel', -1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M15 18l-6-6 6-6"/>
+                                        </svg>
+                                    </button>
+                                    <button class="carousel-btn carousel-btn-next" onclick="moveCarousel('premium-carousel', 1)">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 18l6-6-6-6"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                         <!-- Slide 5: Bancos Carousel -->
+                        <div class="meta-slide">
+                            <div class="vertical-category">
+                                <h3 class="vertical-subtitle">Bancos</h3>
+                                <div class="bancos-grid">
+                                    <div class="partner-logo">
+                                        <img src="./img/Euronet.png" alt="Euronet" class="partner-image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contacto" class="section contact-section slide">
+            <div class="container">
+                <div class="contact-hero">
+                    <div class="contact-hero-content">
+                        <h2 class="contact-title">¿Listo para proteger lo que más importa?</h2>
+                        <p class="contact-subtitle">Contáctanos hoy y descubre cómo podemos crear la solución de seguridad perfecta para ti</p>
+                        <div class="contact-cta">
+                            <a href="tel:+5553253415" class="contact-btn primary">
+                                <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                Llamar Ahora
+                            </a>
+                            <a href="https://wa.me/5553253415" target="_blank" class="contact-btn secondary">
+                                <svg class="btn-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                                </svg>
+                                WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-details">
+                    <div class="contact-cards">
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <h3>Visítanos</h3>
+                            <p>5 de Febrero 283<br>Col. Obrera, Cuauhtémoc<br>C.P. 06800, CDMX</p>
+                            <a href="https://maps.google.com/?q=5%20de%20Febrero%20283%20Col.%20Obrera,%20Cuauht%C3%A9moc,%20C.P.%2006800,%20CDMX" target="_blank" class="contact-link">Ver en Maps</a>
+                        </div>
+
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3>Escríbenos</h3>
+                            <p>ventas@centraldealarmas.com.mx</p>
+                            <a href="mailto:ventas@centraldealarmas.com.mx" class="contact-link">Enviar Email</a>
+                        </div>
+
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3>Horarios</h3>
+                            <p>Lunes a Viernes<br>8:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="social-section">
+                        <h3>Síguenos</h3>
+                        <div class="social-grid">
+                            <a href="https://www.facebook.com/NewCAMSA/?locale=es_LA" target="_blank" class="social-item" title="Facebook">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="https://x.com/newcamsa" target="_blank" class="social-item" title="X (Twitter)">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                                <span>X</span>
+                            </a>
+                            <a href="https://www.linkedin.com/company/central-de-alarmas-de-m%C3%A9xico" target="_blank" class="social-item" title="LinkedIn">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M19 0H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z" clip-rule="evenodd" />
+                                </svg>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="https://www.instagram.com/centraldealarmas.mx/?hl=es" target="_blank" class="social-item" title="Instagram">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17.5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                </svg>
+                                <span>Instagram</span>
+                            </a>
+                            <a href="https://www.tiktok.com/@centraldealarmasdemexico?lang=es" target="_blank" class="social-item" title="TikTok">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                                </svg>
+                                <span>TikTok</span>
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCHBXHHeJ6mpRiPTteQ6AUUA" target="_blank" class="social-item" title="YouTube">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                <span>YouTube</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="website-section">
+                        <a href="https://centraldealarmas.website/" target="_blank" class="website-link">
+                            centraldealarmas.com.mx
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-bottom">
+                    <div class="footer-website">
+                        <a href="https://centraldealarmas.com.mx" target="_blank" class="footer-website-link">
+                            centraldealarmas.com.mx
+                        </a>
+                    </div>
+                    <p class="footer-copyright">
+                        2025 Central de Alarmas. Todos los derechos reservados.
+                        © 2025 Central de Alarmas. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Service Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modalImage" class="modal-image" src="" alt="">
+                </div>
+                <div class="modal-description">
+                    <p id="modalDescription"></p>
+                </div>
+                <div class="modal-icons">
+                    <h4>Los dispositivos que implementamos:</h4>
+                    <div id="modalIcons" class="modal-icons-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
