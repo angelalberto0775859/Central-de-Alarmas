@@ -535,6 +535,90 @@ body {
     line-height: 1.2;
 }
 
+@media (min-width: 769px) {
+    .contact-section {
+        background:
+            radial-gradient(circle at 15% 18%, rgba(37, 99, 235, 0.08), transparent 34%),
+            linear-gradient(180deg, var(--background) 0%, var(--background-alt) 100%);
+    }
+
+    .contact-section .container {
+        max-width: 1120px;
+    }
+
+    .contact-hero {
+        padding: 1.1rem 0 0.85rem;
+    }
+
+    .contact-title {
+        font-size: clamp(2rem, 3vw, 2.65rem);
+        line-height: 1.08;
+        margin-bottom: 0.65rem;
+        text-wrap: balance;
+    }
+
+    .contact-subtitle {
+        max-width: 680px;
+        margin: 0 auto 1rem;
+    }
+
+    .contact-details {
+        padding: 0.85rem 0 1.25rem;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .contact-cards {
+        gap: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .contact-card {
+        padding: 1rem 1.15rem;
+        background: rgba(255, 255, 255, 0.64);
+        border-color: rgba(226, 232, 240, 0.82);
+    }
+
+    .social-section {
+        width: min(100%, 920px);
+        margin: 0.35rem auto 0;
+        padding: 1rem 1.15rem 1.1rem;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+
+    .social-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .social-grid {
+        grid-template-columns: repeat(6, minmax(112px, 1fr));
+        gap: 0.75rem;
+        max-width: none;
+    }
+
+    .social-item {
+        min-height: 76px;
+        padding: 0.9rem 0.65rem;
+        border-color: rgba(226, 232, 240, 0.9);
+        background: rgba(248, 250, 252, 0.82);
+        overflow: visible;
+        font-size: 0.82rem;
+    }
+
+    .social-item span {
+        white-space: nowrap;
+    }
+
+    .website-section {
+        padding: 0.2rem 0 0;
+        margin-top: 0.35rem;
+    }
+}
+
 .website-section {
     text-align: center;
     padding: 0.75rem 0;
@@ -824,64 +908,6 @@ body {
 /* Mobile adjustments for side navigation */
 @media (max-width: 768px) {
     .side-navigation {
-        top: 50%;
-        right: 0.65rem;
-        bottom: auto;
-        transform: translateY(-50%);
-        width: auto;
-        display: block;
-        justify-content: initial;
-    }
-
-    .side-nav-container {
-        padding: 0;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        backdrop-filter: none;
-    }
-
-    .side-nav-indicators {
-        flex-direction: column;
-        gap: 0.2rem;
-    }
-    
-    .side-nav-indicator {
-        width: 18px;
-        height: 18px;
-        box-shadow: none;
-        background-color: transparent;
-        opacity: 0.55;
-        border: 0;
-    }
-
-    .side-nav-indicator:hover,
-    .side-nav-indicator.active {
-        transform: none;
-        box-shadow: none;
-    }
-
-    .side-nav-indicator.active {
-        background: transparent;
-        opacity: 1;
-    }
-    
-    .indicator-dot {
-        width: 5px;
-        height: 5px;
-        background-color: rgba(15, 23, 42, 0.34);
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
-    }
-
-    .side-nav-indicator.active .indicator-dot {
-        width: 8px;
-        height: 8px;
-        background-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.72), 0 0 0 6px rgba(37, 99, 235, 0.14);
-    }
-
-    .side-nav-indicator .indicator-label {
         display: none;
     }
 }
@@ -3058,14 +3084,21 @@ html {
 
     .about-image {
         margin-left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        order: 0;
     }
 
     .about-img {
-        max-width: 100%;
+        display: block;
+        width: 100%;
+        max-width: 360px;
         height: clamp(240px, 64vw, 320px);
         aspect-ratio: 16 / 10;
         object-fit: cover;
         object-position: 50% 46%;
+        margin: 0 auto;
         border-radius: var(--radius-md);
         filter: brightness(1.08) contrast(1.08) saturate(1.05);
         box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
