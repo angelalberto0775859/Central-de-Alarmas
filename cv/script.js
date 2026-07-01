@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initImageFallbacks();
     initSlidesSystem();
     initServiceModals();
+    initHashNavigation();
 });
 
 // Función para inicializar la navegación (solo indicadores laterales)
@@ -44,6 +45,15 @@ function scrollToSection(sectionId) {
         // Actualizar URL sin recargar la página
         history.pushState(null, null, `#${sectionId}`);
     }
+}
+
+function initHashNavigation() {
+    const initialSection = window.location.hash.replace('#', '');
+    if (!initialSection) return;
+
+    requestAnimationFrame(() => {
+        scrollToSection(initialSection);
+    });
 }
 
 // Función para inicializar el formulario de contacto
