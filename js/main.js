@@ -1,8 +1,36 @@
 // ─── SERVICE MODAL ───
 const packageModalData = {
+    qlsys: {
+        title: 'QOLSYS/Monitoreo 24/7',
+        intro: 'Paquete de seguridad QOLSYS para protección residencial con panel táctil y sensores esenciales.',
+        price: '$1,050+IVA',
+        hasColorOptions: false,
+        showSystemCard: false,
+        components: [
+            {
+                name: 'Panel QOLSYS IQ4',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquete-QOLSYS/Elementos/panel-qolsys-iq4.png',
+                description: 'Panel principal táctil para controlar el sistema de alarma y administrar eventos.'
+            },
+            {
+                name: 'Contactos Magnéticos PowerG QOLSYS',
+                badge: 'Cantidad: 2',
+                image: 'img/Paquete-QOLSYS/Elementos/contactos-magneticos-powerg.png',
+                description: 'Contactos magnéticos para proteger puertas o ventanas.'
+            },
+            {
+                name: 'Infrarrojo PowerG',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquete-QOLSYS/Elementos/infrarrojo-powerg.png',
+                description: 'Detector infrarrojo para protección interior de áreas estratégicas.'
+            }
+        ]
+    },
     essential: {
         title: 'Essential/Monitoreo 24/7',
         intro: 'Protección ideal para espacios pequeños con componentes básicos de seguridad.',
+        price: '$999+IVA',
         components: [
             {
                 name: 'Hub 2 (4G) Jeweller',
@@ -51,6 +79,7 @@ const packageModalData = {
     professional: {
         title: 'Profesional/Monitoreo 24/7',
         intro: 'Paquete ideal para hogares y PyMES con vigilancia y acceso controlado.',
+        price: '$1,050+IVA',
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -106,6 +135,7 @@ const packageModalData = {
     elite: {
         title: 'Elite/Monitoreo 24/7',
         intro: 'Solución corporativa para negocios que necesitan cobertura completa y respuesta garantizada.',
+        price: '$1,199+IVA',
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -166,9 +196,9 @@ let packageGalleryState = {
 };
 
 const packageColorState = {
-    essential: 'black',
-    professional: 'black',
-    elite: 'black'
+    essential: 'white',
+    professional: 'white',
+    elite: 'white'
 };
 
 const packageColorImages = {
@@ -584,12 +614,8 @@ function openPackageModal(packageKey) {
     modalImage.src = '';
     modalImage.alt = '';
     modalImage.style.display = 'none';
-    modalBody.innerHTML = `
-        <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
-        <div class="package-included">
-            <span>${escapeHtml(t('packages.included.monitoring'))}</span>
-            <span>${escapeHtml(t('packages.included.apps'))}</span>
-            <span>${escapeHtml(t('packages.included.installation'))}</span>
+    const pricePill = packageData.price ? `<span>Precio: ${escapeHtml(packageData.price)}</span>` : '';
+    const colorPill = packageData.hasColorOptions === false ? '' : `
             <span class="package-color-pill">
                 ${escapeHtml(t('packages.availableColors'))}
                 <span class="color-swatches" data-package-key="${escapeHtml(packageKey)}" aria-label="${escapeHtml(t('packages.colorAria'))}">
@@ -597,6 +623,21 @@ function openPackageModal(packageKey) {
                     <button type="button" class="color-swatch color-swatch-black${getPackageColor(packageKey) === 'black' ? ' active' : ''}" data-package-color="${escapeHtml(t('packages.black'))}" data-color-value="black" aria-label="${escapeHtml(t('packages.colorBlackAria'))}" aria-pressed="${getPackageColor(packageKey) === 'black'}"></button>
                 </span>
             </span>
+    `;
+    const systemCard = packageData.showSystemCard === false ? null : (packageData.systemCard || {
+        title: t('packages.ajaxCard.title'),
+        badge: t('packages.ajaxCard.badge'),
+        image: 'img/Apps/ajax-security-system.jpeg',
+        description: t('packages.ajaxCard.description')
+    });
+    modalBody.innerHTML = `
+        <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
+        <div class="package-included">
+            <span>${escapeHtml(t('packages.included.monitoring'))}</span>
+            <span>${escapeHtml(t('packages.included.apps'))}</span>
+            <span>${escapeHtml(t('packages.included.installation'))}</span>
+            ${colorPill}
+            ${pricePill}
         </div>
         <div class="package-components-grid">
             ${packageData.components.map((component) => `
@@ -610,15 +651,17 @@ function openPackageModal(packageKey) {
                     </div>
                 </article>
             `).join('')}
+            ${systemCard ? `
             <article class="package-component-card package-ajax-system-card">
                 <div class="package-component-media">
-                    <img src="img/Apps/ajax-security-system.jpeg" alt="${escapeHtml(t('packages.ajaxCard.title'))}" loading="lazy" decoding="async">
+                    <img src="${escapeHtml(systemCard.image)}" alt="${escapeHtml(systemCard.title)}" loading="lazy" decoding="async">
                 </div>
                 <div class="package-component-copy">
-                    <h4>${escapeHtml(t('packages.ajaxCard.title'))} <span>${escapeHtml(t('packages.ajaxCard.badge'))}</span></h4>
-                    <p>${escapeHtml(t('packages.ajaxCard.description'))}</p>
+                    <h4>${escapeHtml(systemCard.title)} <span>${escapeHtml(systemCard.badge)}</span></h4>
+                    <p>${escapeHtml(systemCard.description)}</p>
                 </div>
             </article>
+            ` : ''}
         </div>
     `;
 
@@ -1133,7 +1176,7 @@ if (hamburger && mainNav) {
         hamburger.classList.toggle('active');
         hamburger.classList.toggle('open');
     });
-    
+
     // Close menu when clicking on a link
     const navLinks = mainNav.querySelectorAll('a');
     navLinks.forEach(link => {
@@ -1144,7 +1187,7 @@ if (hamburger && mainNav) {
             hamburger.classList.remove('open');
         });
     });
-    
+
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
         if (!hamburger.contains(event.target) && !mainNav.contains(event.target)) {
@@ -1167,12 +1210,12 @@ function changeWord() {
     // Efecto de desvanecimiento
     word2Element.style.opacity = '0';
     word2Element.style.transform = 'translateY(-10px)';
-    
+
     setTimeout(() => {
         // Cambiar palabra
         currentWordIndex = (currentWordIndex + 1) % words.length;
         word2Element.textContent = words[currentWordIndex];
-        
+
         // Efecto de aparición
         word2Element.style.opacity = '1';
         word2Element.style.transform = 'translateY(0)';

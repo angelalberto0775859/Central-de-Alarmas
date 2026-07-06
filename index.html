@@ -281,9 +281,45 @@
             </div>
             <div class="packages-grid">
                 <!-- Paquetes visibles: Hogar, Hogar y PyMES, Negocio -->
+                <div class="package-card package-card-featured" data-package-key="qlsys" data-aos="fade-up" data-aos-delay="100">
+                    <div class="package-img-wrap">
+                        <img src="img/Paquete-QOLSYS/paquete-qolsys.png" alt="Paquete QOLSYS" data-package-image loading="lazy" decoding="async" width="900" height="900">
+                        <span class="package-tag">Hogar</span>
+                        <button type="button" class="package-gallery-button" onclick="openPackageGallery('qlsys')" aria-label="Ver galería de componentes del paquete QOLSYS" data-i18n="packages.galleryButton">
+                            Galería
+                        </button>
+                    </div>
+                    <div class="package-body">
+                        <div class="package-feature-kicker">Nuevo paquete</div>
+                        <div class="package-feature-heading">
+                            <h3>QOLSYS/Monitoreo 24/7</h3>
+                            <div class="package-feature-price">$1,050<span>+IVA</span></div>
+                        </div>
+                        <p class="package-feature-copy">Panel IQ4 con sensores PowerG y monitoreo profesional para hogares que necesitan una solución clara, elegante y lista para operar.</p>
+                        <ul>
+                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
+                            <li><span class="check-icon"></span>Panel QOLSYS IQ4</li>
+                            <li><span class="check-icon"></span>2 Contactos Magnéticos PowerG QOLSYS</li>
+                            <li><span class="check-icon"></span>Infrarrojo PowerG</li>
+                            <li><span class="check-icon"></span>App incluida</li>
+                            <li><span class="check-icon"></span>Instalación gratuita</li>
+                        </ul>
+                        <div class="package-footer">
+                            <button type="button" class="btn-package" onclick="openPackageModal('qlsys')">
+                                <span data-i18n="packages.viewPackage">Ver paquete</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </button>
+                            <a href="#contacto" class="btn-package btn-package-primary">
+                                <span data-i18n="packages.requestInfo">Solicitar más información</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="package-card" data-package-key="essential" data-image-black="img/optimized/essential-card.jpg" data-image-white="img/optimized/essential-white-card.jpg" data-aos="fade-up" data-aos-delay="100">
                     <div class="package-img-wrap">
-                        <img src="img/optimized/essential-card.jpg" alt="Paquete Essential" data-package-image loading="lazy" decoding="async" width="900" height="600">
+                        <img src="img/optimized/essential-white-card.jpg" alt="Paquete Essential" class="package-image-white" data-package-image loading="lazy" decoding="async" width="900" height="600">
                         <span class="package-tag">Hogar</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('essential')" aria-label="Ver galería de componentes del paquete Essential" data-i18n="packages.galleryButton">
                             Galería
@@ -292,21 +328,22 @@
                     <div class="package-body">
                         <h3>Essential/Monitoreo 24/7</h3>
                         <ul>
+                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Hub 2 (4G) Jeweller</li>
                             <li><span class="check-icon"></span>DoorProtect Jeweller</li>
                             <li><span class="check-icon"></span>MotionProtect Jeweller</li>
                             <li><span class="check-icon"></span>TurretCam 5 Mp/2.8 mm</li>
-                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>App incluida</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
                                 <span class="color-swatches" data-package-key="essential" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('essential', 'white')"></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('essential', 'black')"></button>
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('essential', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('essential', 'black')"></button>
                                 </span>
                             </li>
+                            <li><span class="check-icon"></span>Precio: $999+IVA</li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('essential')">
@@ -380,7 +417,7 @@
                 <!-- Paquetes guardados con hidden para reactivarlos después si se necesitan. -->
                 <div class="package-card" data-package-key="professional" data-image-black="img/optimized/profesional-card.jpg" data-image-white="img/optimized/profesional-white-card.jpg" data-aos="fade-up" data-aos-delay="200">
                     <div class="package-img-wrap">
-                        <img src="img/optimized/profesional-card.jpg" alt="Paquete Profesional" data-package-image loading="lazy" decoding="async" width="900" height="600">
+                        <img src="img/optimized/profesional-white-card.jpg" alt="Paquete Profesional" class="package-image-white" data-package-image loading="lazy" decoding="async" width="900" height="600">
                         <span class="package-tag">Hogar y PyMES</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('professional')" aria-label="Ver galería de componentes del paquete Profesional" data-i18n="packages.galleryButton">
                             Galería
@@ -389,21 +426,22 @@
                     <div class="package-body">
                         <h3>Profesional/Monitoreo 24/7</h3>
                         <ul>
+                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Hub 2 Plus Jeweller</li>
                             <li><span class="check-icon"></span>2 DoorProtect Jeweller</li>
                             <li><span class="check-icon"></span>MotionCam (PhOD) Jeweller</li>
                             <li><span class="check-icon"></span>TurretCam 5 Mp/2.8 mm</li>
-                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>App incluida</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
                                 <span class="color-swatches" data-package-key="professional" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('professional', 'white')"></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('professional', 'black')"></button>
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('professional', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('professional', 'black')"></button>
                                 </span>
                             </li>
+                            <li><span class="check-icon"></span>Precio: $1,050+IVA</li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('professional')">
@@ -448,7 +486,7 @@
 
                 <div class="package-card" data-package-key="elite" data-image-black="img/optimized/elite-card.jpg" data-image-white="img/optimized/elite-white-card.jpg" data-aos="fade-up" data-aos-delay="300">
                     <div class="package-img-wrap">
-                        <img src="img/optimized/elite-card.jpg" alt="Paquete Elite" data-package-image loading="lazy" decoding="async" width="900" height="450">
+                        <img src="img/optimized/elite-white-card.jpg" alt="Paquete Elite" class="package-image-white" data-package-image loading="lazy" decoding="async" width="900" height="450">
                         <span class="package-tag">Negocio</span>
                         <button type="button" class="package-gallery-button" onclick="openPackageGallery('elite')" aria-label="Ver galería de componentes del paquete Elite" data-i18n="packages.galleryButton">
                             Galería
@@ -457,21 +495,22 @@
                     <div class="package-body">
                         <h3>Elite/Monitoreo 24/7</h3>
                         <ul>
+                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>Hub 2 Plus Jeweller</li>
                             <li><span class="check-icon"></span>2 DoorProtect Jeweller</li>
                             <li><span class="check-icon"></span>2 MotionCam (PhOD) Jeweller</li>
                             <li><span class="check-icon"></span>DoorBell con IA integrada</li>
-                            <li><span class="check-icon"></span>Monitoreo 24 hrs/7</li>
                             <li><span class="check-icon"></span>App incluida</li>
                             <li><span class="check-icon"></span>Instalación gratuita</li>
                             <li class="package-color-option">
                                 <span class="check-icon"></span>
                                 <span data-i18n="packages.availableColors">Disponible en</span>
                                 <span class="color-swatches" data-package-key="elite" aria-label="Colores disponibles: blanco y negro">
-                                    <button type="button" class="color-swatch color-swatch-white" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('elite', 'white')"></button>
-                                    <button type="button" class="color-swatch color-swatch-black active" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('elite', 'black')"></button>
+                                    <button type="button" class="color-swatch color-swatch-white active" data-package-color="Blanco" data-color-value="white" aria-label="Color blanco" onclick="applyPackageColor('elite', 'white')"></button>
+                                    <button type="button" class="color-swatch color-swatch-black" data-package-color="Negro" data-color-value="black" aria-label="Color negro" onclick="applyPackageColor('elite', 'black')"></button>
                                 </span>
                             </li>
+                            <li><span class="check-icon"></span>Precio: $1,199+IVA</li>
                         </ul>
                         <div class="package-footer">
                             <button type="button" class="btn-package" onclick="openPackageModal('elite')">
@@ -652,7 +691,7 @@
                         <img src="img/Partners/Soriana.png" alt="Partner 8" class="partner-soriana" loading="lazy" decoding="async">
                         <img src="img/Partners/Starbucks.png" alt="Partner 9" class="partner-starbucks" loading="lazy" decoding="async">
                         <img src="img/Partners/Vips.png" alt="Partner 10" class="partner-vips" loading="lazy" decoding="async">
-                        
+
                         <!-- Segunda tanda duplicada para loop infinito -->
                         <img src="img/Partners/Alsea.png" alt="Partner 1" class="partner-alsea" loading="lazy" decoding="async">
                         <img src="img/Partners/Bardahl.png" alt="Partner 2" class="partner-bardahl" loading="lazy" decoding="async">
