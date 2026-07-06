@@ -197,9 +197,9 @@ let packageGalleryState = {
 };
 
 const packageColorState = {
-    essential: 'white',
-    professional: 'white',
-    elite: 'white'
+    essential: 'black',
+    professional: 'black',
+    elite: 'black'
 };
 
 const packageColorImages = {
@@ -615,7 +615,9 @@ function openPackageModal(packageKey) {
     modalImage.src = '';
     modalImage.alt = '';
     modalImage.style.display = 'none';
-    const pricePill = packageData.price ? `<span>Precio: ${escapeHtml(packageData.price)}</span>` : '';
+    const monitoringText = packageData.price
+        ? `${t('packages.included.monitoring')} ${packageData.price}`
+        : t('packages.included.monitoring');
     const colorPill = packageData.hasColorOptions === false ? '' : `
             <span class="package-color-pill">
                 ${escapeHtml(t('packages.availableColors'))}
@@ -634,11 +636,10 @@ function openPackageModal(packageKey) {
     modalBody.innerHTML = `
         <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
         <div class="package-included">
-            <span>${escapeHtml(t('packages.included.monitoring'))}</span>
+            <span>${escapeHtml(monitoringText)}</span>
             ${packageData.hasAppIncluded === false ? '' : `<span>${escapeHtml(t('packages.included.apps'))}</span>`}
             <span>${escapeHtml(t('packages.included.installation'))}</span>
             ${colorPill}
-            ${pricePill}
         </div>
         <div class="package-components-grid">
             ${packageData.components.map((component) => `
