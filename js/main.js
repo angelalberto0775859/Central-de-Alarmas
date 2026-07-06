@@ -5,6 +5,7 @@ const packageModalData = {
         intro: 'Paquete de seguridad QOLSYS para protección residencial con panel táctil y sensores esenciales.',
         price: '$1,050+IVA',
         hasColorOptions: false,
+        hasAppIncluded: false,
         showSystemCard: false,
         components: [
             {
@@ -634,7 +635,7 @@ function openPackageModal(packageKey) {
         <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
         <div class="package-included">
             <span>${escapeHtml(t('packages.included.monitoring'))}</span>
-            <span>${escapeHtml(t('packages.included.apps'))}</span>
+            ${packageData.hasAppIncluded === false ? '' : `<span>${escapeHtml(t('packages.included.apps'))}</span>`}
             <span>${escapeHtml(t('packages.included.installation'))}</span>
             ${colorPill}
             ${pricePill}
