@@ -737,9 +737,9 @@ body {
    SLIDES SYSTEM
    ======================================== */
 .slides-container {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     overflow-y: auto;
-    height: calc(100vh - 64px);
+    height: 100vh;
     scroll-behavior: smooth;
     background-color: var(--background);
     position: relative;
@@ -747,11 +747,11 @@ body {
 
 .slide {
     scroll-snap-align: start;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* ========================================
@@ -886,6 +886,19 @@ body {
 .side-nav-indicator.active .indicator-label {
     opacity: 1;
     background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.05);
+}
+
+.side-nav-indicator .indicator-label {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateX(8px);
+}
+
+.side-nav-indicator:hover .indicator-label,
+.side-nav-indicator:focus-visible .indicator-label {
+    opacity: 1 !important;
+    visibility: visible !important;
     transform: scale(1.05);
 }
 
@@ -1113,7 +1126,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
 }
 
@@ -1128,8 +1141,8 @@ html {
 
 /* Ajustes para el contenido dentro de slides */
 .slide .container {
-    max-height: calc(100vh - 64px); 
-    overflow-y: auto; 
+    max-height: none;
+    overflow: visible;
     padding: var(--spacing-lg);
     width: 100%;
 }
@@ -1546,7 +1559,7 @@ html {
 
 .services-section .container {
     padding: var(--spacing-md);
-    max-height: calc(100vh - 64px);
+    max-height: none;
 }
 
 .services-section .section-header {
@@ -1638,11 +1651,6 @@ html {
     .service-description {
         font-size: var(--text-sm);
         line-height: 1.4;
-        display: -webkit-box;
-        line-clamp: 3;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
     .services-section .container {
         padding-top: var(--spacing-md);
@@ -1862,6 +1870,72 @@ html {
 .value-added-service-description {
     font-size: var(--text-sm);
     color: var(--text-secondary);
+}
+
+/* Variante editorial oscura para evitar fondos grises y tarjetas blancas */
+.services-section,
+#valor-agregado {
+    background:
+        radial-gradient(circle at 16% 18%, rgba(37, 99, 235, 0.28), transparent 28%),
+        radial-gradient(circle at 84% 72%, rgba(14, 165, 233, 0.14), transparent 32%),
+        linear-gradient(135deg, #07111f 0%, #0f1e33 52%, #07111f 100%);
+    color: #f8fafc;
+}
+
+.services-section .section-title,
+#valor-agregado .section-title,
+.services-section .section-subtitle,
+#valor-agregado .section-subtitle,
+.services-section .service-title,
+#valor-agregado .value-added-service-title {
+    color: #f8fafc;
+}
+
+.services-section .section-title::after,
+#valor-agregado .section-title::after {
+    background: linear-gradient(90deg, #60a5fa, #38bdf8);
+}
+
+.services-section .section-subtitle,
+#valor-agregado .section-subtitle,
+.services-section .service-description,
+#valor-agregado .value-added-service-description,
+#valor-agregado .service-description {
+    color: rgba(226, 232, 240, 0.82);
+}
+
+.services-section .service-card,
+#valor-agregado .value-added-card {
+    background: rgba(15, 30, 51, 0.42);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: none;
+    backdrop-filter: blur(10px);
+}
+
+.services-section .service-card:hover,
+#valor-agregado .value-added-card:hover {
+    border-color: rgba(96, 165, 250, 0.64);
+    background: rgba(15, 30, 51, 0.62);
+}
+
+.services-section .service-card::before,
+#valor-agregado .value-added-card::before {
+    box-shadow: 0 20px 45px rgba(2, 8, 23, 0.26);
+}
+
+.services-section .service-card::after,
+#valor-agregado .value-added-card::after {
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.55) 0%, transparent 68%);
+}
+
+.services-section .service-icon,
+#valor-agregado .value-added-icon {
+    background: rgba(37, 99, 235, 0.95);
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
+}
+
+#valor-agregado .value-added-card:hover .value-added-icon {
+    background: #2563eb;
 }
 
 /* ========================================
@@ -3282,4 +3356,375 @@ html {
 }
 .meta-slider-btn:hover {
     background: #ccc;
+}
+
+/* ========================================
+   CONTACTO - CIERRE INTEGRADO SIN CARTAS
+   ======================================== */
+#contacto.contact-section {
+    min-height: 100vh;
+    height: auto;
+    padding: clamp(3rem, 5vw, 5rem) 0;
+    background:
+        radial-gradient(circle at 18% 16%, rgba(37, 99, 235, 0.12), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    color: var(--text-primary);
+}
+
+#contacto .container {
+    max-width: 1120px;
+}
+
+#contacto .contact-hero {
+    background: transparent;
+    padding: 0 0 clamp(2rem, 4vw, 3.5rem);
+    overflow: visible;
+}
+
+#contacto .contact-hero-content {
+    max-width: 860px;
+}
+
+#contacto .contact-title {
+    font-size: clamp(2.35rem, 5vw, 4.75rem);
+    line-height: 0.98;
+    margin-bottom: 1rem;
+    letter-spacing: 0;
+    color: #0f172a;
+    text-wrap: balance;
+}
+
+#contacto .contact-subtitle {
+    max-width: 660px;
+    margin: 0 auto 1.5rem;
+    color: #475569;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+#contacto .contact-cta {
+    gap: 0.75rem;
+}
+
+#contacto .contact-btn {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    padding: 0.8rem 1.25rem;
+}
+
+#contacto .contact-btn.primary {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+#contacto .contact-btn.secondary {
+    background: #ffffff;
+    border-color: rgba(37, 99, 235, 0.28);
+    color: #0f172a;
+}
+
+#contacto .contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.14);
+}
+
+#contacto .contact-details {
+    padding: 0;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+#contacto .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: clamp(1rem, 2.2vw, 1.5rem) 0;
+    border-top: 1px solid rgba(37, 99, 235, 0.18);
+    border-bottom: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+#contacto .contact-card {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: start;
+    column-gap: 1rem;
+    padding: 0.25rem clamp(1rem, 2vw, 1.5rem);
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    transform: none;
+}
+
+#contacto .contact-card + .contact-card {
+    border-left: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+#contacto .contact-card::before,
+#contacto .contact-card::after {
+    content: none;
+}
+
+#contacto .contact-card:hover {
+    transform: none;
+    border-color: rgba(37, 99, 235, 0.16);
+}
+
+#contacto .contact-card-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0;
+    border-radius: 0.5rem;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+#contacto .contact-card-icon svg {
+    color: #2563eb;
+}
+
+#contacto .contact-card h3 {
+    grid-column: 2;
+    margin: 0 0 0.35rem;
+    color: #0f172a;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+#contacto .contact-card p {
+    grid-column: 2;
+    margin: 0;
+    color: #475569;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+#contacto .contact-link {
+    grid-column: 2;
+    margin-top: 0.55rem;
+    padding: 0;
+    background: transparent;
+    color: #2563eb;
+    border-radius: 0;
+}
+
+#contacto .contact-link:hover {
+    color: #1d4ed8;
+    background: transparent;
+    transform: none;
+}
+
+#contacto .social-section {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    text-align: center;
+}
+
+#contacto .social-section h3 {
+    margin-bottom: 1rem;
+    color: #0f172a;
+}
+
+#contacto .social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    max-width: none;
+}
+
+#contacto .social-item {
+    width: auto;
+    min-height: auto;
+    padding: 0.6rem 0.8rem;
+    flex-direction: row;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #475569;
+    font-size: 0.86rem;
+    overflow: visible;
+}
+
+#contacto .social-item::before,
+#contacto .social-item::after {
+    content: none;
+}
+
+#contacto .social-item svg {
+    width: 1rem;
+    height: 1rem;
+    color: #2563eb;
+}
+
+#contacto .social-item:hover {
+    transform: translateY(-1px);
+    background: rgba(37, 99, 235, 0.08);
+    border-color: transparent;
+    color: #0f172a;
+}
+
+#contacto .social-item span {
+    white-space: nowrap;
+}
+
+#contacto .website-section {
+    margin-top: 0;
+    padding: 0;
+}
+
+#contacto .website-link {
+    display: inline-flex;
+    align-items: center;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    color: #2563eb;
+    font-size: 1rem;
+    box-shadow: none;
+}
+
+#contacto .website-link:hover {
+    background: transparent;
+    color: #1d4ed8;
+    transform: none;
+    box-shadow: none;
+}
+
+.dark-theme #contacto.contact-section,
+[data-theme="dark"] #contacto.contact-section {
+    background:
+        radial-gradient(circle at 18% 16%, rgba(37, 99, 235, 0.22), transparent 34%),
+        linear-gradient(180deg, #07111f 0%, #0f172a 100%);
+    color: #f8fafc;
+}
+
+.dark-theme #contacto .contact-title,
+.dark-theme #contacto .contact-card h3,
+.dark-theme #contacto .social-section h3,
+[data-theme="dark"] #contacto .contact-title,
+[data-theme="dark"] #contacto .contact-card h3,
+[data-theme="dark"] #contacto .social-section h3 {
+    color: #f8fafc;
+}
+
+.dark-theme #contacto .contact-subtitle,
+.dark-theme #contacto .contact-card p,
+.dark-theme #contacto .social-item,
+[data-theme="dark"] #contacto .contact-subtitle,
+[data-theme="dark"] #contacto .contact-card p,
+[data-theme="dark"] #contacto .social-item {
+    color: rgba(226, 232, 240, 0.82);
+}
+
+.dark-theme #contacto .contact-cards,
+[data-theme="dark"] #contacto .contact-cards {
+    border-top-color: rgba(96, 165, 250, 0.28);
+    border-bottom-color: rgba(96, 165, 250, 0.28);
+}
+
+.dark-theme #contacto .contact-card + .contact-card,
+[data-theme="dark"] #contacto .contact-card + .contact-card {
+    border-left-color: rgba(96, 165, 250, 0.24);
+}
+
+.dark-theme #contacto .contact-card-icon,
+[data-theme="dark"] #contacto .contact-card-icon {
+    background: rgba(96, 165, 250, 0.14);
+}
+
+.dark-theme #contacto .contact-card-icon svg,
+.dark-theme #contacto .social-item svg,
+.dark-theme #contacto .contact-link,
+.dark-theme #contacto .website-link,
+[data-theme="dark"] #contacto .contact-card-icon svg,
+[data-theme="dark"] #contacto .social-item svg,
+[data-theme="dark"] #contacto .contact-link,
+[data-theme="dark"] #contacto .website-link {
+    color: #60a5fa;
+}
+
+.dark-theme #contacto .contact-btn.secondary,
+[data-theme="dark"] #contacto .contact-btn.secondary {
+    background: rgba(15, 23, 42, 0.72);
+    border-color: rgba(96, 165, 250, 0.34);
+    color: #f8fafc;
+}
+
+.dark-theme #contacto .social-item:hover,
+[data-theme="dark"] #contacto .social-item:hover {
+    background: rgba(96, 165, 250, 0.1);
+    color: #f8fafc;
+}
+
+.dark-theme #contacto .contact-link:hover,
+.dark-theme #contacto .website-link:hover,
+[data-theme="dark"] #contacto .contact-link:hover,
+[data-theme="dark"] #contacto .website-link:hover {
+    color: #93c5fd;
+}
+
+@media (max-width: 900px) {
+    #contacto .contact-cards {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    #contacto .contact-card {
+        padding: 0;
+    }
+
+    #contacto .contact-card + .contact-card {
+        border-left: 0;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(37, 99, 235, 0.14);
+    }
+
+    .dark-theme #contacto .contact-card + .contact-card,
+    [data-theme="dark"] #contacto .contact-card + .contact-card {
+        border-top-color: rgba(96, 165, 250, 0.24);
+    }
+}
+
+@media (max-width: 768px) {
+    #contacto.contact-section {
+        padding: 5.5rem 0 4.5rem;
+    }
+
+    #contacto .contact-hero {
+        padding-bottom: 2rem;
+    }
+
+    #contacto .contact-title {
+        font-size: clamp(2.35rem, 13vw, 3.4rem);
+        line-height: 1.04;
+    }
+
+    #contacto .contact-subtitle {
+        font-size: 1rem;
+        line-height: 1.55;
+    }
+
+    #contacto .contact-cta {
+        align-items: stretch;
+    }
+
+    #contacto .contact-btn {
+        max-width: none;
+    }
+
+    #contacto .social-grid {
+        justify-content: flex-start;
+    }
 }

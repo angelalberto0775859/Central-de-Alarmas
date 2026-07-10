@@ -400,23 +400,25 @@ function initThemeToggle() {
     
     // Agregar al DOM
     document.body.appendChild(themeToggle);
+
+    function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark-theme', isDark);
+        document.documentElement.dataset.theme = theme;
+        document.body.dataset.theme = theme;
+        themeToggle.innerHTML = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', theme);
+    }
     
     // Funcionalidad del toggle
     themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        this.innerHTML = isDark ? '☀️' : '🌙';
-        
-        // Guardar preferencia
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+        applyTheme(nextTheme);
     });
     
     // Aplicar tema guardado
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.innerHTML = '☀️';
-    }
+    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
 }
 
 // Función para inicializar todas las funcionalidades adicionales
@@ -656,17 +658,8 @@ function initSlidesSystem() {
         }
     }
     
-    // Manejar scroll con rueda del mouse
-    let wheelTimeout;
-    slidesContainer.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        
-        clearTimeout(wheelTimeout);
-        wheelTimeout = setTimeout(() => {
-            const direction = e.deltaY > 0 ? 1 : -1;
-            navigateSlides(direction);
-        }, 100);
-    }, { passive: false });
+    // La rueda del mouse conserva el scroll nativo para que las secciones
+    // con más contenido, como Servicios y Valor Agregado, no se recorten.
 }
 
 // ========================================
