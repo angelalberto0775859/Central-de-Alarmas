@@ -270,16 +270,13 @@ function initAnimations() {
 
 // Función para inicializar fallbacks de imágenes
 function applyImageFallback(imageElement) {
-    // Si la imagen ya se cargó o ya tiene un fallback, no hacer nada.
-    if (imageElement.complete || imageElement.dataset.fallbackApplied) return;
+    if (!imageElement || imageElement.dataset.fallbackApplied) return;
 
-    imageElement.addEventListener('error', function handler() {
-        // Solo actuar si la imagen realmente está rota y no tiene un SVG ya.
-        if (this.parentNode.querySelector('svg.fallback-svg')) return;
+    function showFallback(img) {
+        if (img.parentNode.querySelector('svg.fallback-svg')) return;
 
-        // Crear imagen de fallback con SVG
         const fallbackSVG = `
-            <svg class="fallback-svg" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:${this.naturalWidth || 100}px; height:${this.naturalHeight || 100}px; object-fit:contain; max-width: 100%;">
+            <svg class="fallback-svg" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:${img.naturalWidth || 100}px; height:${img.naturalHeight || 100}px; object-fit:contain; max-width: 100%;">
                 <rect width="100" height="100" fill="#f1f5f9"/>
                 <path d="M30 40C30 34.4772 34.4772 30 40 30H60C65.5228 30 70 34.4772 70 40V60C70 65.5228 65.5228 70 60 70H40C34.4772 70 30 65.5228 30 60V40Z" fill="#cbd5e1"/>
                 <path d="M35 45C35 42.2386 37.2386 40 40 40H60C62.7614 40 65 42.2386 65 45V55C65 57.7614 62.7614 60 60 60H40C37.2386 60 35 57.7614 35 55V45Z" fill="#94a3b8"/>
@@ -288,14 +285,23 @@ function applyImageFallback(imageElement) {
             </svg>
         `;
 
-        // Reemplazar imagen con SVG
-        this.style.display = 'none';
-        this.insertAdjacentHTML('afterend', fallbackSVG);
+        img.style.display = 'none';
+        img.insertAdjacentHTML('afterend', fallbackSVG);
+    }
 
-        // Remover el listener para evitar que se dispare múltiples veces
+    if (imageElement.complete && imageElement.naturalWidth > 0) return;
+
+    if (imageElement.complete && imageElement.naturalWidth === 0 && imageElement.src) {
+        showFallback(imageElement);
+        imageElement.dataset.fallbackApplied = 'true';
+        return;
+    }
+
+    imageElement.addEventListener('error', function handler() {
+        showFallback(this);
+        this.dataset.fallbackApplied = 'true';
         this.removeEventListener('error', handler);
     });
-    imageElement.dataset.fallbackApplied = 'true';
 }
 
 function initImageFallbacks() {
@@ -859,7 +865,11 @@ function openServiceModal(serviceId) {
     document.getElementById('modalDescription').textContent = serviceData.description; // Esto es un <p>, así que está bien
     const modalImage = document.getElementById('modalImage');
     
-    // Primero asignamos el src y luego aplicamos el fallback
+    // Limpiar estado anterior para que cada servicio cargue su imagen real.
+    modalImage.parentNode.querySelectorAll('svg.fallback-svg').forEach(svg => svg.remove());
+    modalImage.style.display = '';
+    delete modalImage.dataset.fallbackApplied;
+
     modalImage.src = serviceData.image;
     modalImage.alt = serviceData.title;
     applyImageFallback(modalImage);
