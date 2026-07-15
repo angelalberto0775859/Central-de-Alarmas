@@ -1989,6 +1989,302 @@
             background: #fff;
         }
 
+        .enterprise-solution-section {
+            padding: 6rem 1.5rem;
+            background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
+        }
+
+        .enterprise-solution-panel {
+            width: min(1180px, 100%);
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.05fr);
+            align-items: stretch;
+            overflow: hidden;
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: var(--radius-md);
+            background: #fff;
+            box-shadow: 0 18px 45px rgba(6,57,112,0.09);
+        }
+
+        .enterprise-solution-media {
+            position: relative;
+            min-height: 560px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: #fff;
+        }
+
+        .enterprise-solution-media img {
+            width: 100%;
+            height: 100%;
+            max-height: none;
+            object-fit: cover;
+            object-position: center;
+            filter: none;
+        }
+
+        .enterprise-solution-content {
+            padding: clamp(2rem, 4vw, 3rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 560px;
+        }
+
+        .enterprise-solution-heading {
+            margin-bottom: 1rem;
+        }
+
+        .enterprise-solution-heading span {
+            display: inline-flex;
+            margin-bottom: 0.55rem;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .enterprise-solution-content h3 {
+            color: var(--accent);
+            font-size: clamp(1.9rem, 4vw, 3rem);
+            line-height: 1.04;
+            margin-bottom: 1rem;
+        }
+
+        .enterprise-solution-lead {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+        }
+
+        .enterprise-solution-scope {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .enterprise-solution-scope span {
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: 999px;
+            padding: 0.35rem 0.7rem;
+            background: #f4f8fc;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .enterprise-solution-benefits {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            list-style: none;
+        }
+
+        .enterprise-solution-benefits li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            min-height: 82px;
+            border: 1px solid rgba(6,57,112,0.09);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem;
+            background: #f7faff;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .enterprise-solution-benefits .benefit-copy {
+            display: block;
+            min-width: 0;
+        }
+
+        .enterprise-solution-benefits .benefit-copy strong,
+        .enterprise-solution-benefits .benefit-copy small {
+            display: block;
+        }
+
+        .enterprise-solution-benefits .benefit-copy strong {
+            color: var(--text);
+            font-size: 0.92rem;
+            line-height: 1.25;
+        }
+
+        .enterprise-solution-benefits .benefit-copy small {
+            margin-top: 0.16rem;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            line-height: 1.35;
+        }
+
+        .enterprise-solution-footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: auto;
+        }
+
+        .enterprise-solution-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
+            border: 0;
+            border-radius: var(--radius-sm);
+            padding: 0.78rem 1.1rem;
+            background: #061432;
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.25s, background 0.25s;
+        }
+
+        .enterprise-solution-action-secondary {
+            background: #fff;
+            color: var(--accent);
+            border: 1px solid rgba(6,57,112,0.18);
+        }
+
+        .enterprise-solution-action:hover {
+            transform: translateY(-2px);
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .enterprise-solution-action:focus-visible {
+            outline: 3px solid rgba(102,204,51,0.32);
+            outline-offset: 3px;
+        }
+
+        .service-modal.solution-modal .service-modal-content {
+            max-width: min(1120px, calc(100vw - 2rem));
+        }
+
+        .solution-modal-heading {
+            margin-bottom: 1rem;
+        }
+
+        .solution-modal-heading span {
+            display: inline-flex;
+            margin-bottom: 0.45rem;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .solution-modal-intro {
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin-bottom: 0;
+            max-width: 780px;
+        }
+
+        .solution-modal-subtitle {
+            margin: 0 0 0.8rem;
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .solution-modal-benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .solution-modal-benefits span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            border-radius: 999px;
+            padding: 0.35rem 0.85rem;
+            background: rgba(102,204,51,0.16);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .solution-components-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .solution-component-card {
+            display: grid;
+            grid-template-columns: 110px minmax(0, 1fr);
+            align-items: center;
+            gap: 1.1rem;
+            min-height: 128px;
+            padding: 1rem 1.2rem;
+            border-radius: var(--radius-md);
+            background: #f0f0f0;
+            border: 1px solid rgba(6,57,112,0.08);
+        }
+
+        .solution-component-media {
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            background: #fff;
+        }
+
+        .solution-component-media img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .solution-component-copy h4 {
+            margin: 0 0 0.45rem;
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .solution-component-copy h4 span {
+            display: inline-flex;
+            vertical-align: middle;
+            margin-left: 0.35rem;
+            border-radius: 4px;
+            padding: 0.08rem 0.28rem;
+            background: #66cc33;
+            color: #122200;
+            font-size: 0.58rem;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .solution-component-copy p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
         .enterprise-service-grid {
             width: min(1180px, 100%);
             margin: 3rem auto 0;
@@ -2062,8 +2358,38 @@
             .story-grid,
             .operations-layout,
             .proof-grid,
+            .enterprise-solution-panel,
             .enterprise-service-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .enterprise-solution-media {
+                min-height: 320px;
+            }
+
+            .enterprise-solution-content {
+                min-height: auto;
+            }
+
+            .enterprise-solution-benefits {
+                grid-template-columns: 1fr;
+            }
+
+            .enterprise-solution-footer {
+                align-items: stretch;
+            }
+
+            .enterprise-solution-action {
+                width: 100%;
+            }
+
+            .solution-components-grid,
+            .solution-component-card {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-component-card {
+                text-align: center;
             }
 
             .enterprise-hero h1 {
@@ -2332,7 +2658,7 @@
                         <article class="story-step">
                             <div class="story-step-num">02</div>
                             <div>
-                                <h3>Arquitectura de seguridad</h3>
+                                <h3>Diseño de solución</h3>
                                 <p>Diseñamos capas conectadas: detección, video, control de acceso, incendio, comunicación y monitoreo.</p>
                             </div>
                         </article>
@@ -2404,13 +2730,56 @@
             </div>
         </section>
 
+        <section class="enterprise-solution-section" id="solucion-enterprise">
+            <div class="story-wrap" data-aos="fade-up">
+                <p class="story-kicker">Solución Enterprise</p>
+                <h2 class="story-heading">Seguridad inteligente para empresas.</h2>
+                <p class="story-copy">
+                    Protección profesional para operaciones que requieren un sistema robusto, escalable y monitoreado permanentemente.
+                </p>
+            </div>
+
+            <article class="enterprise-solution-panel" data-aos="fade-up">
+                <div class="enterprise-solution-media">
+                    <img src="img/Paquete Empresa/Enterprise Pro : DSC NEO 2064.png" alt="Enterprise Pro / DSC NEO 2064" loading="lazy" decoding="async" width="2182" height="1952">
+                </div>
+                <div class="enterprise-solution-content">
+                    <div class="enterprise-solution-heading">
+                        <span>Solución Enterprise</span>
+                        <h3>Enterprise Pro / DSC NEO 2064</h3>
+                    </div>
+                    <p class="enterprise-solution-lead">
+                        Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.
+                    </p>
+                    <div class="enterprise-solution-scope" aria-label="Cobertura recomendada">
+                        <span>Oficinas corporativas</span>
+                        <span>Sucursales</span>
+                        <span>Centros administrativos</span>
+                    </div>
+                    <ul class="enterprise-solution-benefits" aria-label="Beneficios para tu empresa">
+                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Monitoreo 24/7</strong><small>Atención permanente con Central de Alarmas.</small></span></li>
+                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Doble vía de comunicación</strong><small>Internet y red celular para mayor continuidad.</small></span></li>
+                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Videoverificación de eventos</strong><small>Validación visual inmediata cuando ocurre una alerta.</small></span></li>
+                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Sistema escalable</strong><small>Crece conforme aumentan las necesidades de la empresa.</small></span></li>
+                    </ul>
+                    <div class="enterprise-solution-footer">
+                        <button type="button" class="enterprise-solution-action" onclick="openEnterpriseSolutionModal()" aria-haspopup="dialog">
+                            Ver desglose de elementos
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <a href="#contacto" class="enterprise-solution-action enterprise-solution-action-secondary">Diseñar solución</a>
+                    </div>
+                </div>
+            </article>
+        </section>
+
         <!-- ─── SERVICES SECTION ─── -->
         <section class="services-empresa" id="servicios-empresa">
             <div class="story-wrap" data-aos="fade-up">
                 <p class="story-kicker">Servicios empresariales</p>
                 <h2 class="story-heading">Una solución modular para crecer con tu operación.</h2>
                 <p class="story-copy">
-                    Puedes empezar por un punto crítico o integrar todo el ecosistema. La arquitectura se adapta al tamaño,
+                    Puedes empezar por un punto crítico o integrar todo el ecosistema. La solución se adapta al tamaño,
                     sector y nivel de exposición de tu empresa.
                 </p>
             </div>
@@ -2705,11 +3074,97 @@
     </a>
 
     <script>
+        const enterpriseSolutionData = {
+            title: 'Enterprise Pro / DSC NEO 2064',
+            intro: 'Seguridad inteligente para empresas con requerimientos de protección profesional. Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.',
+            benefits: [
+                'Monitoreo 24/7 con Central de Alarmas',
+                'Doble vía: Internet y red celular',
+                'Videoverificación inmediata de eventos',
+                'Sistema escalable conforme crece la empresa'
+            ],
+            components: [
+                {
+                    name: 'Panel DSC 2064',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/KIT.png',
+                    description: 'El cerebro del sistema que administra todos los eventos de seguridad.'
+                },
+                {
+                    name: 'Comunicador IP/GSM',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/INTERCOMUNICADOR DUAL.jpg',
+                    description: 'Mantiene la comunicación incluso si una vía falla.'
+                },
+                {
+                    name: 'Detector PIR Dual',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/Pridual.jpg',
+                    description: 'Detección confiable de movimiento con reducción de falsas alarmas.'
+                },
+                {
+                    name: 'PIR Cámara',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/PRI-Camara.jpg',
+                    description: 'Verificación visual inmediata del evento.'
+                },
+                {
+                    name: 'Repetidor',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/REPETIDOR.jpg',
+                    description: 'Amplía la cobertura del sistema inalámbrico.'
+                },
+                {
+                    name: 'Botón de Pánico',
+                    badge: 'Incluido',
+                    image: 'img/Paquete Empresa/Boton de Panico.jpg',
+                    description: 'Solicita asistencia inmediata en situaciones críticas.'
+                }
+            ]
+        };
+
+        function openEnterpriseSolutionModal() {
+            const modal = document.getElementById('serviceModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            if (!modal || !modalTitle || !modalBody) return;
+
+            modal.classList.remove('service-detail-modal');
+            modal.classList.add('solution-modal');
+            modalTitle.textContent = `Elementos de ${enterpriseSolutionData.title}`;
+            modalBody.innerHTML = `
+                <div class="solution-modal-heading">
+                    <span>Solución Enterprise</span>
+                    <p class="solution-modal-intro">${enterpriseSolutionData.intro}</p>
+                </div>
+                <div class="solution-modal-benefits">
+                    ${enterpriseSolutionData.benefits.map((benefit) => `<span>${benefit}</span>`).join('')}
+                </div>
+                <h4 class="solution-modal-subtitle">Lo que integra</h4>
+                <div class="solution-components-grid">
+                    ${enterpriseSolutionData.components.map((component) => `
+                        <article class="solution-component-card">
+                            <div class="solution-component-media">
+                                <img src="${component.image}" alt="${component.name}" loading="lazy" decoding="async">
+                            </div>
+                            <div class="solution-component-copy">
+                                <h4>${component.name} <span>${component.badge}</span></h4>
+                                <p>${component.description}</p>
+                            </div>
+                        </article>
+                    `).join('')}
+                </div>
+            `;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
         function openServiceModal(title, description) {
             const modal = document.getElementById('serviceModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
             
+            modal.classList.remove('solution-modal');
             modalTitle.textContent = title;
             modalBody.textContent = description;
             modal.style.display = 'block';
@@ -2718,6 +3173,7 @@
 
         function closeServiceModal() {
             const modal = document.getElementById('serviceModal');
+            modal.classList.remove('solution-modal');
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }

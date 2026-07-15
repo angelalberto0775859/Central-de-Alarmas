@@ -191,6 +191,56 @@ const packageModalData = {
     }
 };
 
+const enterpriseSolutionData = {
+    title: 'Enterprise Pro / DSC NEO 2064',
+    intro: 'Seguridad inteligente para empresas con requerimientos de protección profesional. Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.',
+    image: 'img/Paquete Empresa/Enterprise Pro : DSC NEO 2064.png',
+    benefits: [
+        'Monitoreo 24/7 con Central de Alarmas',
+        'Doble vía: Internet y red celular',
+        'Videoverificación inmediata de eventos',
+        'Sistema escalable conforme crece la empresa'
+    ],
+    components: [
+        {
+            name: 'Panel DSC 2064',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/KIT.png',
+            description: 'El cerebro del sistema que administra todos los eventos de seguridad.'
+        },
+        {
+            name: 'Comunicador IP/GSM',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/INTERCOMUNICADOR DUAL.jpg',
+            description: 'Mantiene la comunicación incluso si una vía falla.'
+        },
+        {
+            name: 'Detector PIR Dual',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/Pridual.jpg',
+            description: 'Detección confiable de movimiento con reducción de falsas alarmas.'
+        },
+        {
+            name: 'PIR Cámara',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/PRI-Camara.jpg',
+            description: 'Verificación visual inmediata del evento.'
+        },
+        {
+            name: 'Repetidor',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/REPETIDOR.jpg',
+            description: 'Amplía la cobertura del sistema inalámbrico.'
+        },
+        {
+            name: 'Botón de Pánico',
+            badge: 'Incluido',
+            image: 'img/Paquete Empresa/Boton de Panico.jpg',
+            description: 'Solicita asistencia inmediata en situaciones críticas.'
+        }
+    ]
+};
+
 let packageGalleryState = {
     packageKey: null,
     index: 0
@@ -548,6 +598,7 @@ function openCertificationModal(certId) {
 
     modal.classList.remove('package-modal');
     modal.classList.remove('package-gallery-modal');
+    modal.classList.remove('solution-modal');
     modal.classList.add('certification-modal');
     delete modal.dataset.packageKey;
     modalTitle.textContent = details.title;
@@ -582,6 +633,7 @@ function openServiceModal(title, description, imageSrc) {
     modal.classList.remove('package-modal');
     modal.classList.remove('package-gallery-modal');
     modal.classList.remove('certification-modal');
+    modal.classList.remove('solution-modal');
     modalTitle.textContent = title;
     modalBody.innerHTML = description;
 
@@ -599,6 +651,52 @@ function openServiceModal(title, description, imageSrc) {
     document.body.style.overflow = 'hidden';
 }
 
+function openEnterpriseSolutionModal() {
+    const modal = document.getElementById('serviceModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalImage = document.getElementById('modalImage');
+    if (!modal || !modalTitle || !modalBody || !modalImage) return;
+
+    modal.classList.remove('package-gallery-modal');
+    modal.classList.remove('certification-modal');
+    modal.classList.add('solution-modal');
+    modal.classList.add('package-modal');
+    delete modal.dataset.packageKey;
+    modalTitle.textContent = `Elementos de ${enterpriseSolutionData.title}`;
+    modalImage.src = '';
+    modalImage.alt = '';
+    modalImage.style.display = 'none';
+    modalBody.innerHTML = `
+        <div class="solution-modal-heading">
+            <span>Solución Enterprise</span>
+            <p class="package-modal-intro">${escapeHtml(enterpriseSolutionData.intro)}</p>
+        </div>
+        <div class="package-included">
+            ${enterpriseSolutionData.benefits.map((benefit) => `<span>${escapeHtml(benefit)}</span>`).join('')}
+        </div>
+        <h4 class="solution-modal-subtitle">Lo que integra</h4>
+        <div class="package-components-grid">
+            ${enterpriseSolutionData.components.map((component) => `
+                <article class="package-component-card">
+                    <div class="package-component-media">
+                        <img src="${escapeHtml(component.image)}" alt="${escapeHtml(component.name)}" loading="lazy" decoding="async">
+                    </div>
+                    <div class="package-component-copy">
+                        <h4>${escapeHtml(component.name)} <span>${escapeHtml(component.badge)}</span></h4>
+                        <p>${escapeHtml(component.description)}</p>
+                    </div>
+                </article>
+            `).join('')}
+        </div>
+    `;
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+window.openEnterpriseSolutionModal = openEnterpriseSolutionModal;
+
 function openPackageModal(packageKey) {
     const packageData = packageModalData[packageKey];
     const modal = document.getElementById('serviceModal');
@@ -609,6 +707,7 @@ function openPackageModal(packageKey) {
 
     modal.classList.remove('package-gallery-modal');
     modal.classList.remove('certification-modal');
+    modal.classList.remove('solution-modal');
     modal.classList.add('package-modal');
     modal.dataset.packageKey = packageKey;
     modalTitle.textContent = t('packages.modalTitle', { title: packageData.title });
@@ -983,6 +1082,7 @@ function openPackageGallery(packageKey) {
     packageGalleryState = { packageKey, index: 0 };
     modal.classList.remove('package-modal');
     modal.classList.remove('certification-modal');
+    modal.classList.remove('solution-modal');
     modal.classList.add('package-gallery-modal');
     modal.dataset.packageKey = packageKey;
     modalImage.src = '';
@@ -1010,6 +1110,7 @@ function closeServiceModal() {
     modal.classList.remove('package-modal');
     modal.classList.remove('package-gallery-modal');
     modal.classList.remove('certification-modal');
+    modal.classList.remove('solution-modal');
     delete modal.dataset.packageKey;
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
