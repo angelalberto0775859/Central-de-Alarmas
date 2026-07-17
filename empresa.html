@@ -1892,98 +1892,6 @@
             line-height: 1.65;
         }
 
-        .operations-band {
-            background: #061432;
-            color: #fff;
-            padding: 5rem 1.5rem;
-            overflow: hidden;
-        }
-
-        .operations-layout {
-            width: min(1180px, 100%);
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 0.75fr 1.25fr;
-            gap: 3rem;
-            align-items: start;
-        }
-
-        .operations-layout h2 {
-            color: #fff;
-            font-size: clamp(2rem, 4vw, 3.6rem);
-            line-height: 1.05;
-            position: sticky;
-            top: 110px;
-        }
-
-        .operations-list {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .operation-card {
-            min-height: 230px;
-            padding: 1.4rem;
-            border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.12);
-        }
-
-        .operation-card img {
-            width: 100%;
-            height: 126px;
-            object-fit: cover;
-            border-radius: var(--radius-sm);
-            margin-bottom: 1rem;
-        }
-
-        .operation-card h3 {
-            color: #fff;
-            font-size: 1.05rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .operation-card p {
-            color: rgba(255,255,255,0.72);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .proof-section {
-            padding: 5rem 1.5rem;
-            background: #f4f8fc;
-        }
-
-        .proof-grid {
-            width: min(1180px, 100%);
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .proof-card {
-            padding: 1.6rem;
-            border-radius: var(--radius-md);
-            background: #fff;
-            border: 1px solid rgba(6,57,112,0.1);
-        }
-
-        .proof-card strong {
-            display: block;
-            color: var(--accent);
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            line-height: 1;
-            margin-bottom: 0.8rem;
-        }
-
-        .proof-card span {
-            color: var(--text-muted);
-            line-height: 1.65;
-            font-size: 0.95rem;
-        }
-
         .services-empresa {
             padding: 6rem 1.5rem;
             background: #fff;
@@ -2060,21 +1968,6 @@
 
         .enterprise-solution-heading {
             margin-bottom: 1rem;
-        }
-
-        .enterprise-package-index {
-            display: inline-flex;
-            width: fit-content;
-            margin-bottom: 0.9rem;
-            border: 1px solid rgba(6,57,112,0.12);
-            border-radius: 999px;
-            padding: 0.34rem 0.72rem;
-            background: #f4f8fc;
-            color: var(--accent);
-            font-size: 0.68rem;
-            font-weight: 900;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
         }
 
         .enterprise-solution-heading span {
@@ -2225,13 +2118,6 @@
             font-weight: 900;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-        }
-
-        .solution-modal-intro {
-            color: var(--text-muted);
-            line-height: 1.65;
-            margin-bottom: 0;
-            max-width: 780px;
         }
 
         .solution-modal-subtitle {
@@ -2442,23 +2328,13 @@
             }
 
             .story-section,
-            .services-empresa,
-            .operations-band,
-            .proof-section {
+            .services-empresa {
                 padding: 4rem 1.25rem;
             }
 
             .story-media,
             .story-media img {
                 min-height: 360px;
-            }
-
-            .operations-layout h2 {
-                position: static;
-            }
-
-            .operations-list {
-                grid-template-columns: 1fr;
             }
 
             .service-item-empresa {
@@ -2722,59 +2598,10 @@
             </div>
         </section>
 
-        <!-- ─── OPERATIONS ─── -->
-        <section class="operations-band">
-            <div class="operations-layout">
-                <div data-aos="fade-up">
-                    <p class="eyebrow-line">Capas de protección</p>
-                    <h2>Todo conectado para responder mejor.</h2>
-                </div>
-                <div class="operations-list">
-                    <article class="operation-card" data-aos="fade-up">
-                        <img src="img/Servicios/Videovigilancia.jpg" alt="Videovigilancia empresarial">
-                        <h3>Verificación visual</h3>
-                        <p>Cámaras y videoverificación ayudan a distinguir un evento real de una falsa alarma.</p>
-                    </article>
-                    <article class="operation-card" data-aos="fade-up" data-aos-delay="80">
-                        <img src="img/Servicios/ControlDeAcceso.jpg" alt="Control de acceso empresarial">
-                        <h3>Accesos bajo control</h3>
-                        <p>Usuarios, horarios, visitantes y zonas restringidas se vuelven trazables.</p>
-                    </article>
-                    <article class="operation-card" data-aos="fade-up" data-aos-delay="160">
-                        <img src="img/Servicios/Incendios.jpg" alt="Detección de incendios">
-                        <h3>Riesgos críticos</h3>
-                        <p>Incendio, sismo e intrusión se integran a protocolos de protección y evacuación.</p>
-                    </article>
-                    <article class="operation-card" data-aos="fade-up" data-aos-delay="240">
-                        <img src="img/Servicios/RastreoGPS.jpg" alt="Rastreo GPS de activos">
-                        <h3>Activos en movimiento</h3>
-                        <p>Flotillas, rutas, geocercas y alertas para operaciones que salen del inmueble.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="proof-section">
-            <div class="proof-grid">
-                <article class="proof-card" data-aos="fade-up">
-                    <strong>1991</strong>
-                    <span>Integrados al Grupo Seguridad Integral, con experiencia en operaciones sensibles y de alta continuidad.</span>
-                </article>
-                <article class="proof-card" data-aos="fade-up" data-aos-delay="80">
-                    <strong>24/7</strong>
-                    <span>Centro de monitoreo activo para validar señales, coordinar respuesta y documentar eventos.</span>
-                </article>
-                <article class="proof-card" data-aos="fade-up" data-aos-delay="160">
-                    <strong>360°</strong>
-                    <span>Servicios empresariales que cubren perímetro, acceso, video, fuego, sismo, GPS y soporte.</span>
-                </article>
-            </div>
-        </section>
-
         <section class="enterprise-solution-section" id="solucion-enterprise">
             <div class="story-wrap" data-aos="fade-up">
                 <p class="story-kicker">Soluciones Enterprise</p>
-                <h2 class="story-heading">Dos paquetes Enterprise para distintos niveles de operación.</h2>
+                <h2 class="story-heading">Dos arquitecturas Enterprise para distintos niveles de operación.</h2>
                 <p class="story-copy">
                     Elige Enterprise Pro para protección empresarial robusta o Enterprise Advanced para instalaciones de alta exigencia con incendio, perímetro y mayor cobertura operativa.
                 </p>
@@ -2783,10 +2610,9 @@
             <div class="enterprise-solutions-stack">
                 <article class="enterprise-solution-panel" id="enterprise-pro-dsc-neo-2064" data-aos="fade-up">
                     <div class="enterprise-solution-media">
-                        <img src="img/paquete-empresa/enterprise-pro-dsc-neo-2064.png" alt="Enterprise Pro / DSC NEO 2064" loading="lazy" decoding="async" width="2182" height="1952">
+                        <img src="img/paquete-empresa/ARMADO_1 copia.jpg.jpeg" alt="Enterprise Pro / DSC NEO 2064" loading="lazy" decoding="async" width="2086" height="1460">
                     </div>
                     <div class="enterprise-solution-content">
-                        <span class="enterprise-package-index">Paquete 1 de 2</span>
                         <div class="enterprise-solution-heading">
                             <span>Solución Enterprise</span>
                             <h3>Enterprise Pro / DSC NEO 2064</h3>
@@ -2817,10 +2643,9 @@
 
                 <article class="enterprise-solution-panel enterprise-solution-panel-alt" id="enterprise-advanced-dsc-neo-2128" data-aos="fade-up">
                     <div class="enterprise-solution-media">
-                        <img src="img/paquete-empresa/enterprise-advanced-dsc-neo-2128.png" alt="Enterprise Advanced / DSC NEO 2128" loading="lazy" decoding="async" width="2090" height="1612">
+                        <img src="img/paquete-empresa/ARMADO_2 copia.jpg.jpeg" alt="Enterprise Advanced / DSC NEO 2128" loading="lazy" decoding="async" width="2322" height="1460">
                     </div>
                     <div class="enterprise-solution-content">
-                        <span class="enterprise-package-index">Paquete 2 de 2</span>
                         <div class="enterprise-solution-heading">
                             <span>Solución AMS</span>
                             <h3>Enterprise Advanced / DSC NEO 2128</h3>
@@ -3165,7 +2990,7 @@
                 ],
                 components: [
                     {
-                        name: 'Panel DSC 2064',
+                        name: 'Módulo de control de 64 zonas',
                         image: 'img/paquete-empresa/kit.png',
                         description: 'El cerebro del sistema que administra todos los eventos de seguridad.'
                     },
@@ -3210,7 +3035,7 @@
                 ],
                 components: [
                     {
-                        name: 'Panel DSC 2128',
+                        name: 'Módulo de control de 128 zonas',
                         badge: 'Comunicación',
                         image: 'img/paquete-empresa/enterprise-advanced-dsc-neo-2128.png',
                         description: 'Centro de control que administra todos los dispositivos, procesa los eventos y coordina el funcionamiento del sistema.'
@@ -3286,7 +3111,6 @@
             modalBody.innerHTML = `
                 <div class="solution-modal-heading">
                     <span>Solución Enterprise</span>
-                    <p class="solution-modal-intro">${solutionData.intro}</p>
                 </div>
                 <div class="solution-modal-benefits">
                     ${solutionData.benefits.map((benefit) => `<span>${benefit}</span>`).join('')}
