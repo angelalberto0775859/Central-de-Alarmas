@@ -2007,6 +2007,30 @@
             box-shadow: 0 18px 45px rgba(6,57,112,0.09);
         }
 
+        .enterprise-solutions-stack {
+            width: min(1180px, 100%);
+            margin: 3rem auto 0;
+            display: grid;
+            gap: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        .enterprise-solutions-stack .enterprise-solution-panel {
+            width: 100%;
+            margin: 0;
+        }
+
+        .enterprise-solution-panel-alt {
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        }
+
+        .enterprise-solution-panel-alt .enterprise-solution-media {
+            order: 2;
+        }
+
+        .enterprise-solution-panel-alt .enterprise-solution-content {
+            order: 1;
+        }
+
         .enterprise-solution-media {
             position: relative;
             min-height: 560px;
@@ -2036,6 +2060,21 @@
 
         .enterprise-solution-heading {
             margin-bottom: 1rem;
+        }
+
+        .enterprise-package-index {
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 0.9rem;
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: 999px;
+            padding: 0.34rem 0.72rem;
+            background: #f4f8fc;
+            color: var(--accent);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .enterprise-solution-heading span {
@@ -2364,10 +2403,12 @@
             }
 
             .enterprise-solution-media {
+                order: 1;
                 min-height: 320px;
             }
 
             .enterprise-solution-content {
+                order: 2;
                 min-height: auto;
             }
 
@@ -2732,45 +2773,83 @@
 
         <section class="enterprise-solution-section" id="solucion-enterprise">
             <div class="story-wrap" data-aos="fade-up">
-                <p class="story-kicker">Solución Enterprise</p>
-                <h2 class="story-heading">Seguridad inteligente para empresas.</h2>
+                <p class="story-kicker">Soluciones Enterprise</p>
+                <h2 class="story-heading">Dos paquetes Enterprise para distintos niveles de operación.</h2>
                 <p class="story-copy">
-                    Protección profesional para operaciones que requieren un sistema robusto, escalable y monitoreado permanentemente.
+                    Elige Enterprise Pro para protección empresarial robusta o Enterprise Advanced para instalaciones de alta exigencia con incendio, perímetro y mayor cobertura operativa.
                 </p>
             </div>
 
-            <article class="enterprise-solution-panel" data-aos="fade-up">
-                <div class="enterprise-solution-media">
-                    <img src="img/paquete-empresa/enterprise-pro-dsc-neo-2064.png" alt="Enterprise Pro / DSC NEO 2064" loading="lazy" decoding="async" width="2182" height="1952">
-                </div>
-                <div class="enterprise-solution-content">
-                    <div class="enterprise-solution-heading">
-                        <span>Solución Enterprise</span>
-                        <h3>Enterprise Pro / DSC NEO 2064</h3>
+            <div class="enterprise-solutions-stack">
+                <article class="enterprise-solution-panel" id="enterprise-pro-dsc-neo-2064" data-aos="fade-up">
+                    <div class="enterprise-solution-media">
+                        <img src="img/paquete-empresa/enterprise-pro-dsc-neo-2064.png" alt="Enterprise Pro / DSC NEO 2064" loading="lazy" decoding="async" width="2182" height="1952">
                     </div>
-                    <p class="enterprise-solution-lead">
-                        Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.
-                    </p>
-                    <div class="enterprise-solution-scope" aria-label="Cobertura recomendada">
-                        <span>Oficinas corporativas</span>
-                        <span>Sucursales</span>
-                        <span>Centros administrativos</span>
+                    <div class="enterprise-solution-content">
+                        <span class="enterprise-package-index">Paquete 1 de 2</span>
+                        <div class="enterprise-solution-heading">
+                            <span>Solución Enterprise</span>
+                            <h3>Enterprise Pro / DSC NEO 2064</h3>
+                        </div>
+                        <p class="enterprise-solution-lead">
+                            Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.
+                        </p>
+                        <div class="enterprise-solution-scope" aria-label="Cobertura recomendada">
+                            <span>Oficinas corporativas</span>
+                            <span>Sucursales</span>
+                            <span>Centros administrativos</span>
+                        </div>
+                        <ul class="enterprise-solution-benefits" aria-label="Beneficios para tu empresa">
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Monitoreo 24/7</strong><small>Atención permanente con Central de Alarmas.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Doble vía de comunicación</strong><small>Internet y red celular para mayor continuidad.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Videoverificación de eventos</strong><small>Validación visual inmediata cuando ocurre una alerta.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Sistema escalable</strong><small>Crece conforme aumentan las necesidades de la empresa.</small></span></li>
+                        </ul>
+                        <div class="enterprise-solution-footer">
+                            <button type="button" class="enterprise-solution-action" onclick="openEnterpriseSolutionModal('pro')" aria-haspopup="dialog">
+                                Ver desglose de elementos
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </button>
+                            <a href="#contacto" class="enterprise-solution-action enterprise-solution-action-secondary">Diseñar solución</a>
+                        </div>
                     </div>
-                    <ul class="enterprise-solution-benefits" aria-label="Beneficios para tu empresa">
-                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Monitoreo 24/7</strong><small>Atención permanente con Central de Alarmas.</small></span></li>
-                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Doble vía de comunicación</strong><small>Internet y red celular para mayor continuidad.</small></span></li>
-                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Videoverificación de eventos</strong><small>Validación visual inmediata cuando ocurre una alerta.</small></span></li>
-                        <li><span class="check-icon"></span><span class="benefit-copy"><strong>Sistema escalable</strong><small>Crece conforme aumentan las necesidades de la empresa.</small></span></li>
-                    </ul>
-                    <div class="enterprise-solution-footer">
-                        <button type="button" class="enterprise-solution-action" onclick="openEnterpriseSolutionModal()" aria-haspopup="dialog">
-                            Ver desglose de elementos
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </button>
-                        <a href="#contacto" class="enterprise-solution-action enterprise-solution-action-secondary">Diseñar solución</a>
+                </article>
+
+                <article class="enterprise-solution-panel enterprise-solution-panel-alt" id="enterprise-advanced-dsc-neo-2128" data-aos="fade-up">
+                    <div class="enterprise-solution-media">
+                        <img src="img/paquete-empresa/enterprise-advanced-dsc-neo-2128.png" alt="Enterprise Advanced / DSC NEO 2128" loading="lazy" decoding="async" width="2090" height="1612">
                     </div>
-                </div>
-            </article>
+                    <div class="enterprise-solution-content">
+                        <span class="enterprise-package-index">Paquete 2 de 2</span>
+                        <div class="enterprise-solution-heading">
+                            <span>Solución AMS</span>
+                            <h3>Enterprise Advanced / DSC NEO 2128</h3>
+                        </div>
+                        <p class="enterprise-solution-lead">
+                            Protección integral para instalaciones de alta exigencia: corporativos, centros logísticos, industrias, plantas de producción, almacenes y operaciones que requieren múltiples capas de protección.
+                        </p>
+                        <div class="enterprise-solution-scope" aria-label="Cobertura recomendada">
+                            <span>Corporativos</span>
+                            <span>Centros logísticos</span>
+                            <span>Industrias</span>
+                            <span>Almacenes</span>
+                        </div>
+                        <ul class="enterprise-solution-benefits" aria-label="Beneficios para instalaciones complejas">
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Protección interior y perimetral</strong><small>Intrusión, límites de propiedad y áreas de mayor riesgo.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Detección de incendio</strong><small>Humo y calor para proteger personas, activos y continuidad.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Videoverificación</strong><small>Eventos con apoyo visual para una respuesta más precisa.</small></span></li>
+                            <li><span class="check-icon"></span><span class="benefit-copy"><strong>Escalabilidad empresarial</strong><small>Cobertura para instalaciones complejas con repetidor inalámbrico.</small></span></li>
+                        </ul>
+                        <div class="enterprise-solution-footer">
+                            <button type="button" class="enterprise-solution-action" onclick="openEnterpriseSolutionModal('advanced')" aria-haspopup="dialog">
+                                Ver desglose de elementos
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </button>
+                            <a href="#contacto" class="enterprise-solution-action enterprise-solution-action-secondary">Diseñar solución</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </section>
 
         <!-- ─── SERVICES SECTION ─── -->
@@ -3074,56 +3153,128 @@
     </a>
 
     <script>
-        const enterpriseSolutionData = {
-            title: 'Enterprise Pro / DSC NEO 2064',
-            intro: 'Seguridad inteligente para empresas con requerimientos de protección profesional. Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.',
-            benefits: [
-                'Monitoreo 24/7 con Central de Alarmas',
-                'Doble vía: Internet y red celular',
-                'Videoverificación inmediata de eventos',
-                'Sistema escalable conforme crece la empresa'
-            ],
-            components: [
-                {
-                    name: 'Panel DSC 2064',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/kit.png',
-                    description: 'El cerebro del sistema que administra todos los eventos de seguridad.'
-                },
-                {
-                    name: 'Comunicador IP/GSM',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/intercomunicador-dual.jpg',
-                    description: 'Mantiene la comunicación incluso si una vía falla.'
-                },
-                {
-                    name: 'Detector PIR Dual',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/pridual.jpg',
-                    description: 'Detección confiable de movimiento con reducción de falsas alarmas.'
-                },
-                {
-                    name: 'PIR Cámara',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/pri-camara.jpg',
-                    description: 'Verificación visual inmediata del evento.'
-                },
-                {
-                    name: 'Repetidor',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/repetidor.jpg',
-                    description: 'Amplía la cobertura del sistema inalámbrico.'
-                },
-                {
-                    name: 'Botón de Pánico',
-                    badge: 'Incluido',
-                    image: 'img/paquete-empresa/boton-de-panico.jpg',
-                    description: 'Solicita asistencia inmediata en situaciones críticas.'
-                }
-            ]
+        const enterpriseSolutionsData = {
+            pro: {
+                title: 'Enterprise Pro / DSC NEO 2064',
+                intro: 'Seguridad inteligente para empresas con requerimientos de protección profesional. Pensada para oficinas corporativas, sucursales, comercios, centros administrativos y empresas que requieren un sistema robusto, escalable y monitoreado permanentemente.',
+                benefits: [
+                    'Monitoreo 24/7 con Central de Alarmas',
+                    'Doble vía: Internet y red celular',
+                    'Videoverificación inmediata de eventos',
+                    'Sistema escalable conforme crece la empresa'
+                ],
+                components: [
+                    {
+                        name: 'Panel DSC 2064',
+                        image: 'img/paquete-empresa/kit.png',
+                        description: 'El cerebro del sistema que administra todos los eventos de seguridad.'
+                    },
+                    {
+                        name: 'Comunicador IP/GSM',
+                        image: 'img/paquete-empresa/intercomunicador-dual.jpg',
+                        description: 'Mantiene la comunicación incluso si una vía falla.'
+                    },
+                    {
+                        name: 'Detector PIR Dual',
+                        image: 'img/paquete-empresa/pridual.jpg',
+                        description: 'Detección confiable de movimiento con reducción de falsas alarmas.'
+                    },
+                    {
+                        name: 'PIR Cámara',
+                        image: 'img/paquete-empresa/pri-camara.jpg',
+                        description: 'Verificación visual inmediata del evento.'
+                    },
+                    {
+                        name: 'Repetidor',
+                        image: 'img/paquete-empresa/repetidor.jpg',
+                        description: 'Amplía la cobertura del sistema inalámbrico.'
+                    },
+                    {
+                        name: 'Botón de Pánico',
+                        image: 'img/paquete-empresa/boton-de-panico.jpg',
+                        description: 'Solicita asistencia inmediata en situaciones críticas.'
+                    }
+                ]
+            },
+            advanced: {
+                title: 'Enterprise Advanced / DSC NEO 2128',
+                intro: 'Protección integral para instalaciones de alta exigencia. Diseñada para corporativos, centros logísticos, industrias, plantas de producción, almacenes y operaciones donde la seguridad requiere múltiples capas de protección.',
+                benefits: [
+                    'Monitoreo 24/7 con Central de Alarmas',
+                    'Protección interior y perimetral',
+                    'Detección de incendio',
+                    'Videoverificación',
+                    'Doble vía de comunicación: Internet y red celular',
+                    'Cobertura para instalaciones complejas',
+                    'Escalabilidad empresarial'
+                ],
+                components: [
+                    {
+                        name: 'Panel DSC 2128',
+                        badge: 'Comunicación',
+                        image: 'img/paquete-empresa/enterprise-advanced-dsc-neo-2128.png',
+                        description: 'Centro de control que administra todos los dispositivos, procesa los eventos y coordina el funcionamiento del sistema.'
+                    },
+                    {
+                        name: 'Comunicador Dual IP-GSM',
+                        badge: 'Comunicación',
+                        image: 'img/paquete-empresa/intercomunicador-dual.jpg',
+                        description: 'Mantiene la transmisión de eventos por Internet y red celular, incluso si uno de los canales falla.'
+                    },
+                    {
+                        name: 'Repetidor inalámbrico',
+                        badge: 'Comunicación',
+                        image: 'img/paquete-empresa/repetidor.jpg',
+                        description: 'Amplía el alcance de la red inalámbrica para instalaciones de mayor tamaño sin perder estabilidad.'
+                    },
+                    {
+                        name: 'PIR Dual',
+                        badge: 'Intrusión',
+                        image: 'img/paquete-empresa/pridual.jpg',
+                        description: 'Detector de movimiento de doble tecnología que reduce falsas alarmas y ofrece detección confiable en interiores.'
+                    },
+                    {
+                        name: 'PIR Cámara',
+                        badge: 'Intrusión',
+                        image: 'img/paquete-empresa/pri-camara.jpg',
+                        description: 'Combina detección de movimiento con captura de imágenes para verificar visualmente los eventos reportados.'
+                    },
+                    {
+                        name: 'Botón de Pánico',
+                        badge: 'Intrusión',
+                        image: 'img/paquete-empresa/boton-de-panico.jpg',
+                        description: 'Permite solicitar asistencia inmediata con solo presionar un botón en situaciones de emergencia.'
+                    },
+                    {
+                        name: 'Llavero',
+                        badge: 'Intrusión',
+                        image: 'img/paquete-empresa/llavero.jpg',
+                        description: 'Control remoto para activar, desactivar o generar una alerta de pánico de forma rápida y segura.'
+                    },
+                    {
+                        name: 'Detector de humo',
+                        badge: 'Incendio',
+                        image: 'img/paquete-empresa/detector-de-humo.jpg',
+                        description: 'Identifica presencia de humo en etapas tempranas para permitir una respuesta inmediata.'
+                    },
+                    {
+                        name: 'Detector de calor',
+                        badge: 'Incendio',
+                        image: 'img/paquete-empresa/detector-de-calor.jpg',
+                        description: 'Detecta incrementos anormales de temperatura, ideal para áreas donde humo o polvo pueden generar falsas alarmas.'
+                    },
+                    {
+                        name: 'Fotoceldas',
+                        badge: 'Perimetral',
+                        image: 'img/paquete-empresa/fotocelda.png',
+                        description: 'Generan una barrera infrarroja invisible que detecta el cruce de personas o vehículos en áreas estratégicas.'
+                    }
+                ]
+            }
         };
 
-        function openEnterpriseSolutionModal() {
+        function openEnterpriseSolutionModal(solutionKey = 'pro') {
+            const solutionData = enterpriseSolutionsData[solutionKey] || enterpriseSolutionsData.pro;
             const modal = document.getElementById('serviceModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
@@ -3131,24 +3282,24 @@
 
             modal.classList.remove('service-detail-modal');
             modal.classList.add('solution-modal');
-            modalTitle.textContent = `Elementos de ${enterpriseSolutionData.title}`;
+            modalTitle.textContent = `Elementos de ${solutionData.title}`;
             modalBody.innerHTML = `
                 <div class="solution-modal-heading">
                     <span>Solución Enterprise</span>
-                    <p class="solution-modal-intro">${enterpriseSolutionData.intro}</p>
+                    <p class="solution-modal-intro">${solutionData.intro}</p>
                 </div>
                 <div class="solution-modal-benefits">
-                    ${enterpriseSolutionData.benefits.map((benefit) => `<span>${benefit}</span>`).join('')}
+                    ${solutionData.benefits.map((benefit) => `<span>${benefit}</span>`).join('')}
                 </div>
                 <h4 class="solution-modal-subtitle">Lo que integra</h4>
                 <div class="solution-components-grid">
-                    ${enterpriseSolutionData.components.map((component) => `
+                    ${solutionData.components.map((component) => `
                         <article class="solution-component-card">
                             <div class="solution-component-media">
                                 <img src="${component.image}" alt="${component.name}" loading="lazy" decoding="async">
                             </div>
                             <div class="solution-component-copy">
-                                <h4>${component.name} <span>${component.badge}</span></h4>
+                                <h4>${component.name}${component.badge ? ` <span>${component.badge}</span>` : ''}</h4>
                                 <p>${component.description}</p>
                             </div>
                         </article>
