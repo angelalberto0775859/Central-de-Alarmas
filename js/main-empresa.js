@@ -38,10 +38,12 @@ function initAOS() {
 
     document.body.classList.add('aos-enhanced');
     AOS.init({
-        duration: 800,
-        once: false,
-        offset: 100,
-        easing: 'ease-in-out'
+        duration: 180,
+        delay: 0,
+        once: true,
+        offset: 20,
+        easing: 'ease-out',
+        disableMutationObserver: true
     });
     aosInitialized = true;
 }
