@@ -3,7 +3,7 @@ const packageModalData = {
     qlsys: {
         title: 'QOLSYS/Monitoreo 24/7',
         intro: 'Paquete de seguridad QOLSYS para protección residencial con panel táctil y sensores esenciales.',
-        price: '$1,050+IVA',
+        price: '*',
         hasColorOptions: false,
         hasAppIncluded: false,
         showSystemCard: false,
@@ -31,7 +31,7 @@ const packageModalData = {
     essential: {
         title: 'Essential/Monitoreo 24/7',
         intro: 'Protección ideal para espacios pequeños con componentes básicos de seguridad.',
-        price: '$999+IVA',
+        price: '*',
         components: [
             {
                 name: 'Hub 2 (4G) Jeweller',
@@ -80,7 +80,7 @@ const packageModalData = {
     professional: {
         title: 'Profesional/Monitoreo 24/7',
         intro: 'Paquete ideal para hogares y PyMES con vigilancia y acceso controlado.',
-        price: '$1,050+IVA',
+        price: '*',
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -136,7 +136,7 @@ const packageModalData = {
     elite: {
         title: 'Elite/Monitoreo 24/7',
         intro: 'Solución corporativa para negocios que necesitan cobertura completa y respuesta garantizada.',
-        price: '$1,199+IVA',
+        price: '*',
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -286,6 +286,7 @@ const translations = {
         'packages.colorAria': 'Colores disponibles: blanco y negro',
         'packages.colorWhiteAria': 'Color blanco',
         'packages.colorBlackAria': 'Color negro',
+        'packages.termsNote': '*Precio de monitoreo sujeto a términos y condiciones.',
         'gallery.count': '{current} de {total}',
         'gallery.prev': 'Ver componente anterior',
         'gallery.next': 'Ver siguiente componente',
@@ -328,6 +329,7 @@ const translations = {
         'packages.colorAria': 'Available colors: white and black',
         'packages.colorWhiteAria': 'White color',
         'packages.colorBlackAria': 'Black color',
+        'packages.termsNote': '*Monitoring price subject to terms and conditions.',
         'gallery.count': '{current} of {total}',
         'gallery.prev': 'View previous component',
         'gallery.next': 'View next component',
@@ -370,6 +372,7 @@ const translations = {
         'packages.colorAria': '可选颜色：白色和黑色',
         'packages.colorWhiteAria': '白色',
         'packages.colorBlackAria': '黑色',
+        'packages.termsNote': '*监控价格受条款和条件约束。',
         'gallery.count': '{current} / {total}',
         'gallery.prev': '查看上一个组件',
         'gallery.next': '查看下一个组件',
@@ -619,7 +622,7 @@ function openPackageModal(packageKey) {
     modalImage.alt = '';
     modalImage.style.display = 'none';
     const monitoringText = packageData.price
-        ? `${t('packages.included.monitoring')} ${packageData.price}`
+        ? `${t('packages.included.monitoring')}${packageData.price}`
         : t('packages.included.monitoring');
     const colorPill = packageData.hasColorOptions === false ? '' : `
             <span class="package-color-pill">
@@ -644,6 +647,7 @@ function openPackageModal(packageKey) {
             <span>${escapeHtml(t('packages.included.installation'))}</span>
             ${colorPill}
         </div>
+        <p class="package-modal-terms">${escapeHtml(t('packages.termsNote'))}</p>
         <div class="package-components-grid">
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
