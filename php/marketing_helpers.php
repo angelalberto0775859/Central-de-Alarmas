@@ -28,9 +28,16 @@ function cdaMarketingPriority($priority) {
     return in_array($priority, ['Normal', 'Alta', 'Urgente'], true) ? $priority : 'Normal';
 }
 
-function cdaMarketingFolio($date, $sequence) {
+function cdaMarketingFolio($date, $sequence, $suffix = '') {
     $compactDate = preg_replace('/[^0-9]/', '', (string) $date);
-    return 'MKT-' . $compactDate . '-' . str_pad((string) (int) $sequence, 4, '0', STR_PAD_LEFT);
+    $folio = 'MKT-' . $compactDate . '-' . str_pad((string) (int) $sequence, 4, '0', STR_PAD_LEFT);
+    $suffix = strtoupper(preg_replace('/[^A-Z0-9]/i', '', (string) $suffix));
+
+    return $suffix ? $folio . '-' . substr($suffix, 0, 4) : $folio;
+}
+
+function cdaMarketingRandomFolioSuffix() {
+    return strtoupper(bin2hex(random_bytes(2)));
 }
 
 function cdaMarketingJson($ok, $message, $extra = []) {

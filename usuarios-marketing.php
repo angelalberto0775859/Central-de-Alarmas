@@ -12,6 +12,7 @@ $message = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    cdaRequirePostCsrf();
     $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
     $correo = filter_var(cdaMarketingClean($_POST['correo'] ?? ''), FILTER_VALIDATE_EMAIL);
     $password = (string) ($_POST['password'] ?? '');
@@ -92,6 +93,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, creado_en FROM 
                 <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="usuarios-marketing.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                     <label>Nombre <input name="nombre" required></label>
                     <label>Correo autorizado <input name="correo" type="email" required></label>
                     <label>Contrasena inicial <input name="password" type="password" placeholder="Opcional si usara Google"></label>

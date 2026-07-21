@@ -13,7 +13,7 @@ function cdaMarketingNotifyAdmins($ticket, $files) {
     }
 
     $fileList = $files ? '<ul><li>' . implode('</li><li>', array_map('htmlspecialchars', $files)) . '</li></ul>' : '<p>Sin archivos adjuntos.</p>';
-    $seguimientoUrl = rtrim(CDA_SITE_URL, '/') . '/seguimiento.php?folio=' . urlencode($ticket['folio']) . '&correo=' . urlencode($ticket['correo']);
+    $seguimientoUrl = rtrim(CDA_SITE_URL, '/') . '/seguimiento.php?folio=' . urlencode($ticket['folio']);
     $panelUrl = rtrim(CDA_SITE_URL, '/') . '/panel-marketing.php';
 
     $subject = 'Nuevo ticket de Diseño y Marketing: ' . $ticket['folio'];
@@ -97,6 +97,69 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $neededDate)) {
     cdaMarketingJson(false, 'La fecha requerida no es valida.');
 }
 
+$allowedFileExtensions = ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov'];
+$allowedMimePrefixes = ['image/', 'video/'];
+$allowedMimeTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/zip',
+    'application/octet-stream',
+];
+$maxFiles = 5;
+$maxFileSize = 25 * 1024 * 1024;
+
+if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
+    $uploadedCount = count(array_filter($_FILES['documents']['name'], function ($name) {
+        return trim((string) $name) !== '';
+    }));
+
+    if ($uploadedCount > $maxFiles) {
+        http_response_code(422);
+        cdaMarketingJson(false, 'Puedes adjuntar maximo 5 archivos por ticket.');
+    }
+
+    foreach ($_FILES['documents']['name'] as $index => $name) {
+        if ($_FILES['documents']['error'][$index] === UPLOAD_ERR_NO_FILE) {
+            continue;
+        }
+
+        if ($_FILES['documents']['error'][$index] !== UPLOAD_ERR_OK || (int) ($_FILES['documents']['size'][$index] ?? 0) > $maxFileSize) {
+            http_response_code(422);
+            cdaMarketingJson(false, 'Uno de los archivos supera el limite permitido o no se cargo correctamente.');
+        }
+
+        $extension = strtolower(pathinfo((string) $name, PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowedFileExtensions, true)) {
+            http_response_code(422);
+            cdaMarketingJson(false, 'Uno de los archivos tiene un formato no permitido.');
+        }
+
+        $mime = '';
+        if (is_uploaded_file($_FILES['documents']['tmp_name'][$index])) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime = (string) $finfo->file($_FILES['documents']['tmp_name'][$index]);
+        }
+
+        $prefixAllowed = false;
+        foreach ($allowedMimePrefixes as $prefix) {
+            if (strpos($mime, $prefix) === 0) {
+                $prefixAllowed = true;
+                break;
+            }
+        }
+
+        if ($mime && !$prefixAllowed && !in_array($mime, $allowedMimeTypes, true)) {
+            http_response_code(422);
+            cdaMarketingJson(false, 'Uno de los archivos no coincide con un formato permitido.');
+        }
+    }
+}
+
 try {
     $db = cdaDb();
     $db->beginTransaction();
@@ -104,7 +167,7 @@ try {
     $today = date('Y-m-d');
     $countStmt = $db->prepare('SELECT COUNT(*) FROM marketing_tickets WHERE DATE(creado_en) = ?');
     $countStmt->execute([$today]);
-    $folio = cdaMarketingFolio($today, ((int) $countStmt->fetchColumn()) + 1);
+    $folio = cdaMarketingFolio($today, ((int) $countStmt->fetchColumn()) + 1, cdaMarketingRandomFolioSuffix());
 
     $stmt = $db->prepare(
         'INSERT INTO marketing_tickets
@@ -139,7 +202,6 @@ try {
             mkdir($uploadDir, 0755, true);
         }
 
-        $allowed = ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov'];
         $fileStmt = $db->prepare('INSERT INTO marketing_ticket_archivos (ticket_id, nombre_original, ruta, mime, tamano) VALUES (?, ?, ?, ?, ?)');
 
         foreach ($_FILES['documents']['name'] as $index => $name) {
@@ -149,7 +211,7 @@ try {
 
             $original = basename((string) $name);
             $extension = strtolower(pathinfo($original, PATHINFO_EXTENSION));
-            if (!in_array($extension, $allowed, true)) {
+            if (!in_array($extension, $allowedFileExtensions, true)) {
                 continue;
             }
 
@@ -190,7 +252,7 @@ try {
 
     cdaMarketingJson(true, 'Ticket creado correctamente.', [
         'folio' => $folio,
-        'seguimiento' => 'seguimiento.php?folio=' . urlencode($folio) . '&correo=' . urlencode($email),
+        'seguimiento' => 'seguimiento.php?folio=' . urlencode($folio),
     ]);
 } catch (Throwable $error) {
     if (isset($db) && $db->inTransaction()) {

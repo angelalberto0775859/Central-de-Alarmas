@@ -9,6 +9,7 @@ function assertSameValue($expected, $actual, $label) {
 }
 
 assertSameValue('MKT-20260721-0007', cdaMarketingFolio('2026-07-21', 7), 'folio format');
+assertSameValue('MKT-20260721-0007-A1B2', cdaMarketingFolio('2026-07-21', 7, 'a1b2c3'), 'folio format with suffix');
 assertSameValue(true, cdaMarketingStatusAllowed('En evaluacion'), 'known status allowed');
 assertSameValue(false, cdaMarketingStatusAllowed('Inventado'), 'unknown status rejected');
 assertSameValue('Texto con espacios', cdaMarketingClean("  Texto con espacios  "), 'clean trims text');

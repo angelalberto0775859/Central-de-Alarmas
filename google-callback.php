@@ -2,16 +2,19 @@
 require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_config.php';
 
-if (empty($_GET['state']) || empty($_SESSION['google_oauth_state']) || !hash_equals($_SESSION['google_oauth_state'], $_GET['state'])) {
-    header('Location: login.php');
+function cdaGoogleLoginFail($reason = 'google') {
+    header('Location: login.php?error=' . urlencode($reason));
     exit;
+}
+
+if (empty($_GET['state']) || empty($_SESSION['google_oauth_state']) || !hash_equals($_SESSION['google_oauth_state'], $_GET['state'])) {
+    cdaGoogleLoginFail('google_state');
 }
 
 unset($_SESSION['google_oauth_state']);
 
 if (empty($_GET['code'])) {
-    header('Location: login.php');
-    exit;
+    cdaGoogleLoginFail('google_code');
 }
 
 function cdaGooglePost($url, $payload) {
@@ -24,7 +27,15 @@ function cdaGooglePost($url, $payload) {
         CURLOPT_TIMEOUT => 12,
     ]);
     $response = curl_exec($ch);
+    if ($response === false) {
+        curl_close($ch);
+        return null;
+    }
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+    if ($status < 200 || $status >= 300) {
+        return null;
+    }
     return json_decode((string) $response, true);
 }
 
@@ -36,7 +47,15 @@ function cdaGoogleGet($url, $token) {
         CURLOPT_TIMEOUT => 12,
     ]);
     $response = curl_exec($ch);
+    if ($response === false) {
+        curl_close($ch);
+        return null;
+    }
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+    if ($status < 200 || $status >= 300) {
+        return null;
+    }
     return json_decode((string) $response, true);
 }
 
@@ -49,16 +68,19 @@ $token = cdaGooglePost('https://oauth2.googleapis.com/token', [
 ]);
 
 if (empty($token['access_token'])) {
-    header('Location: login.php');
-    exit;
+    cdaGoogleLoginFail('google_token');
 }
 
 $profile = cdaGoogleGet('https://openidconnect.googleapis.com/v1/userinfo', $token['access_token']);
-$correo = filter_var($profile['email'] ?? '', FILTER_VALIDATE_EMAIL);
+if (!is_array($profile) || empty($profile['sub'])) {
+    cdaGoogleLoginFail('google_profile');
+}
 
-if (!$correo) {
-    header('Location: login.php');
-    exit;
+$correo = filter_var($profile['email'] ?? '', FILTER_VALIDATE_EMAIL);
+$emailVerified = filter_var($profile['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+if (!$correo || !$emailVerified) {
+    cdaGoogleLoginFail('google_email');
 }
 
 $stmt = cdaDb()->prepare('SELECT id, google_sub, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
@@ -66,8 +88,11 @@ $stmt->execute([$correo]);
 $user = $stmt->fetch();
 
 if (!$user || (int) $user['activo'] !== 1) {
-    header('Location: login.php');
-    exit;
+    cdaGoogleLoginFail('google_not_allowed');
+}
+
+if (!empty($user['google_sub']) && !empty($profile['sub']) && !hash_equals($user['google_sub'], $profile['sub'])) {
+    cdaGoogleLoginFail('google_account_mismatch');
 }
 
 if (empty($user['google_sub']) && !empty($profile['sub'])) {

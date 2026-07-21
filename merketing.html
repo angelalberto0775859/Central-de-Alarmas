@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitud de Diseño y Marketing | Central de Alarmas</title>
+    <title>Centro de Gestión Creativa | Central de Alarmas</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#063970">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
@@ -89,6 +89,13 @@
             color: inherit;
         }
 
+        .brand-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
         .brand img {
             width: 146px;
             height: auto;
@@ -116,8 +123,14 @@
         .top-actions {
             display: inline-flex;
             align-items: center;
-            flex-wrap: wrap;
             justify-content: flex-end;
+            gap: 0.65rem;
+        }
+
+        .top-links {
+            display: inline-flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
             gap: 0.65rem;
         }
 
@@ -152,20 +165,20 @@
         }
 
         .hero {
-            padding: clamp(2.3rem, 5vw, 4.7rem) 0 2rem;
+            padding: clamp(3rem, 7vw, 6.5rem) 0 clamp(2.4rem, 5vw, 4rem);
             color: #fff;
         }
 
         .hero-grid {
             display: grid;
-            grid-template-columns: minmax(0, 0.95fr) minmax(310px, 0.55fr);
-            align-items: end;
-            gap: clamp(1.5rem, 4vw, 3rem);
+            grid-template-columns: minmax(0, 1fr) minmax(340px, 0.48fr);
+            align-items: center;
+            gap: clamp(2rem, 6vw, 5rem);
         }
 
         .hero-title-stack {
             display: grid;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .hero-label {
@@ -177,33 +190,67 @@
         }
 
         h1 {
-            max-width: 760px;
-            font-size: clamp(2.2rem, 6.2vw, 4.9rem);
-            line-height: 1;
+            max-width: 830px;
+            font-size: clamp(2.45rem, 6vw, 5.45rem);
+            line-height: 0.98;
             letter-spacing: 0;
-            font-weight: 850;
+            font-weight: 880;
         }
 
         h1 span {
             display: block;
             color: rgba(255,255,255,0.72);
-            font-size: clamp(1.5rem, 4vw, 3.3rem);
+            font-size: clamp(1.6rem, 3.8vw, 3.35rem);
             font-weight: 650;
+            margin-top: 0.18rem;
         }
 
         .hero p {
-            max-width: 650px;
-            margin-top: 1.1rem;
+            max-width: 700px;
+            margin-top: 1.35rem;
             color: rgba(255,255,255,0.78);
             font-size: clamp(1rem, 2vw, 1.18rem);
-            line-height: 1.65;
+            line-height: 1.75;
+        }
+
+        .hero-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.9rem;
+            max-width: 720px;
+            margin-top: 1.65rem;
+        }
+
+        .hero-kpi {
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: var(--radius);
+            padding: 1rem;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(14px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            min-height: 108px;
+        }
+
+        .hero-kpi strong {
+            display: block;
+            color: #fff;
+            font-size: 1.3rem;
+            line-height: 1;
+            margin-bottom: 0.32rem;
+        }
+
+        .hero-kpi span {
+            color: rgba(255,255,255,0.72);
+            font-size: 0.76rem;
+            font-weight: 850;
+            line-height: 1.35;
         }
 
         .hero-points {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.55rem;
-            margin-top: 1.2rem;
+            gap: 0.72rem;
+            margin-top: 1.65rem;
         }
 
         .hero-points span {
@@ -219,7 +266,7 @@
         .process-panel {
             border: 1px solid rgba(255,255,255,0.18);
             border-radius: var(--radius);
-            padding: 1rem;
+            padding: clamp(1.15rem, 2.4vw, 1.55rem);
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(18px);
         }
@@ -275,7 +322,7 @@
         .workspace {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(300px, 0.42fr);
-            gap: 1.2rem;
+            gap: clamp(1.2rem, 3vw, 2rem);
             align-items: start;
         }
 
@@ -289,7 +336,7 @@
         }
 
         .request-card {
-            padding: clamp(1.2rem, 3vw, 2rem);
+            padding: clamp(1.35rem, 3.4vw, 2.4rem);
         }
 
         .section-head {
@@ -320,15 +367,15 @@
 
         form {
             display: grid;
-            gap: 1.2rem;
+            gap: 1.45rem;
         }
 
         .form-section {
             display: grid;
-            gap: 1rem;
+            gap: 1.15rem;
             border: 1px solid rgba(6,57,112,0.09);
             border-radius: var(--radius);
-            padding: 1rem;
+            padding: clamp(1rem, 2.2vw, 1.35rem);
             background: linear-gradient(180deg, #fff, #fbfdff);
         }
 
@@ -357,7 +404,7 @@
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
+            gap: 1.1rem;
         }
 
         .field {
@@ -505,12 +552,12 @@
 
         .side-stack {
             display: grid;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .ideas-card,
         .ticket-preview {
-            padding: 1.05rem;
+            padding: 1.2rem;
         }
 
         .ideas-card h2,
@@ -628,6 +675,11 @@
             .process-panel {
                 max-width: 560px;
             }
+
+            .hero-kpis {
+                max-width: 560px;
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 640px) {
@@ -647,12 +699,20 @@
                 justify-content: flex-start;
             }
 
+            .top-links {
+                justify-content: flex-start;
+            }
+
             .internal-tag,
             .ticket-number {
                 width: fit-content;
             }
 
             .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-kpis {
                 grid-template-columns: 1fr;
             }
 
@@ -680,11 +740,13 @@
 <body>
     <div class="page-shell">
         <header class="topbar">
-            <a class="brand" href="index.html" aria-label="Ir al inicio de Central de Alarmas">
-                <img src="img/cda-logo-f.svg" alt="Central de Alarmas">
-            </a>
-            <div class="top-actions">
+            <div class="brand-group">
+                <a class="brand" href="index.html" aria-label="Ir al inicio de Central de Alarmas">
+                    <img src="img/cda-logo-f.svg" alt="Central de Alarmas">
+                </a>
                 <span class="internal-tag"><span class="availability-dot" aria-hidden="true"></span>Área interna · Diseño y Marketing</span>
+            </div>
+            <div class="top-actions">
                 <a class="top-link" href="seguimiento.php">Seguimiento</a>
                 <a class="top-link primary" href="login.php">Iniciar sesión</a>
             </div>
@@ -695,19 +757,24 @@
                 <div class="hero-grid">
                     <div>
                         <div class="hero-title-stack">
-                            <div class="hero-label">Central de Alarmas · Solicitudes internas</div>
-                            <h1>Generador de tickets <span>Diseño y Marketing</span></h1>
-                        </div>
-                        <p>
-                            Solicita materiales de diseño, campañas, piezas digitales o apoyo creativo.
-                            El equipo de Diseño y Marketing revisará alcance, prioridad, archivos y fecha requerida antes de asignar producción.
-                        </p>
-                        <div class="hero-points" aria-label="Datos necesarios para evaluar la solicitud">
-                            <span>Actividad clara</span>
-                            <span>Fecha requerida</span>
-                            <span>Documentos adjuntos</span>
-                            <span>Evaluación previa</span>
-                        </div>
+	                            <div class="hero-label">Central de Alarmas · Operación creativa</div>
+	                            <h1>Centro de gestión creativa <span>Diseño y Marketing</span></h1>
+	                        </div>
+	                        <p>
+	                            Solicita piezas, campañas y materiales con un brief claro, trazabilidad por folio y control de estatus.
+	                            El equipo evalúa alcance, prioridad, archivos y fecha requerida antes de iniciar producción.
+	                        </p>
+	                        <div class="hero-kpis" aria-label="Beneficios del flujo">
+	                            <div class="hero-kpi"><strong>01</strong><span>Solicitud estructurada desde el inicio</span></div>
+	                            <div class="hero-kpi"><strong>02</strong><span>Seguimiento público solo con folio</span></div>
+	                            <div class="hero-kpi"><strong>03</strong><span>Control interno de estatus y prioridad</span></div>
+	                        </div>
+	                        <div class="hero-points" aria-label="Datos necesarios para evaluar la solicitud">
+	                            <span>Brief operativo</span>
+	                            <span>Folio de seguimiento</span>
+	                            <span>Prioridad visible</span>
+	                            <span>Evaluación previa</span>
+	                        </div>
                     </div>
                     <aside class="process-panel" aria-label="Proceso de evaluación">
                         <h2>Proceso de solicitud</h2>
@@ -745,7 +812,7 @@
                                     <input id="requester" name="requester" type="text" autocomplete="name" required placeholder="Nombre y apellido">
                                 </div>
                                 <div class="field">
-                                    <label for="email">Correo para seguimiento *</label>
+                                    <label for="email">Correo del solicitante *</label>
                                     <input id="email" name="email" type="email" autocomplete="email" required placeholder="correo@centraldealarmas.com.mx">
                                 </div>
                                 <div class="field">
@@ -828,7 +895,7 @@
                                         <span class="file-copy">
                                             <span>
                                                 <strong>Adjuntar brief, logos, textos, fotos o referencias</strong>
-                                                PDF, Office, imágenes o video. Puedes seleccionar varios archivos.
+                                                PDF, Office, imágenes o video. Máximo 5 archivos de 25 MB cada uno.
                                             </span>
                                             <span class="upload-mark">Elegir archivos</span>
                                         </span>
@@ -890,6 +957,8 @@
         const priority = document.getElementById('priority');
         const neededDate = document.getElementById('neededDate');
         const activity = document.getElementById('activity');
+        const maxFiles = 5;
+        const maxFileSize = 25 * 1024 * 1024;
 
         const today = new Date();
         const ticketSeed = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
@@ -905,6 +974,18 @@
 
         fileInput.addEventListener('change', () => {
             const names = Array.from(fileInput.files).map((file) => file.name);
+            const tooManyFiles = fileInput.files.length > maxFiles;
+            const tooLargeFile = Array.from(fileInput.files).some((file) => file.size > maxFileSize);
+
+            if (tooManyFiles || tooLargeFile) {
+                fileInput.value = '';
+                fileList.textContent = tooManyFiles
+                    ? 'Selecciona máximo 5 archivos'
+                    : 'Cada archivo debe pesar máximo 25 MB';
+                updatePreview();
+                return;
+            }
+
             fileList.textContent = names.length ? names.join(', ') : 'Sin archivos seleccionados';
             updatePreview();
         });

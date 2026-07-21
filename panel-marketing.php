@@ -101,6 +101,7 @@ if ($statsRow) {
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <span class="muted"><?php echo htmlspecialchars($user['nombre']); ?></span>
+                <?php if ($user['rol'] === 'admin'): ?><a href="control-marketing.php">Control admin</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <a href="marketing.html">Crear ticket</a>
                 <a href="seguimiento.php">Seguimiento publico</a>
@@ -149,6 +150,7 @@ if ($statsRow) {
                         <td><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?><br><span class="muted">Actualizado <?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></span></td>
                         <td>
                             <form class="inline-form" method="post" action="ticket-actualizar.php">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                                 <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
                                 <select name="estado" required>
                                     <?php foreach (cdaMarketingStatuses() as $status): ?>

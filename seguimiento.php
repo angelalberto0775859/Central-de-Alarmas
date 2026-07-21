@@ -3,37 +3,32 @@ require_once __DIR__ . '/php/db.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $folio = cdaMarketingClean($_GET['folio'] ?? $_POST['folio'] ?? '');
-$correo = cdaMarketingClean($_GET['correo'] ?? $_POST['correo'] ?? '');
 $ticket = null;
 $historial = [];
 $archivos = [];
 $error = '';
 $progressIndex = 0;
 
-if ($folio || $correo) {
-    if (!$folio || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        $error = 'Escribe un folio y correo valido.';
-    } else {
-        try {
-            $stmt = cdaDb()->prepare('SELECT * FROM marketing_tickets WHERE folio = ? AND correo = ? LIMIT 1');
-            $stmt->execute([$folio, $correo]);
-            $ticket = $stmt->fetch();
+if ($folio) {
+    try {
+        $stmt = cdaDb()->prepare('SELECT * FROM marketing_tickets WHERE folio = ? LIMIT 1');
+        $stmt->execute([$folio]);
+        $ticket = $stmt->fetch();
 
-            if ($ticket) {
-                $progressIndex = cdaMarketingProgressIndex($ticket['estado']);
-                $histStmt = cdaDb()->prepare('SELECT estado, comentario, creado_en FROM marketing_ticket_historial WHERE ticket_id = ? ORDER BY creado_en DESC');
-                $histStmt->execute([$ticket['id']]);
-                $historial = $histStmt->fetchAll();
+        if ($ticket) {
+            $progressIndex = cdaMarketingProgressIndex($ticket['estado']);
+            $histStmt = cdaDb()->prepare('SELECT estado, comentario, creado_en FROM marketing_ticket_historial WHERE ticket_id = ? ORDER BY creado_en DESC');
+            $histStmt->execute([$ticket['id']]);
+            $historial = $histStmt->fetchAll();
 
-                $fileStmt = cdaDb()->prepare('SELECT nombre_original, ruta FROM marketing_ticket_archivos WHERE ticket_id = ? ORDER BY creado_en ASC');
-                $fileStmt->execute([$ticket['id']]);
-                $archivos = $fileStmt->fetchAll();
-            } else {
-                $error = 'No encontramos un ticket con esos datos.';
-            }
-        } catch (Throwable $e) {
-            $error = 'No fue posible consultar el seguimiento en este momento.';
+            $fileStmt = cdaDb()->prepare('SELECT nombre_original, ruta FROM marketing_ticket_archivos WHERE ticket_id = ? ORDER BY creado_en ASC');
+            $fileStmt->execute([$ticket['id']]);
+            $archivos = $fileStmt->fetchAll();
+        } else {
+            $error = 'No encontramos un ticket con ese folio.';
         }
+    } catch (Throwable $e) {
+        $error = 'No fue posible consultar el seguimiento en este momento.';
     }
 }
 ?>
@@ -120,7 +115,7 @@ if ($folio || $correo) {
         .search-head h2, .side h2, .main h2 { color:var(--blue); font-size:1.1rem; line-height:1.15; }
         .search-head p { color:var(--muted); line-height:1.55; margin-top:.35rem; }
         .mini-badge { border:1px solid var(--line); border-radius:999px; padding:.45rem .65rem; color:var(--blue); background:var(--soft); font-size:.72rem; font-weight:950; white-space:nowrap; }
-        form { display:grid; grid-template-columns:1fr 1fr auto; gap:.85rem; align-items:end; }
+        form { display:grid; grid-template-columns:1fr auto; gap:.85rem; align-items:end; }
         label { display:grid; gap:.42rem; color:var(--ink); font-size:.78rem; font-weight:900; }
         input {
             width:100%;
@@ -251,13 +246,12 @@ if ($folio || $correo) {
             <div class="search-head">
                 <div>
                     <h2>Buscar solicitud</h2>
-                    <p>Usa el folio enviado al crear el ticket y el correo del solicitante.</p>
+                    <p>Usa el folio que recibiste al crear la solicitud. No necesitas iniciar sesión ni escribir correo.</p>
                 </div>
                 <span class="mini-badge">Consulta sin login</span>
             </div>
             <form method="get" action="seguimiento.php">
-                <label>Folio <input name="folio" value="<?php echo htmlspecialchars($folio); ?>" placeholder="MKT-20260721-0001" required></label>
-                <label>Correo <input name="correo" type="email" value="<?php echo htmlspecialchars($correo); ?>" placeholder="correo@empresa.com" required></label>
+                <label>Folio <input name="folio" value="<?php echo htmlspecialchars($folio); ?>" placeholder="MKT-20260721-0001-A1B2" required></label>
                 <button type="submit">Consultar</button>
             </form>
             <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
@@ -308,7 +302,7 @@ if ($folio || $correo) {
         </section>
         <?php else: ?>
         <div class="empty-state">
-            Ten a la mano tu folio y correo. Si acabas de crear una solicitud, revisa el mensaje de confirmación del formulario.
+            Ten a la mano tu folio. Si acabas de crear una solicitud, revisa el mensaje de confirmación del formulario.
         </div>
         <?php endif; ?>
     </div>

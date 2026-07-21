@@ -8,12 +8,29 @@ if (cdaCurrentUser()) {
 }
 
 $error = '';
+$googleErrorMessages = [
+    'google_state' => 'No fue posible validar la sesión de Google. Intenta nuevamente.',
+    'google_code' => 'Google no devolvió un código válido. Intenta nuevamente.',
+    'google_token' => 'No fue posible completar la conexión con Google.',
+    'google_profile' => 'Google no devolvió un perfil válido.',
+    'google_email' => 'Google no confirmó un correo verificado.',
+    'google_not_allowed' => 'Ese correo de Google no está dado de alta en el panel.',
+    'google_account_mismatch' => 'Ese correo ya está vinculado con otra cuenta de Google.',
+    'google' => 'No fue posible iniciar sesión con Google.',
+];
+if (!empty($_GET['error']) && isset($googleErrorMessages[$_GET['error']])) {
+    $error = $googleErrorMessages[$_GET['error']];
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    cdaRequirePostCsrf();
     $correo = filter_var(trim($_POST['correo'] ?? ''), FILTER_VALIDATE_EMAIL);
     $password = (string) ($_POST['password'] ?? '');
+    $lockedUntil = (int) ($_SESSION['cda_login_locked_until'] ?? 0);
 
-    if (!$correo || !$password) {
-        $error = 'Escribe correo y contrasena.';
+    if ($lockedUntil > time()) {
+        $error = 'Demasiados intentos. Intenta nuevamente en unos minutos.';
+    } elseif (!$correo || !$password) {
+        $error = 'Escribe correo y contraseña.';
     } else {
         try {
             $stmt = cdaDb()->prepare('SELECT id, password_hash, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
@@ -26,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
 
+            $_SESSION['cda_login_failures'] = (int) ($_SESSION['cda_login_failures'] ?? 0) + 1;
+            if ($_SESSION['cda_login_failures'] >= 5) {
+                $_SESSION['cda_login_locked_until'] = time() + 600;
+            }
             $error = 'Correo o contrasena incorrectos.';
         } catch (Throwable $e) {
             $error = 'No fue posible iniciar sesion. Revisa la configuracion.';
@@ -40,7 +61,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Iniciar sesión | Diseño y Marketing</title>
+    <title>Iniciar sesión | Diseño y Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -303,6 +324,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
                 </div>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="login.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                     <label>Correo autorizado <input name="correo" type="email" autocomplete="email" required placeholder="angelalberto077@gmail.com"></label>
                     <label>Contraseña <input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
                     <button type="submit">Entrar al panel</button>
@@ -310,7 +332,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
                 <?php if ($googleReady): ?>
                     <a class="button google" href="google-login.php">Continuar con Google</a>
                 <?php else: ?>
-                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_config.php</strong>.</div>
+                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong>.</div>
                 <?php endif; ?>
                 <div class="links">
                     <a href="marketing.html">Nueva solicitud</a>

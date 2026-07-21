@@ -1,9 +1,6 @@
 <?php
+require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_config.php';
-
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
 
 if (CDA_GOOGLE_CLIENT_ID === '' || CDA_GOOGLE_CLIENT_SECRET === '') {
     header('Location: login.php');
@@ -18,6 +15,7 @@ $params = [
     'scope' => 'openid email profile',
     'state' => $_SESSION['google_oauth_state'],
     'prompt' => 'select_account',
+    'include_granted_scopes' => 'true',
 ];
 
 header('Location: https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params));

@@ -2,7 +2,34 @@
 require_once __DIR__ . '/db.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_start();
+}
+
+function cdaCsrfToken() {
+    if (empty($_SESSION['cda_csrf_token'])) {
+        $_SESSION['cda_csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['cda_csrf_token'];
+}
+
+function cdaVerifyCsrfToken($token) {
+    return !empty($_SESSION['cda_csrf_token']) && is_string($token) && hash_equals($_SESSION['cda_csrf_token'], $token);
+}
+
+function cdaRequirePostCsrf() {
+    if (!cdaVerifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        exit('Solicitud no valida.');
+    }
 }
 
 function cdaCurrentUser() {
@@ -34,6 +61,7 @@ function cdaRequireLogin() {
 function cdaLoginUser($userId) {
     session_regenerate_id(true);
     $_SESSION['cda_user_id'] = (int) $userId;
+    unset($_SESSION['cda_login_failures'], $_SESSION['cda_login_locked_until']);
 }
 
 function cdaLogout() {
