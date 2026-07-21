@@ -37,6 +37,7 @@ logs/
 # Environment
 .env
 .env.local
+php/marketing_secrets.php
 
 # Recovery
 recovery/

@@ -2072,11 +2072,12 @@
         }
 
         .enterprise-solution-footer {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
             align-items: center;
+            justify-content: stretch;
             gap: 0.8rem;
+            width: 100%;
             margin-top: auto;
         }
 
@@ -2085,6 +2086,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            width: 100%;
             min-height: 44px;
             border: 0;
             border-radius: var(--radius-sm);
@@ -2094,7 +2096,9 @@
             font-size: 0.78rem;
             font-weight: 900;
             letter-spacing: 0.06em;
+            line-height: 1.2;
             text-transform: uppercase;
+            text-align: center;
             text-decoration: none;
             cursor: pointer;
             transition: transform 0.25s, background 0.25s;
@@ -2319,6 +2323,7 @@
 
             .enterprise-solution-footer {
                 align-items: stretch;
+                grid-template-columns: 1fr;
             }
 
             .enterprise-solution-action {
