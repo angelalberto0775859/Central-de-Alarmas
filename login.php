@@ -325,7 +325,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="login.php">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                    <label>Correo autorizado <input name="correo" type="email" autocomplete="email" required placeholder="angelalberto077@gmail.com"></label>
+                    <label>Correo autorizado <input name="correo" type="email" autocomplete="email" required placeholder="usuario@centraldealarmas.com.mx"></label>
                     <label>Contraseña <input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
                     <button type="submit">Entrar al panel</button>
                 </form>
