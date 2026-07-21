@@ -31,13 +31,87 @@ if (hamburger && mobileMenu && mobileOverlay) {
 }
 
 // ─── AOS INITIALIZATION ───
-// Inicializar AOS con configuración para repetir animaciones
-AOS.init({
-    duration: 800,
-    once: false, // Importante: false para que las animaciones se repitan
-    offset: 100,
-    easing: 'ease-in-out'
-});
+let aosInitialized = false;
+
+function initAOS() {
+    if (!window.AOS || aosInitialized) return;
+
+    document.body.classList.add('aos-enhanced');
+    AOS.init({
+        duration: 800,
+        once: false,
+        offset: 100,
+        easing: 'ease-in-out'
+    });
+    aosInitialized = true;
+}
+
+function refreshAOS() {
+    if (window.AOS) AOS.refresh();
+}
+
+initAOS();
+
+function loadDeferredHeroVideo() {
+    const video = document.getElementById('background-video');
+    if (!video || video.dataset.loaded === 'true') return;
+
+    const source = video.querySelector('source[data-src]');
+    if (!source) return;
+
+    source.src = source.dataset.src;
+    source.removeAttribute('data-src');
+    video.dataset.loaded = 'true';
+    video.load();
+    video.play().catch(() => {});
+}
+
+function loadRecaptcha() {
+    if (!document.querySelector('.g-recaptcha') || document.querySelector('script[data-recaptcha-loader]')) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    script.dataset.recaptchaLoader = 'true';
+    document.head.appendChild(script);
+}
+
+function scheduleNonCriticalResources() {
+    const loadVideoSoon = () => {
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadDeferredHeroVideo, { timeout: 1800 });
+            return;
+        }
+        setTimeout(loadDeferredHeroVideo, 900);
+    };
+
+    if (document.readyState === 'complete') {
+        loadVideoSoon();
+    } else {
+        window.addEventListener('load', loadVideoSoon, { once: true });
+    }
+
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach((eventName) => {
+        window.addEventListener(eventName, loadDeferredHeroVideo, { once: true, passive: true });
+    });
+
+    const contactForm = document.getElementById('contact-form-empresa');
+    if (!contactForm) return;
+
+    ['focusin', 'pointerenter', 'touchstart'].forEach((eventName) => {
+        contactForm.addEventListener(eventName, loadRecaptcha, { once: true, passive: true });
+    });
+
+    if ('IntersectionObserver' in window) {
+        const recaptchaObserver = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            loadRecaptcha();
+            recaptchaObserver.disconnect();
+        }, { rootMargin: '500px 0px' });
+        recaptchaObserver.observe(contactForm);
+    }
+}
 
 // Variable para controlar si ya se reiniciaron las animaciones
 let animationsReset = false;
@@ -45,20 +119,22 @@ let lastScrollTop = 0;
 
 // Refrescar AOS cuando se carga la página para asegurar que las animaciones se repitan
 document.addEventListener('DOMContentLoaded', function() {
-    // Forzar reinicio de AOS
-    AOS.refresh();
+    initAOS();
+    refreshAOS();
     
     // También refrescar después de un pequeño retraso
     setTimeout(function() {
-        AOS.refresh();
+        refreshAOS();
     }, 100);
+
+    scheduleNonCriticalResources();
 });
 
 // Refrescar AOS cuando la página se vuelve visible (por si viene de navegación)
 document.addEventListener('visibilitychange', function() {
     if (!document.hidden) {
         setTimeout(function() {
-            AOS.refresh();
+            refreshAOS();
         }, 100);
     }
 });
@@ -75,7 +151,7 @@ window.addEventListener('scroll', function() {
     // Si estamos cerca del inicio (header visible) y las animaciones no se han reiniciado
     if (scrollTop < 100 && !animationsReset) {
         setTimeout(function() {
-            AOS.refresh();
+            refreshAOS();
             animationsReset = true;
         }, 200);
     }

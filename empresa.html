@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Central de Alarmas — Soluciones para Empresas</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="./css/styles.css" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://www.google.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preload" href="img/optimized/hero-poster-v2.jpg" as="image" fetchpriority="high">
+    <link rel="preload" href="https://unpkg.com/aos@next/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"></noscript>
+    <link rel="preload" href="./css/styles.css?v=empresa-20260721" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="./css/styles.css?v=empresa-20260721"></noscript>
     <style>
         :root {
             --primary: #ffffff;
@@ -40,6 +45,12 @@
         body > * {
             position: relative;
             z-index: 1;
+        }
+
+        body:not(.aos-enhanced) [data-aos] {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
         }
 
         /* ─── HEADER ─── */
@@ -2514,8 +2525,8 @@
 
         <!-- ─── HERO ─── -->
         <section class="enterprise-hero" id="inicio">
-            <video autoplay muted loop playsinline preload="metadata" id="background-video">
-                <source src="img/video-inicio.mp4" type="video/mp4">
+            <video autoplay muted loop playsinline preload="none" poster="img/optimized/hero-poster-v2.jpg" fetchpriority="high" id="background-video" style="background-image: url('img/optimized/hero-poster-v2.jpg'); background-size: cover; background-position: center;">
+                <source data-src="img/optimized/video-inicio-720.mp4" type="video/mp4">
             </video>
 
             <div class="enterprise-hero-inner" data-aos="fade-in">
@@ -3172,10 +3183,11 @@
         });
     </script>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="./js/form-handler.js?v=20260526-form-cache"></script>
-    <script src="./js/language-switcher.js"></script>
-    <script src="./js/cookies.js"></script>
-    <script src="./js/main-empresa.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
+    <script src="./js/form-handler.js?v=20260526-form-cache" defer></script>
+    <script src="./js/language-switcher.js" defer></script>
+    <script src="./js/cookies.js" defer></script>
+    <script src="./js/main-empresa.js?v=empresa-20260721" defer></script>
 </body>
 </html>
