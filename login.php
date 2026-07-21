@@ -40,7 +40,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesion | Diseño y Marketing</title>
+        <title>Iniciar sesión | Diseño y Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -296,7 +296,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             <article class="card">
                 <div class="card-head">
                     <div>
-                        <h2>Iniciar sesion</h2>
+                        <h2>Iniciar sesión</h2>
                         <p>Usa un correo autorizado del equipo.</p>
                     </div>
                     <span class="secure-pill">Acceso seguro</span>
@@ -304,7 +304,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="login.php">
                     <label>Correo autorizado <input name="correo" type="email" autocomplete="email" required placeholder="angelalberto077@gmail.com"></label>
-                    <label>Contrasena <input name="password" type="password" autocomplete="current-password" required placeholder="Tu contrasena"></label>
+                    <label>Contraseña <input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
                     <button type="submit">Entrar al panel</button>
                 </form>
                 <?php if ($googleReady): ?>

@@ -52,3 +52,49 @@ function cdaMarketingStatusClass($status) {
     $slug = strtolower(str_replace(' ', '-', cdaMarketingClean($status)));
     return preg_replace('/[^a-z0-9-]/', '', $slug);
 }
+
+function cdaMarketingStatusLabel($status) {
+    $labels = [
+        'Recibido' => 'Recibido',
+        'En evaluacion' => 'En evaluación',
+        'Pendiente de informacion' => 'Pendiente de información',
+        'Aprobado' => 'Aprobado',
+        'En diseno' => 'En diseño',
+        'En revision' => 'En revisión',
+        'Ajustes solicitados' => 'Ajustes solicitados',
+        'Programado' => 'Programado',
+        'Entregado' => 'Entregado',
+        'Cerrado' => 'Cerrado',
+        'Rechazado' => 'Rechazado',
+    ];
+
+    return $labels[$status] ?? $status;
+}
+
+function cdaMarketingProgressSteps() {
+    return [
+        'Recibido' => 'Recibido',
+        'En evaluacion' => 'Evaluación',
+        'En diseno' => 'Diseño',
+        'En revision' => 'Revisión',
+        'Entregado' => 'Entrega',
+    ];
+}
+
+function cdaMarketingProgressIndex($status) {
+    $map = [
+        'Recibido' => 0,
+        'En evaluacion' => 1,
+        'Pendiente de informacion' => 1,
+        'Aprobado' => 1,
+        'Programado' => 2,
+        'En diseno' => 2,
+        'En revision' => 3,
+        'Ajustes solicitados' => 3,
+        'Entregado' => 4,
+        'Cerrado' => 4,
+        'Rechazado' => 1,
+    ];
+
+    return $map[$status] ?? 0;
+}

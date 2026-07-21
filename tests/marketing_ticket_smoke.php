@@ -14,5 +14,8 @@ assertSameValue(false, cdaMarketingStatusAllowed('Inventado'), 'unknown status r
 assertSameValue('Texto con espacios', cdaMarketingClean("  Texto con espacios  "), 'clean trims text');
 assertSameValue('Urgente', cdaMarketingPriority('Urgente'), 'known priority kept');
 assertSameValue('Normal', cdaMarketingPriority('Fuera'), 'unknown priority defaults');
+assertSameValue('En evaluación', cdaMarketingStatusLabel('En evaluacion'), 'status label uses accents');
+assertSameValue(4, cdaMarketingProgressIndex('Cerrado'), 'closed status maps to final progress');
+assertSameValue(1, cdaMarketingProgressIndex('Pendiente de informacion'), 'waiting info maps to evaluation progress');
 
 echo "marketing ticket smoke ok" . PHP_EOL;

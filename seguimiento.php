@@ -8,6 +8,7 @@ $ticket = null;
 $historial = [];
 $archivos = [];
 $error = '';
+$progressIndex = 0;
 
 if ($folio || $correo) {
     if (!$folio || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
@@ -19,6 +20,7 @@ if ($folio || $correo) {
             $ticket = $stmt->fetch();
 
             if ($ticket) {
+                $progressIndex = cdaMarketingProgressIndex($ticket['estado']);
                 $histStmt = cdaDb()->prepare('SELECT estado, comentario, creado_en FROM marketing_ticket_historial WHERE ticket_id = ? ORDER BY creado_en DESC');
                 $histStmt->execute([$ticket['id']]);
                 $historial = $histStmt->fetchAll();
@@ -155,6 +157,13 @@ if ($folio || $correo) {
         .ticket-title { display:grid; gap:.35rem; }
         .folio { color:var(--muted); font-size:.78rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
         .status { display:inline-flex; width:fit-content; border-radius:999px; padding:.46rem .72rem; background:var(--blue); color:#fff; font-size:.78rem; font-weight:950; white-space:nowrap; }
+        .status.rechazado { background:#991b1b; }
+        .status.cerrado, .status.entregado { background:#047857; }
+        .progress { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.45rem; margin:1rem 0 .25rem; }
+        .progress-step { min-height:72px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.72rem .55rem; color:var(--muted); font-size:.76rem; font-weight:900; text-align:center; }
+        .progress-step::before { content:""; display:block; width:18px; height:18px; border-radius:50%; margin:0 auto .42rem; background:#dbe5f0; }
+        .progress-step.done { border-color:rgba(6,57,112,.22); background:linear-gradient(180deg,#fff,#f5f9ff); color:var(--blue); }
+        .progress-step.done::before { background:var(--yellow); box-shadow:0 0 0 5px rgba(246,235,23,.18); }
         .meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.72rem; margin-top:1rem; }
         .meta div, .files li {
             border:1px solid var(--line);
@@ -205,6 +214,9 @@ if ($folio || $correo) {
             .topbar, .search-head, .ticket-head { align-items:flex-start; flex-direction:column; }
             .nav { justify-content:flex-start; }
             .meta { grid-template-columns:1fr; }
+            .progress { grid-template-columns:1fr; }
+            .progress-step { min-height:auto; display:flex; align-items:center; gap:.5rem; text-align:left; }
+            .progress-step::before { margin:0; flex:0 0 auto; }
             button { width:100%; }
         }
     </style>
@@ -223,7 +235,7 @@ if ($folio || $correo) {
             <div class="hero">
                 <div class="eyebrow">Portal de Diseño y Marketing</div>
                 <h1>Seguimiento claro para cada solicitud.</h1>
-                <p>Consulta en segundos el estado de tu ticket, revisa comentarios del equipo y confirma si tu pieza esta en evaluacion, diseño, revision o entrega.</p>
+                <p>Consulta en segundos el estado de tu ticket, revisa comentarios del equipo y confirma si tu pieza está en evaluación, diseño, revisión o entrega.</p>
             </div>
             <aside class="signal-card" aria-label="Estados del proceso">
                 <h2>Flujo visible</h2>
@@ -259,7 +271,12 @@ if ($folio || $correo) {
                         <span class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></span>
                         <h2><?php echo htmlspecialchars($ticket['actividad']); ?></h2>
                     </div>
-                    <span class="status"><?php echo htmlspecialchars($ticket['estado']); ?></span>
+                    <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
+                </div>
+                <div class="progress" aria-label="Progreso del ticket">
+                    <?php $stepIndex = 0; foreach (cdaMarketingProgressSteps() as $stepStatus => $stepLabel): ?>
+                        <div class="progress-step <?php echo $stepIndex <= $progressIndex ? 'done' : ''; ?>"><?php echo htmlspecialchars($stepLabel); ?></div>
+                    <?php $stepIndex++; endforeach; ?>
                 </div>
                 <div class="meta">
                     <div><span>Tipo</span><strong><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></strong></div>
@@ -276,7 +293,7 @@ if ($folio || $correo) {
                 <h2>Historial</h2>
                 <ul class="timeline">
                     <?php foreach ($historial as $item): ?>
-                    <li><strong><?php echo htmlspecialchars($item['estado']); ?></strong><br><?php echo nl2br(htmlspecialchars($item['comentario'] ?? '')); ?><small><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($item['creado_en']))); ?></small></li>
+                    <li><strong><?php echo htmlspecialchars(cdaMarketingStatusLabel($item['estado'])); ?></strong><br><?php echo nl2br(htmlspecialchars($item['comentario'] ?? '')); ?><small><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($item['creado_en']))); ?></small></li>
                     <?php endforeach; ?>
                 </ul>
                 <?php if ($archivos): ?>
@@ -291,7 +308,7 @@ if ($folio || $correo) {
         </section>
         <?php else: ?>
         <div class="empty-state">
-            Ten a la mano tu folio y correo. Si acabas de crear una solicitud, revisa el mensaje de confirmacion del formulario.
+            Ten a la mano tu folio y correo. Si acabas de crear una solicitud, revisa el mensaje de confirmación del formulario.
         </div>
         <?php endif; ?>
     </div>

@@ -561,7 +561,7 @@
             margin-top: 1rem;
             border: 1px solid rgba(16,185,129,0.25);
             border-radius: var(--radius);
-            padding: 0.85rem;
+            padding: 1rem;
             background: rgba(16,185,129,0.08);
             color: #047857;
             font-size: 0.9rem;
@@ -569,6 +569,55 @@
         }
 
         .notice.visible { display: block; }
+
+        .notice.error {
+            border-color: rgba(220,38,38,0.28);
+            background: rgba(220,38,38,0.08);
+            color: #b91c1c;
+        }
+
+        .success-card {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .success-card h3 {
+            color: #047857;
+            font-size: 1.12rem;
+        }
+
+        .success-folio {
+            width: fit-content;
+            border: 1px solid rgba(4,120,87,0.24);
+            border-radius: var(--radius);
+            padding: 0.55rem 0.75rem;
+            background: rgba(255,255,255,0.76);
+            color: var(--blue);
+            font-size: 1.05rem;
+            font-weight: 950;
+            letter-spacing: 0.04em;
+        }
+
+        .success-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .success-actions a,
+        .success-actions button {
+            min-height: 38px;
+            border: 1px solid rgba(4,120,87,0.18);
+            border-radius: var(--radius);
+            padding: 0.58rem 0.75rem;
+            background: #fff;
+            color: #047857;
+            text-decoration: none;
+            font: inherit;
+            font-size: 0.78rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
 
         @media (max-width: 900px) {
             .hero-grid,
@@ -620,6 +669,10 @@
 
             .btn {
                 width: 100%;
+            }
+
+            .success-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -870,7 +923,7 @@
         form.addEventListener('reset', () => {
             setTimeout(() => {
                 fileList.textContent = 'Sin archivos seleccionados';
-                successNotice.classList.remove('visible');
+                successNotice.className = 'notice';
                 updatePreview();
             }, 0);
         });
@@ -883,7 +936,7 @@
             const originalText = submitButton.textContent;
             submitButton.disabled = true;
             submitButton.textContent = 'Enviando...';
-            successNotice.classList.remove('visible');
+            successNotice.className = 'notice';
 
             try {
                 const response = await fetch(form.action, {
@@ -896,19 +949,30 @@
                     throw new Error(data.mensaje || 'No fue posible enviar la solicitud.');
                 }
 
-                successNotice.removeAttribute('style');
                 ticketNumber.textContent = data.folio;
-                successNotice.innerHTML = `Ticket creado correctamente: <strong>${data.folio}</strong>. <a href="${data.seguimiento}" style="color:#047857;">Ver seguimiento</a>`;
-                successNotice.classList.add('visible');
+                successNotice.innerHTML = `
+                    <div class="success-card">
+                        <h3>Solicitud enviada a evaluación</h3>
+                        <p>Guarda este folio para consultar el avance sin iniciar sesión.</p>
+                        <div class="success-folio">${data.folio}</div>
+                        <div class="success-actions">
+                            <a href="${data.seguimiento}">Ver seguimiento</a>
+                            <button type="button" id="copyFolio">Copiar folio</button>
+                        </div>
+                    </div>
+                `;
+                successNotice.className = 'notice visible';
+                const copyButton = document.getElementById('copyFolio');
+                copyButton?.addEventListener('click', async () => {
+                    await navigator.clipboard.writeText(data.folio);
+                    copyButton.textContent = 'Folio copiado';
+                });
                 form.reset();
                 fileList.textContent = 'Sin archivos seleccionados';
                 updatePreview();
             } catch (error) {
                 successNotice.textContent = error.message || 'Hubo un error al enviar el ticket. Intenta nuevamente.';
-                successNotice.style.borderColor = 'rgba(220,38,38,0.28)';
-                successNotice.style.background = 'rgba(220,38,38,0.08)';
-                successNotice.style.color = '#b91c1c';
-                successNotice.classList.add('visible');
+                successNotice.className = 'notice error visible';
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
