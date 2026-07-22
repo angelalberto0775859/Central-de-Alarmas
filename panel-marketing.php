@@ -275,6 +275,9 @@ if ($statsRow) {
         .chat-meta { display:flex; justify-content:space-between; gap:.5rem; color:var(--muted); font-size:.68rem; font-weight:850; }
         .chat-message p { margin-top:.24rem; color:var(--ink); font-size:.8rem; line-height:1.45; }
         .chat-form { display:grid; gap:.42rem; }
+        .chat-files { display:grid; gap:.35rem; margin-top:.42rem; }
+        .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.34rem .48rem; background:#eef4fb; color:var(--blue); font-size:.72rem; font-weight:850; text-decoration:none; }
+        .file-input { padding:.55rem; font-size:.76rem; background:#fff; }
         @media (max-width:900px) {
             body { background:linear-gradient(180deg,#061b39 0 390px,#eef5fb 390px,#f7faff 100%); }
             .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
@@ -417,15 +420,23 @@ if ($statsRow) {
                                                 <span><?php echo htmlspecialchars(date('d/m H:i', strtotime($message['creado_en']))); ?></span>
                                             </div>
                                             <p><?php echo nl2br(htmlspecialchars($message['mensaje'])); ?></p>
+                                            <?php if (!empty($message['archivos'])): ?>
+                                                <div class="chat-files">
+                                                    <?php foreach ($message['archivos'] as $file): ?>
+                                                        <a class="chat-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </article>
                                     <?php endforeach; ?>
                                     <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; escribe aqui si necesitas aclarar el brief o pedir aprobacion.</p><?php endif; ?>
                                 </div>
-                                <form class="chat-form" method="post" action="ticket-mensaje.php">
+                                <form class="chat-form" method="post" action="ticket-mensaje.php" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                                     <input type="hidden" name="ticket_id" value="<?php echo (int) $ticket['id']; ?>">
                                     <input type="hidden" name="return_to" value="panel-marketing.php">
-                                    <textarea name="mensaje" rows="2" required placeholder="Escribe un mensaje para este ticket"></textarea>
+                                    <textarea name="mensaje" rows="2" placeholder="Escribe un mensaje para este ticket"></textarea>
+                                    <input class="file-input" name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip">
                                     <button type="submit">Enviar mensaje</button>
                                 </form>
                             </section>

@@ -41,6 +41,7 @@ try {
         $stmt->execute([$id]);
         $comment = 'Ticket restaurado desde el basurero.';
     } else {
+        $db->prepare('DELETE FROM marketing_ticket_mensaje_archivos WHERE ticket_id = ?')->execute([$id]);
         $db->prepare('DELETE FROM marketing_ticket_mensajes WHERE ticket_id = ?')->execute([$id]);
         $db->prepare('DELETE FROM marketing_ticket_archivos WHERE ticket_id = ?')->execute([$id]);
         $db->prepare('DELETE FROM marketing_ticket_historial WHERE ticket_id = ?')->execute([$id]);

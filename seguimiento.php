@@ -31,13 +31,14 @@ if ($folio) {
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chat') {
                 cdaRequirePostCsrf();
                 $mensajeChat = cdaMarketingClean($_POST['mensaje'] ?? '');
+                $hasChatFiles = $currentUser && $currentUser['rol'] === 'admin' && !empty($_FILES['archivos']['name']) && is_array($_FILES['archivos']['name']) && count(array_filter($_FILES['archivos']['name'])) > 0;
                 $canChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0);
 
                 if (!$currentUser) {
                     $chatError = 'Inicia sesion con el usuario del ticket para enviar mensajes.';
                 } elseif (!$canChat) {
                     $chatError = 'Tu usuario no coincide con el correo de este ticket.';
-                } elseif ($mensajeChat === '') {
+                } elseif ($mensajeChat === '' && !$hasChatFiles) {
                     $chatError = 'Escribe un mensaje para enviarlo al equipo.';
                 } else {
                     try {
@@ -49,12 +50,21 @@ if ($folio) {
                             VALUES (?, ?, ?, ?, ?)'
                         );
                         $authorRole = $currentUser['rol'] === 'admin' ? 'admin' : 'usuario';
-                        $insert->execute([$ticket['id'], $currentUser['id'], $currentUser['nombre'], $authorRole, $mensajeChat]);
+                        $messageText = $mensajeChat !== '' ? $mensajeChat : 'Archivo enviado para este ticket.';
+                        $insert->execute([$ticket['id'], $currentUser['id'], $currentUser['nombre'], $authorRole, $messageText]);
+                        $messageId = (int) $db->lastInsertId();
+                        $savedFiles = [];
+                        if ($currentUser['rol'] === 'admin' && $hasChatFiles) {
+                            $savedFiles = cdaMarketingStoreMessageFiles($ticket, $messageId, $_FILES['archivos']);
+                        }
 
                         $touch = $db->prepare('UPDATE marketing_tickets SET actualizado_en = CURRENT_TIMESTAMP WHERE id = ?');
                         $touch->execute([$ticket['id']]);
 
                         $db->commit();
+                        if ($currentUser['rol'] === 'admin') {
+                            cdaMarketingSendChatEmail($ticket, $currentUser['nombre'], $messageText, $savedFiles);
+                        }
                         header('Location: seguimiento.php?folio=' . urlencode($ticket['folio']) . '#chat');
                         exit;
                     } catch (Throwable $e) {
@@ -243,6 +253,8 @@ if ($folio) {
         .chat-message.usuario { border-left-color:#047857; }
         .chat-meta { display:flex; justify-content:space-between; gap:.75rem; color:var(--muted); font-size:.72rem; font-weight:900; }
         .chat-message p { margin-top:.3rem; line-height:1.55; color:var(--ink); }
+        .chat-files { display:grid; gap:.4rem; margin-top:.55rem; }
+        .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.38rem .55rem; background:#eef4fb; color:var(--blue); font-size:.78rem; font-weight:850; text-decoration:none; }
         .chat-form { display:grid; grid-template-columns:1fr; gap:.7rem; border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; }
         .chat-login { border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; color:var(--muted); line-height:1.55; }
         .empty-state {
@@ -347,6 +359,13 @@ if ($folio) {
                                     <span><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($mensaje['creado_en']))); ?></span>
                                 </div>
                                 <p><?php echo nl2br(htmlspecialchars($mensaje['mensaje'])); ?></p>
+                                <?php if (!empty($mensaje['archivos'])): ?>
+                                    <div class="chat-files">
+                                        <?php foreach ($mensaje['archivos'] as $file): ?>
+                                            <a class="chat-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             </article>
                         <?php endforeach; ?>
                         <?php if (!$mensajes): ?><p class="muted">Aun no hay mensajes. Cuando el equipo necesite una aclaracion, aparecera aqui junto al folio.</p><?php endif; ?>
@@ -354,11 +373,14 @@ if ($folio) {
                     <?php if ($chatError): ?><div class="error"><?php echo htmlspecialchars($chatError); ?></div><?php endif; ?>
                     <?php $canUseChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0); ?>
                     <?php if ($canUseChat): ?>
-                        <form class="chat-form" method="post" action="seguimiento.php#chat">
+                        <form class="chat-form" method="post" action="seguimiento.php#chat" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                             <input type="hidden" name="action" value="chat">
                             <input type="hidden" name="folio" value="<?php echo htmlspecialchars($ticket['folio']); ?>">
-                            <label>Mensaje <textarea name="mensaje" required placeholder="Escribe tu respuesta para el equipo"></textarea></label>
+                            <label>Mensaje <textarea name="mensaje" placeholder="Escribe tu respuesta para el equipo"></textarea></label>
+                            <?php if ($currentUser && $currentUser['rol'] === 'admin'): ?>
+                                <label>Archivos de entrega <input name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip"></label>
+                            <?php endif; ?>
                             <button type="submit">Enviar mensaje</button>
                         </form>
                     <?php else: ?>

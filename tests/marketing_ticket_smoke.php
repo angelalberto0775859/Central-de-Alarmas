@@ -22,5 +22,12 @@ assertSameValue(true, in_array('Ventas', cdaMarketingDepartments(), true), 'depa
 assertSameValue(true, in_array('Clientes actuales', cdaMarketingAudiences(), true), 'audiences expose clientes actuales option');
 assertSameValue('green', cdaMarketingStatusTone('Entregado'), 'delivered tickets use green tone');
 assertSameValue('red', cdaMarketingPriorityTone('Urgente'), 'urgent priority uses red tone');
+assertSameValue(true, cdaMarketingStatusSendsEmail('Pendiente de informacion'), 'waiting info status sends email');
+assertSameValue(true, cdaMarketingStatusSendsEmail('Ajustes solicitados'), 'adjustments status sends email');
+assertSameValue(true, cdaMarketingStatusSendsEmail('Entregado'), 'delivered status sends email');
+assertSameValue(false, cdaMarketingStatusSendsEmail('En diseno'), 'in design status stays internal');
+assertSameValue(true, strpos(cdaMarketingStatusEmailSubject('Entregado', 'MKT-1'), 'MKT-1') !== false, 'status email subject includes folio');
+assertSameValue(true, in_array('pdf', cdaMarketingChatFileExtensions(), true), 'chat files allow pdf');
+assertSameValue(false, in_array('exe', cdaMarketingChatFileExtensions(), true), 'chat files reject executables');
 
 echo "marketing ticket smoke ok" . PHP_EOL;

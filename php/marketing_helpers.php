@@ -140,6 +140,238 @@ function cdaMarketingPriorityTone($priority) {
     return $tones[$priority] ?? 'gray';
 }
 
+function cdaMarketingStatusEmailStatuses() {
+    return [
+        'Pendiente de informacion',
+        'Ajustes solicitados',
+        'Aprobado',
+        'Programado',
+        'Entregado',
+        'Cerrado',
+        'Rechazado',
+    ];
+}
+
+function cdaMarketingStatusSendsEmail($status) {
+    return in_array((string) $status, cdaMarketingStatusEmailStatuses(), true);
+}
+
+function cdaMarketingStatusEmailSubject($status, $folio) {
+    return 'Actualizacion de ticket ' . cdaMarketingClean($folio) . ': ' . cdaMarketingStatusLabel($status);
+}
+
+function cdaMarketingStatusEmailIntro($status) {
+    $messages = [
+        'Pendiente de informacion' => 'El equipo necesita informacion o materiales adicionales para continuar con tu solicitud.',
+        'Ajustes solicitados' => 'El ticket requiere ajustes o confirmaciones antes de avanzar.',
+        'Aprobado' => 'Tu solicitud fue aprobada para continuar con el flujo de trabajo.',
+        'Programado' => 'Tu solicitud ya quedo programada por el equipo.',
+        'Entregado' => 'Tu solicitud fue marcada como entregada. Revisa el seguimiento y el chat del ticket.',
+        'Cerrado' => 'Tu ticket fue cerrado con historial de seguimiento.',
+        'Rechazado' => 'Tu solicitud fue rechazada. Revisa el comentario del equipo para conocer el motivo.',
+    ];
+
+    return $messages[$status] ?? 'Tu ticket tuvo una actualizacion importante.';
+}
+
+function cdaMarketingTicketUrl($folio) {
+    return rtrim(CDA_SITE_URL, '/') . '/seguimiento.php?folio=' . urlencode((string) $folio) . '#chat';
+}
+
+function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment = '') {
+    if (empty($ticket['correo']) || !filter_var($ticket['correo'], FILTER_VALIDATE_EMAIL) || !cdaMarketingStatusSendsEmail($newStatus)) {
+        return false;
+    }
+
+    $subject = cdaMarketingStatusEmailSubject($newStatus, $ticket['folio'] ?? '');
+    $statusLabel = cdaMarketingStatusLabel($newStatus);
+    $oldStatusLabel = cdaMarketingStatusLabel($oldStatus);
+    $commentHtml = $comment !== '' ? nl2br(htmlspecialchars($comment)) : 'Sin comentario adicional.';
+    $url = cdaMarketingTicketUrl($ticket['folio'] ?? '');
+
+    $message = '
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family:Arial,sans-serif;color:#10213f;line-height:1.55;">
+        <div style="max-width:680px;margin:0 auto;border:1px solid #d8e3f0;border-radius:8px;overflow:hidden;">
+            <div style="background:#063970;color:#fff;padding:18px 20px;">
+                <h1 style="margin:0;font-size:21px;">Actualizacion de ticket</h1>
+            </div>
+            <div style="padding:20px;background:#fff;">
+                <p>' . htmlspecialchars(cdaMarketingStatusEmailIntro($newStatus)) . '</p>
+                <p><strong>Folio:</strong> ' . htmlspecialchars($ticket['folio'] ?? '') . '</p>
+                <p><strong>Solicitud:</strong> ' . htmlspecialchars($ticket['actividad'] ?? '') . '</p>
+                <p><strong>Estado anterior:</strong> ' . htmlspecialchars($oldStatusLabel) . '</p>
+                <p><strong>Nuevo estado:</strong> ' . htmlspecialchars($statusLabel) . '</p>
+                <div style="background:#f4f8fc;border:1px solid #d8e3f0;border-radius:8px;padding:12px;margin-top:12px;">
+                    <strong>Comentario del equipo</strong><br>' . $commentHtml . '
+                </div>
+                <a href="' . htmlspecialchars($url) . '" style="display:inline-block;margin-top:14px;background:#f6eb17;color:#063970;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Abrir seguimiento</a>
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
+
+    return mail($ticket['correo'], $subject, $message, $headers);
+}
+
+function cdaMarketingChatFileExtensions() {
+    return ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov','zip'];
+}
+
+function cdaMarketingNormalizeUploadName($name) {
+    $safe = preg_replace('/[^a-zA-Z0-9._-]/', '-', basename((string) $name));
+    return trim($safe, '.-') ?: 'archivo';
+}
+
+function cdaMarketingFetchMessageFiles(array $messageIds) {
+    $messageIds = array_values(array_unique(array_filter(array_map('intval', $messageIds))));
+    if (!$messageIds) {
+        return [];
+    }
+
+    $placeholders = implode(',', array_fill(0, count($messageIds), '?'));
+    try {
+        $stmt = cdaDb()->prepare(
+            "SELECT * FROM marketing_ticket_mensaje_archivos
+            WHERE mensaje_id IN ($placeholders)
+            ORDER BY creado_en ASC, id ASC"
+        );
+        $stmt->execute($messageIds);
+    } catch (Throwable $e) {
+        return [];
+    }
+
+    $files = [];
+    foreach ($stmt->fetchAll() as $file) {
+        $files[(int) $file['mensaje_id']][] = $file;
+    }
+
+    return $files;
+}
+
+function cdaMarketingStoreMessageFiles($ticket, $messageId, $files) {
+    if (empty($files['name']) || !is_array($files['name'])) {
+        return [];
+    }
+
+    $allowed = cdaMarketingChatFileExtensions();
+    $maxFiles = 5;
+    $maxFileSize = 25 * 1024 * 1024;
+    $uploadedCount = count(array_filter($files['name'], function ($name) {
+        return trim((string) $name) !== '';
+    }));
+
+    if ($uploadedCount > $maxFiles) {
+        throw new RuntimeException('too_many_chat_files');
+    }
+
+    $folio = preg_replace('/[^a-zA-Z0-9._-]/', '-', (string) ($ticket['folio'] ?? ('ticket-' . (int) ($ticket['id'] ?? 0))));
+    $uploadDir = dirname(__DIR__) . '/uploads/marketing/' . $folio . '/chat';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $db = cdaDb();
+    $stmt = $db->prepare(
+        'INSERT INTO marketing_ticket_mensaje_archivos (mensaje_id, ticket_id, nombre_original, ruta, mime, tamano)
+        VALUES (?, ?, ?, ?, ?, ?)'
+    );
+
+    $saved = [];
+    foreach ($files['name'] as $index => $name) {
+        if (($files['error'][$index] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            continue;
+        }
+        if (($files['error'][$index] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK || (int) ($files['size'][$index] ?? 0) > $maxFileSize) {
+            throw new RuntimeException('invalid_chat_file');
+        }
+
+        $original = basename((string) $name);
+        $extension = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowed, true)) {
+            throw new RuntimeException('invalid_chat_extension');
+        }
+
+        $safeName = cdaMarketingNormalizeUploadName($original);
+        $finalName = uniqid('mensaje-', true) . '-' . $safeName;
+        $absolutePath = $uploadDir . '/' . $finalName;
+        $relativePath = 'uploads/marketing/' . $folio . '/chat/' . $finalName;
+        $tmpName = $files['tmp_name'][$index] ?? '';
+        $moved = is_uploaded_file($tmpName)
+            ? move_uploaded_file($tmpName, $absolutePath)
+            : (is_file($tmpName) && rename($tmpName, $absolutePath));
+
+        if ($moved) {
+            $payload = [
+                'nombre_original' => $original,
+                'ruta' => $relativePath,
+                'mime' => $files['type'][$index] ?? null,
+                'tamano' => (int) ($files['size'][$index] ?? 0),
+            ];
+            $stmt->execute([
+                (int) $messageId,
+                (int) ($ticket['id'] ?? 0),
+                $payload['nombre_original'],
+                $payload['ruta'],
+                $payload['mime'],
+                $payload['tamano'],
+            ]);
+            $saved[] = $payload;
+        }
+    }
+
+    return $saved;
+}
+
+function cdaMarketingSendChatEmail($ticket, $authorName, $messageText, array $files = []) {
+    if (empty($ticket['correo']) || !filter_var($ticket['correo'], FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+
+    $url = cdaMarketingTicketUrl($ticket['folio'] ?? '');
+    $fileHtml = $files
+        ? '<ul><li>' . implode('</li><li>', array_map(function ($file) {
+            return htmlspecialchars($file['nombre_original'] ?? 'Archivo');
+        }, $files)) . '</li></ul>'
+        : '<p>Sin archivos adjuntos.</p>';
+
+    $subject = 'Nuevo mensaje en ticket ' . cdaMarketingClean($ticket['folio'] ?? '');
+    $message = '
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family:Arial,sans-serif;color:#10213f;line-height:1.55;">
+        <div style="max-width:680px;margin:0 auto;border:1px solid #d8e3f0;border-radius:8px;overflow:hidden;">
+            <div style="background:#063970;color:#fff;padding:18px 20px;">
+                <h1 style="margin:0;font-size:21px;">Nuevo mensaje del equipo</h1>
+            </div>
+            <div style="padding:20px;background:#fff;">
+                <p><strong>Folio:</strong> ' . htmlspecialchars($ticket['folio'] ?? '') . '</p>
+                <p><strong>Solicitud:</strong> ' . htmlspecialchars($ticket['actividad'] ?? '') . '</p>
+                <p><strong>Mensaje de:</strong> ' . htmlspecialchars($authorName) . '</p>
+                <div style="background:#f4f8fc;border:1px solid #d8e3f0;border-radius:8px;padding:12px;margin-top:12px;">
+                    ' . nl2br(htmlspecialchars($messageText)) . '
+                </div>
+                <div style="margin-top:12px;"><strong>Archivos enviados</strong>' . $fileHtml . '</div>
+                <a href="' . htmlspecialchars($url) . '" style="display:inline-block;margin-top:14px;background:#f6eb17;color:#063970;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Abrir seguimiento</a>
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
+
+    return mail($ticket['correo'], $subject, $message, $headers);
+}
+
 function cdaMarketingFetchTicketMessages(array $ticketIds) {
     $ticketIds = array_values(array_unique(array_filter(array_map('intval', $ticketIds))));
     if (!$ticketIds) {
@@ -160,8 +392,12 @@ function cdaMarketingFetchTicketMessages(array $ticketIds) {
         return [];
     }
 
+    $rows = $stmt->fetchAll();
+    $filesByMessage = cdaMarketingFetchMessageFiles(array_column($rows, 'id'));
+
     $messages = [];
-    foreach ($stmt->fetchAll() as $message) {
+    foreach ($rows as $message) {
+        $message['archivos'] = $filesByMessage[(int) $message['id']] ?? [];
         $messages[(int) $message['ticket_id']][] = $message;
     }
 

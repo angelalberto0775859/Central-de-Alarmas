@@ -70,6 +70,21 @@ CREATE TABLE marketing_ticket_mensajes (
     CONSTRAINT fk_marketing_mensajes_usuario FOREIGN KEY (usuario_id) REFERENCES marketing_usuarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE marketing_ticket_mensaje_archivos (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    mensaje_id INT UNSIGNED NOT NULL,
+    ticket_id INT UNSIGNED NOT NULL,
+    nombre_original VARCHAR(255) NOT NULL,
+    ruta VARCHAR(255) NOT NULL,
+    mime VARCHAR(120) NULL,
+    tamano INT UNSIGNED NOT NULL DEFAULT 0,
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_marketing_mensaje_archivos_mensaje FOREIGN KEY (mensaje_id) REFERENCES marketing_ticket_mensajes(id) ON DELETE CASCADE,
+    CONSTRAINT fk_marketing_mensaje_archivos_ticket FOREIGN KEY (ticket_id) REFERENCES marketing_tickets(id) ON DELETE CASCADE,
+    INDEX idx_mensaje_id (mensaje_id),
+    INDEX idx_ticket_id (ticket_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Genera el hash con:
 -- php -r "echo password_hash('TuPasswordSeguro', PASSWORD_DEFAULT), PHP_EOL;"
 -- y reemplaza PASSWORD_HASH_AQUI antes de importar o despues con UPDATE.
