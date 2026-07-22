@@ -452,7 +452,7 @@ if ($statsRow) {
                                     <input type="hidden" name="ticket_id" value="<?php echo (int) $ticket['id']; ?>">
                                     <input type="hidden" name="return_to" value="panel-marketing.php">
                                     <textarea name="mensaje" rows="2" placeholder="Escribe un mensaje para este ticket"></textarea>
-                                    <input class="file-input" name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip">
+                                    <input class="file-input" name="archivos[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>">
                                     <button type="submit">Enviar mensaje</button>
                                 </form>
                             </section>

@@ -178,18 +178,32 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $neededDate)) {
     cdaMarketingJson(false, 'La fecha requerida no es valida.');
 }
 
-$allowedFileExtensions = ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov'];
+$allowedFileExtensions = cdaMarketingTicketFileExtensions();
 $allowedMimePrefixes = ['image/', 'video/'];
 $allowedMimeTypes = [
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-word.document.macroEnabled.12',
     'application/vnd.ms-powerpoint',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
     'application/vnd.ms-excel',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel.sheet.macroEnabled.12',
+    'text/csv',
+    'application/csv',
     'application/zip',
+    'application/x-zip-compressed',
     'application/octet-stream',
+    'application/postscript',
+    'application/illustrator',
+    'application/vnd.adobe.illustrator',
+    'application/photoshop',
+    'application/x-photoshop',
+    'image/vnd.adobe.photoshop',
+    'image/svg+xml',
+    'text/xml',
 ];
 $maxFiles = 5;
 $maxFileSize = 25 * 1024 * 1024;

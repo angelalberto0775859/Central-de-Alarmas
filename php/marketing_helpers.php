@@ -156,6 +156,14 @@ function cdaMarketingStatusSendsEmail($status) {
     return in_array((string) $status, cdaMarketingStatusEmailStatuses(), true);
 }
 
+function cdaMarketingTicketFileExtensions() {
+    return ['pdf','doc','docx','docm','ppt','pptx','pptm','xls','xlsx','xlsm','csv','jpg','jpeg','png','webp','mp4','mov','zip','svg','ai','psd'];
+}
+
+function cdaMarketingAllowedUploadAccept() {
+    return '.' . implode(',.', cdaMarketingTicketFileExtensions());
+}
+
 function cdaMarketingStatusEmailSubject($status, $folio) {
     return 'Actualizacion de ticket ' . cdaMarketingClean($folio) . ': ' . cdaMarketingStatusLabel($status);
 }
@@ -221,7 +229,7 @@ function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment =
 }
 
 function cdaMarketingChatFileExtensions() {
-    return ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov','zip'];
+    return cdaMarketingTicketFileExtensions();
 }
 
 function cdaMarketingCanUploadChatFiles($role) {

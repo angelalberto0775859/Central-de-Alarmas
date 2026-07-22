@@ -393,7 +393,7 @@ if ($folio) {
                             <input type="hidden" name="action" value="chat">
                             <input type="hidden" name="folio" value="<?php echo htmlspecialchars($ticket['folio']); ?>">
                             <label>Mensaje <textarea name="mensaje" placeholder="Escribe tu respuesta para el equipo"></textarea></label>
-                            <label>Archivos <input name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip"></label>
+                            <label>Archivos <input name="archivos[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>"></label>
                             <button type="submit">Enviar mensaje</button>
                         </form>
                     <?php else: ?>
