@@ -134,37 +134,38 @@ if ($statsRow) {
             color:#fff;
             border:1px solid rgba(255,255,255,.16);
             border-radius:var(--radius);
-            padding:.7rem;
-            background:rgba(255,255,255,.08);
+            padding:.65rem .75rem;
+            background:rgba(255,255,255,.12);
             backdrop-filter:blur(14px);
             box-shadow:0 18px 50px rgba(0,0,0,.14);
         }
-        .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-        .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
+        .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
         .nav a, button {
-            min-height:40px;
+            min-height:36px;
             display:inline-flex;
             align-items:center;
             justify-content:center;
             color:var(--blue);
             text-decoration:none;
-            border:1px solid rgba(255,255,255,.22);
+            border:1px solid rgba(255,255,255,.2);
             border-radius:8px;
-            padding:.72rem .88rem;
+            padding:.58rem .7rem;
             background:#fff;
-            font-size:.82rem;
+            font-size:.8rem;
             font-weight:850;
             cursor:pointer;
             white-space:nowrap;
             transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
         }
-        .nav a { background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.26); }
-        .nav a:hover, .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.48); }
-        .nav a.session-link { border-color:rgba(254,202,202,.5); background:rgba(185,28,28,.2); }
-        .nav a.admin-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
-        .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
-        .user-chip { color:#fff; font-weight:850; opacity:.9; }
+        .nav a { background:rgba(255,255,255,.09); color:rgba(255,255,255,.88); border-color:rgba(255,255,255,.18); }
+        .nav a:hover { background:rgba(246,235,23,.16); color:#fff; border-color:rgba(246,235,23,.5); }
+        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); box-shadow:0 8px 18px rgba(0,0,0,.1); }
+        .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
+        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
+        .user-chip, .role-chip { min-height:32px; display:inline-flex; align-items:center; border-radius:8px; padding:.48rem .62rem; font-size:.78rem; font-weight:850; }
+        .user-chip { color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
+        .role-chip { color:var(--blue); background:rgba(246,235,23,.92); border:1px solid rgba(246,235,23,.7); }
         .hero {
             display:flex;
             justify-content:space-between;
@@ -295,6 +296,7 @@ if ($statsRow) {
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
+                <?php if ($user['rol'] === 'admin'): ?><span class="role-chip">Modo admin</span><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? '' : 'active'; ?>" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] !== 'admin'): ?><a class="active" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>

@@ -116,15 +116,17 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
         .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.78); box-shadow:0 0 calc(var(--size) * 5) rgba(166,205,255,.45); opacity:.52; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
         @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.28; } 42% { opacity:.78; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.42; } }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
-        .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-        .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
-        .nav a { min-height:40px; display:inline-flex; align-items:center; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.26); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.12); font-size:.82rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
-        .nav a:hover, .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.48); }
-        .nav a.session-link { border-color:rgba(254,202,202,.5); background:rgba(185,28,28,.2); }
-        .nav a.admin-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
-        .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.65rem .75rem; background:rgba(255,255,255,.12); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
+        .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
+        .nav a { min-height:36px; display:inline-flex; align-items:center; color:rgba(255,255,255,.88); text-decoration:none; border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:.58rem .7rem; background:rgba(255,255,255,.09); font-size:.8rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .nav a:hover { background:rgba(246,235,23,.16); color:#fff; border-color:rgba(246,235,23,.5); }
+        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); box-shadow:0 8px 18px rgba(0,0,0,.1); }
+        .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
+        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
+        .user-chip, .role-chip { min-height:32px; display:inline-flex; align-items:center; border-radius:8px; padding:.48rem .62rem; font-size:.78rem; font-weight:850; }
+        .user-chip { color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
+        .role-chip { color:var(--blue); background:rgba(246,235,23,.92); border:1px solid rgba(246,235,23,.7); }
         .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); position:relative; overflow:hidden; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
         .hero > * { position:relative; z-index:1; }
@@ -170,6 +172,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
+                <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
+                <span class="role-chip">Modo admin</span>
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link" href="control-marketing.php">Tablero</a>
                 <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
