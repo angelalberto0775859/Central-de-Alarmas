@@ -79,33 +79,24 @@ foreach ($tickets as $ticket) {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                radial-gradient(circle at 10% 8%, rgba(246,235,23,.2), transparent 19rem),
-                radial-gradient(circle at 88% 12%, rgba(13,98,173,.28), transparent 24rem),
-                linear-gradient(180deg,#061b39 0 320px,#edf5fb 320px,#f8fbff 100%);
+                radial-gradient(circle at 18% 18%, rgba(246,235,23,.2), transparent 23rem),
+                radial-gradient(circle at 82% 24%, rgba(71,151,255,.2), transparent 25rem),
+                linear-gradient(135deg,#061226,#063970 58%,#031025);
+            overflow-x:hidden;
         }
         body::before {
             content:"";
             position:fixed;
-            inset:0 0 auto;
-            height:320px;
-            pointer-events:none;
-            background:linear-gradient(180deg, rgba(255,255,255,.08), transparent);
-            mask-image:linear-gradient(180deg,#000,transparent);
-            z-index:0;
-        }
-        body::after {
-            content:"";
-            position:fixed;
             inset:0;
             pointer-events:none;
-            background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%);
-            opacity:.36;
+            background:linear-gradient(120deg, transparent 0 44%, rgba(255,255,255,.09) 45%, transparent 48% 100%);
+            opacity:.45;
             z-index:0;
         }
         .shell { width:min(1480px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.8rem; position:relative; z-index:2; }
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
-        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.78); box-shadow:0 0 calc(var(--size) * 5) rgba(166,205,255,.45); opacity:.52; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
-        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.28; } 42% { opacity:.78; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.42; } }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
         .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.65rem .75rem; background:rgba(255,255,255,.12); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
@@ -323,19 +314,19 @@ foreach ($tickets as $ticket) {
         (function () {
             var layer = document.querySelector('.ambient-points');
             if (!layer) return;
-            var count = window.matchMedia('(max-width: 620px)').matches ? 64 : 118;
+            var count = window.matchMedia('(max-width: 620px)').matches ? 54 : 86;
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < count; i += 1) {
                 var point = document.createElement('span');
                 point.className = 'ambient-point';
-                point.style.setProperty('--size', (Math.random() * 3.2 + 1).toFixed(2) + 'px');
+                point.style.setProperty('--size', (Math.random() * 2.8 + .9).toFixed(2) + 'px');
                 point.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
                 point.style.setProperty('--y', (Math.random() * 100).toFixed(2) + 'vh');
-                point.style.setProperty('--dx', (Math.random() * 82 - 41).toFixed(2) + 'px');
-                point.style.setProperty('--dy', (Math.random() * 82 - 41).toFixed(2) + 'px');
-                point.style.setProperty('--duration', (Math.random() * 22 + 20).toFixed(2) + 's');
-                point.style.setProperty('--delay', (Math.random() * -30).toFixed(2) + 's');
-                point.style.opacity = (Math.random() * .4 + .28).toFixed(2);
+                point.style.setProperty('--dx', (Math.random() * 72 - 36).toFixed(2) + 'px');
+                point.style.setProperty('--dy', (Math.random() * 72 - 36).toFixed(2) + 'px');
+                point.style.setProperty('--duration', (Math.random() * 18 + 16).toFixed(2) + 's');
+                point.style.setProperty('--delay', (Math.random() * -24).toFixed(2) + 's');
+                point.style.opacity = (Math.random() * .32 + .18).toFixed(2);
                 fragment.appendChild(point);
             }
             layer.appendChild(fragment);

@@ -112,13 +112,24 @@ if ($folio) {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                radial-gradient(circle at 1px 1px, rgba(255,255,255,.17) 1px, transparent 1.7px),
-                radial-gradient(circle at 16% 18%, rgba(246,235,23,.18), transparent 23rem),
-                radial-gradient(circle at 78% 12%, rgba(69,143,255,.22), transparent 25rem),
+                radial-gradient(circle at 18% 18%, rgba(246,235,23,.2), transparent 23rem),
+                radial-gradient(circle at 82% 24%, rgba(71,151,255,.2), transparent 25rem),
                 linear-gradient(135deg,#061226,#063970 58%,#031025);
-            background-size:28px 28px,auto,auto,auto;
+            overflow-x:hidden;
         }
-        .shell { width:min(1160px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; }
+        body::before {
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background:linear-gradient(120deg, transparent 0 44%, rgba(255,255,255,.09) 45%, transparent 48% 100%);
+            opacity:.45;
+            z-index:0;
+        }
+        .shell { width:min(1160px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:2; }
+        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#fff; margin-bottom:clamp(2rem,5vw,3.8rem); }
         .topbar img { width:154px; display:block; }
         .nav { display:flex; flex-wrap:wrap; gap:.62rem; justify-content:flex-end; }
@@ -279,9 +290,11 @@ if ($folio) {
             .progress-step::before { margin:0; flex:0 0 auto; }
             button { width:100%; }
         }
+        @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
 <body>
+    <div class="ambient-points" aria-hidden="true"></div>
     <div class="shell">
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
@@ -414,5 +427,38 @@ if ($folio) {
         </div>
         <?php endif; ?>
     </div>
+    <script>
+        (function () {
+            var layer = document.querySelector('.ambient-points');
+            if (!layer) return;
+
+            var count = window.matchMedia('(max-width: 620px)').matches ? 54 : 86;
+            var fragment = document.createDocumentFragment();
+
+            for (var i = 0; i < count; i += 1) {
+                var point = document.createElement('span');
+                var size = (Math.random() * 2.8 + .9).toFixed(2);
+                var x = (Math.random() * 100).toFixed(2);
+                var y = (Math.random() * 100).toFixed(2);
+                var dx = (Math.random() * 72 - 36).toFixed(2);
+                var dy = (Math.random() * 72 - 36).toFixed(2);
+                var duration = (Math.random() * 18 + 16).toFixed(2);
+                var delay = (Math.random() * -24).toFixed(2);
+
+                point.className = 'ambient-point';
+                point.style.setProperty('--size', size + 'px');
+                point.style.setProperty('--x', x + 'vw');
+                point.style.setProperty('--y', y + 'vh');
+                point.style.setProperty('--dx', dx + 'px');
+                point.style.setProperty('--dy', dy + 'px');
+                point.style.setProperty('--duration', duration + 's');
+                point.style.setProperty('--delay', delay + 's');
+                point.style.opacity = (Math.random() * .32 + .18).toFixed(2);
+                fragment.appendChild(point);
+            }
+
+            layer.appendChild(fragment);
+        }());
+    </script>
 </body>
 </html>
