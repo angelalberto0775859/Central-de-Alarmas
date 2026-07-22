@@ -19,6 +19,8 @@ $stmt = cdaDb()->query('SELECT * FROM marketing_tickets WHERE eliminado_en IS NU
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
+$flashError = $_SESSION['cda_marketing_error'] ?? '';
+unset($_SESSION['cda_marketing_error']);
 $laneTickets = array_fill_keys(array_keys($lanes), []);
 
 foreach ($tickets as $ticket) {
@@ -182,6 +184,7 @@ foreach ($tickets as $ticket) {
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
         .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
+        .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
         @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:620px) { .stats, .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
@@ -223,6 +226,9 @@ foreach ($tickets as $ticket) {
             <div class="stat"><span>Por vencer</span><strong><?php echo $stats['dueSoon']; ?></strong></div>
             <div class="stat"><span>Esperando info</span><strong><?php echo $stats['waiting']; ?></strong></div>
         </section>
+        <?php if ($flashError): ?>
+            <div class="alert-error"><?php echo htmlspecialchars($flashError); ?></div>
+        <?php endif; ?>
         <main class="board" aria-label="Tablero de tickets">
             <?php foreach ($laneTickets as $laneName => $items): ?>
             <section class="lane">

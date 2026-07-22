@@ -71,6 +71,7 @@ try {
     if (isset($db) && $db->inTransaction()) {
         $db->rollBack();
     }
+    $_SESSION['cda_marketing_error'] = 'No fue posible enviar el mensaje o guardar los archivos. Revisa que exista la tabla de archivos del chat y que la carpeta uploads/marketing tenga permisos de escritura.';
 }
 
 header('Location: ' . $returnTo . '#ticket-' . $ticketId);

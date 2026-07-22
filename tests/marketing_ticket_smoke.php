@@ -32,5 +32,21 @@ assertSameValue(false, in_array('exe', cdaMarketingChatFileExtensions(), true), 
 assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing users can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
+assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
+
+$tmpBase = sys_get_temp_dir() . '/cda-marketing-upload-test-' . bin2hex(random_bytes(4));
+$tmpDir = $tmpBase . '/nested';
+cdaMarketingEnsureUploadDir($tmpDir);
+assertSameValue(true, is_dir($tmpDir), 'upload dir is created');
+
+$blockedPath = $tmpBase . '/blocked';
+file_put_contents($blockedPath, 'not a directory');
+$thrown = false;
+try {
+    cdaMarketingEnsureUploadDir($blockedPath);
+} catch (RuntimeException $e) {
+    $thrown = $e->getMessage() === 'upload_dir_unavailable';
+}
+assertSameValue(true, $thrown, 'upload dir rejects file path');
 
 echo "marketing ticket smoke ok" . PHP_EOL;

@@ -233,6 +233,20 @@ function cdaMarketingNormalizeUploadName($name) {
     return trim($safe, '.-') ?: 'archivo';
 }
 
+function cdaMarketingEnsureUploadDir($path) {
+    if (is_dir($path)) {
+        return;
+    }
+
+    if (file_exists($path)) {
+        throw new RuntimeException('upload_dir_unavailable');
+    }
+
+    if (!mkdir($path, 0755, true) && !is_dir($path)) {
+        throw new RuntimeException('upload_dir_unavailable');
+    }
+}
+
 function cdaMarketingFetchMessageFiles(array $messageIds) {
     $messageIds = array_values(array_unique(array_filter(array_map('intval', $messageIds))));
     if (!$messageIds) {
@@ -303,9 +317,7 @@ function cdaMarketingStoreMessageFiles($ticket, $messageId, $files) {
 
     $folio = preg_replace('/[^a-zA-Z0-9._-]/', '-', (string) ($ticket['folio'] ?? ('ticket-' . (int) ($ticket['id'] ?? 0))));
     $uploadDir = dirname(__DIR__) . '/uploads/marketing/' . $folio . '/chat';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
+    cdaMarketingEnsureUploadDir($uploadDir);
 
     $db = cdaDb();
     $stmt = $db->prepare(
@@ -353,6 +365,8 @@ function cdaMarketingStoreMessageFiles($ticket, $messageId, $files) {
                 $payload['tamano'],
             ]);
             $saved[] = $payload;
+        } else {
+            throw new RuntimeException('upload_move_failed');
         }
     }
 

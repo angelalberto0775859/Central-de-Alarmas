@@ -37,6 +37,8 @@ $stmt->execute($params);
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
+$flashError = $_SESSION['cda_marketing_error'] ?? '';
+unset($_SESSION['cda_marketing_error']);
 
 $stats = [
     'total' => 0,
@@ -254,6 +256,7 @@ if ($statsRow) {
         .inline-form button:hover, .filters button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
         .danger-button { background:#fee2e2 !important; color:#991b1b !important; box-shadow:none !important; }
         .restore-button { background:#d1fae5 !important; color:#047857 !important; box-shadow:none !important; }
+        .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
         .ticket-actions { display:grid; gap:.5rem; margin-top:.6rem; }
         .muted { color:var(--muted); }
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
@@ -322,6 +325,9 @@ if ($statsRow) {
             <div class="stat"><span>Urgentes</span><strong><?php echo $stats['urgent']; ?></strong></div>
             <div class="stat"><span>Cerrados</span><strong><?php echo $stats['done']; ?></strong></div>
         </section>
+        <?php if ($flashError): ?>
+            <div class="alert-error"><?php echo htmlspecialchars($flashError); ?></div>
+        <?php endif; ?>
         <section class="card">
             <div class="card-head">
                 <div>

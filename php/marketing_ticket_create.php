@@ -306,9 +306,7 @@ try {
     $uploadedFileNames = [];
     if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
         $uploadDir = dirname(__DIR__) . '/uploads/marketing/' . $folio;
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
+        cdaMarketingEnsureUploadDir($uploadDir);
 
         $fileStmt = $db->prepare('INSERT INTO marketing_ticket_archivos (ticket_id, nombre_original, ruta, mime, tamano) VALUES (?, ?, ?, ?, ?)');
 
@@ -337,6 +335,8 @@ try {
                     $_FILES['documents']['type'][$index] ?? null,
                     (int) ($_FILES['documents']['size'][$index] ?? 0),
                 ]);
+            } else {
+                throw new RuntimeException('upload_move_failed');
             }
         }
     }
@@ -371,5 +371,8 @@ try {
         $db->rollBack();
     }
     http_response_code(500);
+    if (in_array($error->getMessage(), ['upload_dir_unavailable', 'upload_move_failed'], true)) {
+        cdaMarketingJson(false, 'No fue posible guardar los archivos adjuntos. Revisa permisos de la carpeta uploads/marketing e intenta de nuevo.');
+    }
     cdaMarketingJson(false, 'No fue posible crear el ticket. Revisa la configuracion de base de datos.');
 }
