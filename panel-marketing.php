@@ -37,6 +37,7 @@ $stmt->execute($params);
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
+$assignableAdmins = cdaMarketingFetchAssignableAdmins();
 $flashError = $_SESSION['cda_marketing_error'] ?? '';
 unset($_SESSION['cda_marketing_error']);
 
@@ -202,18 +203,18 @@ if ($statsRow) {
             background:rgba(255,255,255,.96);
             border:1px solid var(--line);
             border-radius:var(--radius);
-            padding:1rem;
+            padding:.78rem;
             box-shadow:var(--shadow);
         }
-        .card-head { display:flex; justify-content:space-between; align-items:start; gap:1rem; margin-bottom:.9rem; }
-        .card-head h2 { color:var(--blue); font-size:1.05rem; }
+        .card-head { display:flex; justify-content:space-between; align-items:start; gap:.75rem; margin-bottom:.62rem; }
+        .card-head h2 { color:var(--blue); font-size:.98rem; }
         .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
         .filters {
             display:grid;
             grid-template-columns:1fr 240px auto;
-            gap:.75rem;
-            margin-bottom:1rem;
-            padding:.8rem;
+            gap:.55rem;
+            margin-bottom:.7rem;
+            padding:.58rem;
             border:1px solid var(--line);
             border-radius:var(--radius);
             background:#f8fbff;
@@ -222,7 +223,7 @@ if ($statsRow) {
             width:100%;
             border:1px solid var(--line);
             border-radius:var(--radius);
-            padding:.82rem .9rem;
+            padding:.64rem .72rem;
             font:inherit;
             background:#fff;
             color:var(--ink);
@@ -230,22 +231,22 @@ if ($statsRow) {
         }
         input:focus, select:focus, textarea:focus { border-color:var(--blue-2); box-shadow:0 0 0 4px rgba(6,57,112,.09); }
         table { width:100%; border-collapse:separate; border-spacing:0; min-width:980px; }
-        th, td { padding:.9rem .78rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; font-size:.88rem; }
+        th, td { padding:.58rem .56rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; font-size:.8rem; }
         th { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; background:#f3f8fd; }
         th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
         th:last-child { border-radius:0 var(--radius) var(--radius) 0; }
         tr:hover td { background:#fbfdff; }
         .folio { font-weight:950; color:var(--blue); letter-spacing:.02em; }
-        .request-title { color:var(--ink); font-weight:900; }
-        .status { display:inline-flex; border-radius:999px; padding:.38rem .62rem; background:var(--soft); color:var(--blue); font-size:.75rem; font-weight:900; white-space:nowrap; }
+        .request-title { color:var(--ink); font-weight:900; line-height:1.2; }
+        .status { display:inline-flex; border-radius:999px; padding:.28rem .5rem; background:var(--soft); color:var(--blue); font-size:.7rem; font-weight:900; white-space:nowrap; }
         .status.entregado, .status.cerrado { background:#d1fae5; color:var(--green); }
         .status.rechazado { background:#fee2e2; color:#991b1b; }
         .status.en-diseno, .status.en-revision { background:#dbeafe; color:#1d4ed8; }
         .status.pendiente-de-informacion, .status.ajustes-solicitados { background:#fff7cc; color:#7c5800; }
-        .priority { display:inline-flex; margin-top:.42rem; border-radius:999px; padding:.34rem .55rem; background:#eef4fb; color:var(--ink); font-size:.72rem; font-weight:900; }
+        .priority { display:inline-flex; margin-top:.34rem; border-radius:999px; padding:.25rem .46rem; background:#eef4fb; color:var(--ink); font-size:.68rem; font-weight:900; }
         .priority.urgente { background:#fee2e2; color:var(--red); }
         .priority.alta { background:#fff7cc; color:#7c5800; }
-        .inline-form { display:grid; gap:.5rem; min-width:280px; padding:.65rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
+        .inline-form { display:grid; gap:.38rem; min-width:240px; padding:.48rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
         .inline-form button, .filters button {
             background:var(--yellow);
             border-color:transparent;
@@ -260,11 +261,11 @@ if ($statsRow) {
         .ticket-actions { display:grid; gap:.5rem; margin-top:.6rem; }
         .muted { color:var(--muted); }
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
-        .ticket-chat { display:grid; gap:.58rem; margin-top:.65rem; padding:.68rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
-        .ticket-chat h3 { color:var(--blue); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }
-        .chat-note { color:var(--muted); font-size:.72rem; line-height:1.35; }
-        .chat-thread { display:grid; gap:.45rem; max-height:170px; overflow:auto; padding-right:.2rem; }
-        .chat-message { border-left:3px solid var(--blue-2); padding:.48rem .55rem; border-radius:0 6px 6px 0; background:#fff; }
+        .ticket-chat { display:grid; gap:.42rem; margin-top:.48rem; padding:.5rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
+        .ticket-chat h3 { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
+        .chat-note { color:var(--muted); font-size:.68rem; line-height:1.3; }
+        .chat-thread { display:grid; gap:.34rem; max-height:128px; overflow:auto; padding-right:.15rem; }
+        .chat-message { border-left:3px solid var(--blue-2); padding:.38rem .45rem; border-radius:0 6px 6px 0; background:#fff; }
         .chat-message.admin { border-left-color:var(--yellow); }
         .chat-message.usuario { border-left-color:var(--green); }
         .chat-meta { display:flex; justify-content:space-between; gap:.5rem; color:var(--muted); font-size:.68rem; font-weight:850; }
@@ -274,7 +275,7 @@ if ($statsRow) {
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.34rem .48rem; background:#eef4fb; color:var(--blue); font-size:.72rem; font-weight:850; text-decoration:none; }
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
         .ticket-file { display:inline-flex; border-radius:6px; padding:.34rem .48rem; background:#fff7cc; color:#7c5800; font-size:.72rem; font-weight:850; text-decoration:none; }
-        .file-input { padding:.55rem; font-size:.76rem; background:#fff; }
+        .file-input { padding:.42rem; font-size:.72rem; background:#fff; }
         @media (max-width:900px) {
             .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
@@ -384,7 +385,13 @@ if ($statsRow) {
                                         <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $ticket['estado'] === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input name="asignado_a" value="<?php echo htmlspecialchars($ticket['asignado_a'] ?? ''); ?>" placeholder="Asignado a">
+                                <select name="asignado_a" aria-label="Asignar ticket">
+                                    <option value="">Sin asignar</option>
+                                    <?php foreach ($assignableAdmins as $admin): ?>
+                                        <?php $adminName = (string) ($admin['nombre'] ?? ''); ?>
+                                        <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                                 <textarea name="respuesta_interna" rows="2" placeholder="Comentario visible para seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                                 <button type="submit">Guardar</button>
                             </form>

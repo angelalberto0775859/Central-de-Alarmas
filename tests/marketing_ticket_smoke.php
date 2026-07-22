@@ -33,6 +33,9 @@ assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can uploa
 assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing users can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
 assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
+assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
+assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
+assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
 
 $tmpBase = sys_get_temp_dir() . '/cda-marketing-upload-test-' . bin2hex(random_bytes(4));
 $tmpDir = $tmpBase . '/nested';

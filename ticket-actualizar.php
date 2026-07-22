@@ -14,7 +14,11 @@ cdaRequirePostCsrf();
 $id = (int) ($_POST['id'] ?? 0);
 $estado = cdaMarketingClean($_POST['estado'] ?? '');
 $respuesta = cdaMarketingClean($_POST['respuesta_interna'] ?? '');
-$asignado = cdaMarketingClean($_POST['asignado_a'] ?? '');
+$assignableAdmins = cdaMarketingFetchAssignableAdmins();
+$assignableAdminNames = array_map(function ($admin) {
+    return (string) ($admin['nombre'] ?? '');
+}, $assignableAdmins);
+$asignado = cdaMarketingAssigneeValue($_POST['asignado_a'] ?? '', $assignableAdminNames);
 $returnTo = cdaMarketingClean($_POST['return_to'] ?? 'panel-marketing.php');
 $allowedReturnTo = ['panel-marketing.php', 'control-marketing.php'];
 if (!in_array($returnTo, $allowedReturnTo, true)) {

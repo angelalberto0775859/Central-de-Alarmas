@@ -19,6 +19,7 @@ $stmt = cdaDb()->query('SELECT * FROM marketing_tickets WHERE eliminado_en IS NU
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
+$assignableAdmins = cdaMarketingFetchAssignableAdmins();
 $flashError = $_SESSION['cda_marketing_error'] ?? '';
 unset($_SESSION['cda_marketing_error']);
 $laneTickets = array_fill_keys(array_keys($lanes), []);
@@ -277,7 +278,13 @@ foreach ($tickets as $ticket) {
                                 <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $ticket['estado'] === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <input name="asignado_a" value="<?php echo htmlspecialchars($ticket['asignado_a'] ?? ''); ?>" placeholder="Asignado a">
+                        <select name="asignado_a" aria-label="Asignar ticket">
+                            <option value="">Sin asignar</option>
+                            <?php foreach ($assignableAdmins as $admin): ?>
+                                <?php $adminName = (string) ($admin['nombre'] ?? ''); ?>
+                                <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                         <textarea name="respuesta_interna" placeholder="Comentario visible en seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                         <button type="submit">Actualizar</button>
                     </form>

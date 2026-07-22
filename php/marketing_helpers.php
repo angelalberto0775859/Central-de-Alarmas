@@ -233,6 +233,24 @@ function cdaMarketingNormalizeUploadName($name) {
     return trim($safe, '.-') ?: 'archivo';
 }
 
+function cdaMarketingAssigneeValue($value, array $allowedNames) {
+    $value = cdaMarketingClean($value);
+    if ($value === '') {
+        return '';
+    }
+
+    return in_array($value, $allowedNames, true) ? $value : '';
+}
+
+function cdaMarketingFetchAssignableAdmins() {
+    try {
+        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1 ORDER BY nombre ASC");
+        return $stmt->fetchAll();
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
 function cdaMarketingEnsureUploadDir($path) {
     if (is_dir($path)) {
         return;
