@@ -91,6 +91,7 @@ foreach ($tickets as $ticket) {
             pointer-events:none;
             background:linear-gradient(180deg, rgba(255,255,255,.08), transparent);
             mask-image:linear-gradient(180deg,#000,transparent);
+            z-index:0;
         }
         body::after {
             content:"";
@@ -99,20 +100,21 @@ foreach ($tickets as $ticket) {
             pointer-events:none;
             background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%);
             opacity:.36;
+            z-index:0;
         }
-        .shell { width:min(1480px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.8rem; position:relative; z-index:1; }
-        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
-        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.58); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.36; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
-        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.16; } 42% { opacity:.58; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.3; } }
+        .shell { width:min(1480px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.8rem; position:relative; z-index:2; }
+        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.78); box-shadow:0 0 calc(var(--size) * 5) rgba(166,205,255,.45); opacity:.52; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.28; } 42% { opacity:.78; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.42; } }
         .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; }
         .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:900; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
         .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.5); box-shadow:inset 0 0 0 1px rgba(246,235,23,.12); }
-        .nav a.public-link { border-color:rgba(166,205,255,.38); background:rgba(13,98,173,.18); }
-        .nav a.session-link { border-color:rgba(254,202,202,.42); background:rgba(185,28,28,.16); }
-        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.16rem .34rem; font-size:.58rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a.admin-link { border-color:rgba(246,235,23,.72); background:rgba(246,235,23,.1); box-shadow:inset 0 0 0 1px rgba(246,235,23,.2); }
+        .nav a.public-link { border-color:rgba(166,205,255,.55); background:rgba(13,98,173,.24); }
+        .nav a.session-link { border-color:rgba(254,202,202,.58); background:rgba(185,28,28,.22); }
+        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
         .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
         .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
@@ -123,6 +125,11 @@ foreach ($tickets as $ticket) {
         h1 { color:#fff; font-size:clamp(1.9rem,4vw,3.35rem); line-height:1; letter-spacing:0; }
         .hero .muted { color:rgba(255,255,255,.76); margin-top:.45rem; }
         .muted { color:var(--muted); line-height:1.45; }
+        .story-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; margin:0 0 1rem; }
+        .story-step { border:1px solid rgba(255,255,255,.44); border-radius:var(--radius); padding:.82rem; background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.92)); box-shadow:var(--shadow); }
+        .story-step span { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-bottom:.45rem; border-radius:50%; background:var(--blue); color:var(--yellow); font-weight:950; font-size:.76rem; }
+        .story-step strong { display:block; color:var(--blue); font-size:.82rem; line-height:1.2; }
+        .story-step p { margin-top:.22rem; color:var(--muted); font-size:.75rem; line-height:1.35; }
         .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.85rem; margin-bottom:1rem; }
         .stat { border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); position:relative; overflow:hidden; }
         .stat::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:linear-gradient(90deg,var(--yellow),var(--blue-3)); }
@@ -159,6 +166,7 @@ foreach ($tickets as $ticket) {
         button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
         .ticket-chat { display:grid; gap:.5rem; padding:.58rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
         .ticket-chat h4 { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
+        .chat-note { color:var(--muted); font-size:.72rem; line-height:1.35; }
         .chat-thread { display:grid; gap:.4rem; max-height:150px; overflow:auto; padding-right:.15rem; }
         .chat-message { border-left:3px solid var(--blue-2); padding:.44rem .5rem; border-radius:0 6px 6px 0; background:#fff; }
         .chat-message.admin { border-left-color:var(--yellow); }
@@ -166,8 +174,8 @@ foreach ($tickets as $ticket) {
         .chat-meta { display:flex; justify-content:space-between; gap:.45rem; color:var(--muted); font-size:.66rem; font-weight:850; }
         .chat-message p { margin-top:.22rem; color:var(--ink); font-size:.76rem; line-height:1.42; }
         .chat-form { display:grid; gap:.42rem; }
-        @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-        @media (max-width:620px) { .stats { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
+        @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media (max-width:620px) { .stats, .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -190,8 +198,14 @@ foreach ($tickets as $ticket) {
             <div>
                 <div class="eyebrow">Dashboard administrativo</div>
                 <h1>Control admin de solicitudes</h1>
-                <p class="muted">Tablero operativo para priorizar, asignar y mover estatus de tickets de Diseño y Marketing.</p>
+                <p class="muted">Cada ticket conserva su contexto: estado, responsable, fecha y conversacion quedan juntos para decidir rapido sin perder la historia de la solicitud.</p>
             </div>
+        </section>
+        <section class="story-strip" aria-label="Flujo admin del ticket">
+            <div class="story-step"><span>1</span><strong>Entrada validada</strong><p>El usuario queda ligado al correo del ticket desde el registro.</p></div>
+            <div class="story-step"><span>2</span><strong>Prioridad visible</strong><p>El admin revisa urgencia, fecha y etapa sin abrir otra pantalla.</p></div>
+            <div class="story-step"><span>3</span><strong>Chat con contexto</strong><p>Las dudas y aprobaciones se guardan directo en el folio.</p></div>
+            <div class="story-step"><span>4</span><strong>Cierre trazable</strong><p>La entrega queda documentada con historial y comentarios.</p></div>
         </section>
         <section class="stats" aria-label="Resumen admin">
             <div class="stat"><span>En tablero</span><strong><?php echo $stats['total']; ?></strong></div>
@@ -241,7 +255,8 @@ foreach ($tickets as $ticket) {
                         <button type="submit">Actualizar</button>
                     </form>
                     <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
-                        <h4>Chat</h4>
+                        <h4>Chat del ticket</h4>
+                        <p class="chat-note">Usa este hilo para pedir informacion, confirmar avances o dejar acuerdos visibles para el solicitante.</p>
                         <div class="chat-thread">
                             <?php foreach (($ticketMessages[(int) $ticket['id']] ?? []) as $message): ?>
                                 <article class="chat-message <?php echo htmlspecialchars($message['autor_rol']); ?>">
@@ -252,7 +267,7 @@ foreach ($tickets as $ticket) {
                                     <p><?php echo nl2br(htmlspecialchars($message['mensaje'])); ?></p>
                                 </article>
                             <?php endforeach; ?>
-                            <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Sin mensajes todavia.</p><?php endif; ?>
+                            <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; el primer comentario abrira el seguimiento de este folio.</p><?php endif; ?>
                         </div>
                         <form class="chat-form" method="post" action="ticket-mensaje.php">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
@@ -273,19 +288,19 @@ foreach ($tickets as $ticket) {
         (function () {
             var layer = document.querySelector('.ambient-points');
             if (!layer) return;
-            var count = window.matchMedia('(max-width: 620px)').matches ? 46 : 78;
+            var count = window.matchMedia('(max-width: 620px)').matches ? 64 : 118;
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < count; i += 1) {
                 var point = document.createElement('span');
                 point.className = 'ambient-point';
-                point.style.setProperty('--size', (Math.random() * 2.8 + .8).toFixed(2) + 'px');
+                point.style.setProperty('--size', (Math.random() * 3.2 + 1).toFixed(2) + 'px');
                 point.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
                 point.style.setProperty('--y', (Math.random() * 100).toFixed(2) + 'vh');
                 point.style.setProperty('--dx', (Math.random() * 82 - 41).toFixed(2) + 'px');
                 point.style.setProperty('--dy', (Math.random() * 82 - 41).toFixed(2) + 'px');
                 point.style.setProperty('--duration', (Math.random() * 22 + 20).toFixed(2) + 's');
                 point.style.setProperty('--delay', (Math.random() * -30).toFixed(2) + 's');
-                point.style.opacity = (Math.random() * .34 + .16).toFixed(2);
+                point.style.opacity = (Math.random() * .4 + .28).toFixed(2);
                 fragment.appendChild(point);
             }
             layer.appendChild(fragment);

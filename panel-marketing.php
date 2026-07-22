@@ -107,6 +107,7 @@ if ($statsRow) {
             pointer-events:none;
             background:linear-gradient(180deg, rgba(255,255,255,.08), transparent);
             mask-image:linear-gradient(180deg,#000,transparent);
+            z-index:0;
         }
         body::after {
             content:"";
@@ -115,11 +116,12 @@ if ($statsRow) {
             pointer-events:none;
             background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%);
             opacity:.34;
+            z-index:0;
         }
-        .shell { width:min(1320px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:1; }
-        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
-        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.58); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.36; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
-        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.16; } 42% { opacity:.58; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.3; } }
+        .shell { width:min(1320px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:2; }
+        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.78); box-shadow:0 0 calc(var(--size) * 5) rgba(166,205,255,.45); opacity:.52; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.28; } 42% { opacity:.78; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.42; } }
         .topbar {
             display:flex;
             align-items:center;
@@ -155,10 +157,10 @@ if ($statsRow) {
         }
         .nav a { background:rgba(255,255,255,.1); color:rgba(255,255,255,.9); }
         .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.5); box-shadow:inset 0 0 0 1px rgba(246,235,23,.12); }
-        .nav a.public-link { border-color:rgba(166,205,255,.38); background:rgba(13,98,173,.18); }
-        .nav a.session-link { border-color:rgba(254,202,202,.42); background:rgba(185,28,28,.16); }
-        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.16rem .34rem; font-size:.58rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a.admin-link { border-color:rgba(246,235,23,.72); background:rgba(246,235,23,.1); box-shadow:inset 0 0 0 1px rgba(246,235,23,.2); }
+        .nav a.public-link { border-color:rgba(166,205,255,.55); background:rgba(13,98,173,.24); }
+        .nav a.session-link { border-color:rgba(254,202,202,.58); background:rgba(185,28,28,.22); }
+        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
         .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
         .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
@@ -182,6 +184,11 @@ if ($statsRow) {
         .eyebrow { color:var(--yellow); font-size:.74rem; font-weight:950; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.55rem; }
         h1 { color:#fff; font-size:clamp(1.9rem,4vw,3.35rem); line-height:1; letter-spacing:0; }
         .hero .muted { color:rgba(255,255,255,.76); margin-top:.45rem; }
+        .story-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; margin:0 0 1rem; }
+        .story-step { border:1px solid rgba(255,255,255,.44); border-radius:var(--radius); padding:.82rem; background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.92)); box-shadow:var(--shadow); }
+        .story-step span { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-bottom:.45rem; border-radius:50%; background:var(--blue); color:var(--yellow); font-weight:950; font-size:.76rem; }
+        .story-step strong { display:block; color:var(--blue); font-size:.82rem; line-height:1.2; }
+        .story-step p { margin-top:.22rem; color:var(--muted); font-size:.75rem; line-height:1.35; }
         .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.8rem; margin-bottom:1rem; }
         .stat {
             border:1px solid rgba(255,255,255,.5);
@@ -255,6 +262,7 @@ if ($statsRow) {
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
         .ticket-chat { display:grid; gap:.58rem; margin-top:.65rem; padding:.68rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
         .ticket-chat h3 { color:var(--blue); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }
+        .chat-note { color:var(--muted); font-size:.72rem; line-height:1.35; }
         .chat-thread { display:grid; gap:.45rem; max-height:170px; overflow:auto; padding-right:.2rem; }
         .chat-message { border-left:3px solid var(--blue-2); padding:.48rem .55rem; border-radius:0 6px 6px 0; background:#fff; }
         .chat-message.admin { border-left-color:var(--yellow); }
@@ -264,7 +272,7 @@ if ($statsRow) {
         .chat-form { display:grid; gap:.42rem; }
         @media (max-width:900px) {
             body { background:linear-gradient(180deg,#061b39 0 390px,#eef5fb 390px,#f7faff 100%); }
-            .filters, .hero, .stats { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
+            .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
             table, tbody, tr, td { display:block; min-width:0; }
             thead { display:none; }
@@ -296,8 +304,14 @@ if ($statsRow) {
             <div>
                 <div class="eyebrow"><?php echo $user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'; ?></div>
                 <h1>Tickets de Diseño y Marketing</h1>
-                <p class="muted">Alta, revisión y actualización de solicitudes internas.</p>
+                <p class="muted">Cada solicitud vive por folio: registro validado, estado visible, conversacion del ticket y cierre con historial.</p>
             </div>
+        </section>
+        <section class="story-strip" aria-label="Historia del ticket">
+            <div class="story-step"><span>1</span><strong>Registro</strong><p>El correo crea o actualiza el usuario ligado a la solicitud.</p></div>
+            <div class="story-step"><span>2</span><strong>Confirmacion</strong><p>El folio llega al solicitante y avisa a los admins.</p></div>
+            <div class="story-step"><span>3</span><strong>Seguimiento</strong><p>El chat mantiene dudas, aprobaciones y acuerdos en el ticket.</p></div>
+            <div class="story-step"><span>4</span><strong>Entrega</strong><p>Estado e historial dejan claro que paso y cuando cerro.</p></div>
         </section>
         <section class="stats" aria-label="Resumen de tickets">
             <div class="stat"><span>Total</span><strong><?php echo $stats['total']; ?></strong></div>
@@ -354,7 +368,8 @@ if ($statsRow) {
                                 <button type="submit">Guardar</button>
                             </form>
                             <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
-                                <h3>Chat</h3>
+                                <h3>Chat de seguimiento</h3>
+                                <p class="chat-note">Este hilo queda asociado al folio; el solicitante puede responder desde seguimiento con su login.</p>
                                 <div class="chat-thread">
                                     <?php foreach (($ticketMessages[(int) $ticket['id']] ?? []) as $message): ?>
                                         <article class="chat-message <?php echo htmlspecialchars($message['autor_rol']); ?>">
@@ -365,7 +380,7 @@ if ($statsRow) {
                                             <p><?php echo nl2br(htmlspecialchars($message['mensaje'])); ?></p>
                                         </article>
                                     <?php endforeach; ?>
-                                    <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Sin mensajes todavia.</p><?php endif; ?>
+                                    <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; escribe aqui si necesitas aclarar el brief o pedir aprobacion.</p><?php endif; ?>
                                 </div>
                                 <form class="chat-form" method="post" action="ticket-mensaje.php">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
@@ -390,19 +405,19 @@ if ($statsRow) {
         (function () {
             var layer = document.querySelector('.ambient-points');
             if (!layer) return;
-            var count = window.matchMedia('(max-width: 620px)').matches ? 46 : 78;
+            var count = window.matchMedia('(max-width: 620px)').matches ? 64 : 118;
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < count; i += 1) {
                 var point = document.createElement('span');
                 point.className = 'ambient-point';
-                point.style.setProperty('--size', (Math.random() * 2.8 + .8).toFixed(2) + 'px');
+                point.style.setProperty('--size', (Math.random() * 3.2 + 1).toFixed(2) + 'px');
                 point.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
                 point.style.setProperty('--y', (Math.random() * 100).toFixed(2) + 'vh');
                 point.style.setProperty('--dx', (Math.random() * 82 - 41).toFixed(2) + 'px');
                 point.style.setProperty('--dy', (Math.random() * 82 - 41).toFixed(2) + 'px');
                 point.style.setProperty('--duration', (Math.random() * 22 + 20).toFixed(2) + 's');
                 point.style.setProperty('--delay', (Math.random() * -30).toFixed(2) + 's');
-                point.style.opacity = (Math.random() * .34 + .16).toFixed(2);
+                point.style.opacity = (Math.random() * .4 + .28).toFixed(2);
                 fragment.appendChild(point);
             }
             layer.appendChild(fragment);

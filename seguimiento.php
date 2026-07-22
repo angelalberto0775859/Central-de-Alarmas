@@ -236,6 +236,7 @@ if ($folio) {
         .timeline small { color:var(--muted); display:block; margin-top:.3rem; font-weight:750; }
         .files { display:grid; gap:.55rem; margin-top:.8rem; list-style:none; }
         .chat-box { margin-top:1rem; display:grid; gap:.75rem; }
+        .chat-intro { color:var(--muted); line-height:1.55; font-size:.9rem; }
         .chat-thread { display:grid; gap:.55rem; max-height:320px; overflow:auto; padding-right:.25rem; }
         .chat-message { border-left:4px solid var(--blue-2); border-radius:0 var(--radius) var(--radius) 0; background:#fff; padding:.72rem .82rem; }
         .chat-message.admin { border-left-color:var(--yellow); background:#fffbea; }
@@ -281,15 +282,16 @@ if ($folio) {
         <section class="hero-grid">
             <div class="hero">
                 <div class="eyebrow">Portal de Diseño y Marketing</div>
-                <h1>Seguimiento claro para cada solicitud.</h1>
-                <p>Consulta en segundos el estado de tu ticket, revisa comentarios del equipo y confirma si tu pieza está en evaluación, diseño, revisión o entrega.</p>
+                <h1>Del folio al cierre, sin perder contexto.</h1>
+                <p>Consulta el estado de tu ticket, revisa el historial y usa el chat para aclarar materiales, aprobar ajustes o dejar comentarios junto a la solicitud.</p>
             </div>
             <aside class="signal-card" aria-label="Estados del proceso">
                 <h2>Flujo visible</h2>
                 <div class="signal-list">
-                    <div><span>1</span>Solicitud recibida y registrada con folio.</div>
+                    <div><span>1</span>Solicitud recibida con usuario y folio.</div>
                     <div><span>2</span>Evaluacion de alcance, fecha y materiales.</div>
-                    <div><span>3</span>Produccion, revision, ajustes y entrega.</div>
+                    <div><span>3</span>Chat abierto para dudas, aprobaciones y ajustes.</div>
+                    <div><span>4</span>Produccion, revision, entrega y cierre.</div>
                 </div>
             </aside>
         </section>
@@ -335,7 +337,8 @@ if ($folio) {
                     <div class="response-box"><?php echo nl2br(htmlspecialchars($ticket['respuesta_interna'])); ?></div>
                 <?php endif; ?>
                 <section class="chat-box" id="chat" aria-label="Chat del ticket">
-                    <h2>Chat con el equipo</h2>
+                    <h2>Chat de seguimiento</h2>
+                    <p class="chat-intro">Este espacio queda ligado a tu folio. Usalo para agregar contexto, responder preguntas del equipo o confirmar avances sin perder la historia del ticket.</p>
                     <div class="chat-thread">
                         <?php foreach ($mensajes as $mensaje): ?>
                             <article class="chat-message <?php echo htmlspecialchars($mensaje['autor_rol']); ?>">
@@ -346,7 +349,7 @@ if ($folio) {
                                 <p><?php echo nl2br(htmlspecialchars($mensaje['mensaje'])); ?></p>
                             </article>
                         <?php endforeach; ?>
-                        <?php if (!$mensajes): ?><p class="muted">Todavia no hay mensajes en este ticket.</p><?php endif; ?>
+                        <?php if (!$mensajes): ?><p class="muted">Aun no hay mensajes. Cuando el equipo necesite una aclaracion, aparecera aqui junto al folio.</p><?php endif; ?>
                     </div>
                     <?php if ($chatError): ?><div class="error"><?php echo htmlspecialchars($chatError); ?></div><?php endif; ?>
                     <?php $canUseChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0); ?>
