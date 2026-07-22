@@ -38,6 +38,7 @@ logs/
 .env
 .env.local
 php/marketing_secrets.php
+db/*secrets*.sql
 
 # Recovery
 recovery/

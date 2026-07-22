@@ -368,7 +368,7 @@ $googleReady = cdaGoogleOAuthReady();
                 <?php if ($googleReady): ?>
                     <a class="button google" href="google-login.php">Continuar con Google</a>
                 <?php else: ?>
-                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong> o como variables de entorno.</div>
+                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong>, variables de entorno o la tabla <strong>marketing_configuracion</strong>.</div>
                 <?php endif; ?>
                 <div class="links">
                     <a href="marketing.html">Nueva solicitud</a>

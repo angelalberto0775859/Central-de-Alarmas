@@ -15,4 +15,4 @@ define('CDA_GOOGLE_CLIENT_SECRET', 'TU_CLIENT_SECRET');
 define('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 
 // Alternativa: tambien puedes definir estos mismos nombres como variables de entorno
-// en el hosting y dejar este archivo solo con la configuracion de base de datos.
+// o guardarlos en la tabla marketing_configuracion del hosting.

@@ -40,16 +40,53 @@ defined('CDA_GOOGLE_CLIENT_ID') || define('CDA_GOOGLE_CLIENT_ID', cdaConfigValue
 defined('CDA_GOOGLE_CLIENT_SECRET') || define('CDA_GOOGLE_CLIENT_SECRET', cdaConfigValue('CDA_GOOGLE_CLIENT_SECRET'));
 defined('CDA_GOOGLE_REDIRECT_URI') || define('CDA_GOOGLE_REDIRECT_URI', cdaConfigValue('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php'));
 
+function cdaConfigDbValue($key, $default = '') {
+    static $cache = [];
+    static $loaded = false;
+
+    if (!$loaded) {
+        $loaded = true;
+
+        if (CDA_DB_NAME !== '' && CDA_DB_USER !== '') {
+            try {
+                $dsn = 'mysql:host=' . CDA_DB_HOST . ';dbname=' . CDA_DB_NAME . ';charset=utf8mb4';
+                $pdo = new PDO($dsn, CDA_DB_USER, CDA_DB_PASS, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+                $stmt = $pdo->query('SELECT clave, valor FROM marketing_configuracion');
+                foreach ($stmt->fetchAll() as $row) {
+                    $cache[$row['clave']] = trim((string) $row['valor']);
+                }
+            } catch (Throwable $e) {
+                $cache = [];
+            }
+        }
+    }
+
+    return isset($cache[$key]) && $cache[$key] !== '' ? $cache[$key] : $default;
+}
+
+function cdaGoogleConfigValue($key, $default = '') {
+    $value = cdaConfigRuntimeValue($key);
+    if ($value !== '') {
+        return $value;
+    }
+
+    return cdaConfigDbValue($key, $default);
+}
+
 function cdaGoogleClientId() {
-    return cdaConfigRuntimeValue('CDA_GOOGLE_CLIENT_ID');
+    return cdaGoogleConfigValue('CDA_GOOGLE_CLIENT_ID');
 }
 
 function cdaGoogleClientSecret() {
-    return cdaConfigRuntimeValue('CDA_GOOGLE_CLIENT_SECRET');
+    return cdaGoogleConfigValue('CDA_GOOGLE_CLIENT_SECRET');
 }
 
 function cdaGoogleRedirectUri() {
-    return cdaConfigRuntimeValue('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
+    return cdaGoogleConfigValue('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 }
 
 function cdaGoogleOAuthReady() {

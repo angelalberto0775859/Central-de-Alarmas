@@ -37,7 +37,17 @@ define('CDA_GOOGLE_CLIENT_SECRET', 'TU_CLIENT_SECRET');
 define('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 ```
 
-Tambien puedes definir `CDA_GOOGLE_CLIENT_ID`, `CDA_GOOGLE_CLIENT_SECRET` y `CDA_GOOGLE_REDIRECT_URI` como variables de entorno del hosting. Si el Client ID o Secret estan vacios, el boton de Google no aparece.
+Tambien puedes definir `CDA_GOOGLE_CLIENT_ID`, `CDA_GOOGLE_CLIENT_SECRET` y `CDA_GOOGLE_REDIRECT_URI` como variables de entorno del hosting.
+
+Si prefieres guardar Google OAuth en la base de datos de Hostinger, importa `db/google_oauth_config.sql` y reemplaza los valores `TU_CLIENT_ID...` y `TU_CLIENT_SECRET`.
+
+El sistema busca las credenciales en este orden:
+
+1. `php/marketing_secrets.php`
+2. Variables de entorno del hosting
+3. Tabla `marketing_configuracion`
+
+Si el Client ID o Secret estan vacios, el boton de Google no aparece y `google-login.php` regresa al login con error de configuracion.
 
 ## 4. Dar acceso a usuarios
 
