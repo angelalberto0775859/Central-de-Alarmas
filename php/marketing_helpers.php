@@ -233,6 +233,18 @@ function cdaMarketingNormalizeUploadName($name) {
     return trim($safe, '.-') ?: 'archivo';
 }
 
+function cdaMarketingNormalizeFileUpload(array $files) {
+    $keys = ['name', 'type', 'tmp_name', 'error', 'size'];
+    $normalized = [];
+
+    foreach ($keys as $key) {
+        $value = $files[$key] ?? [];
+        $normalized[$key] = is_array($value) ? array_values($value) : [$value];
+    }
+
+    return $normalized;
+}
+
 function cdaMarketingAssigneeValue($value, array $allowedNames) {
     $value = cdaMarketingClean($value);
     if ($value === '') {

@@ -37,6 +37,25 @@ assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel 
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
 assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
 
+$singleUpload = cdaMarketingNormalizeFileUpload([
+    'name' => 'brief.pdf',
+    'type' => 'application/pdf',
+    'tmp_name' => '/tmp/php-upload',
+    'error' => UPLOAD_ERR_OK,
+    'size' => 1234,
+]);
+assertSameValue(['brief.pdf'], $singleUpload['name'], 'single upload normalizes to array names');
+assertSameValue([UPLOAD_ERR_OK], $singleUpload['error'], 'single upload normalizes to array errors');
+
+$multiUpload = cdaMarketingNormalizeFileUpload([
+    'name' => ['brief.pdf', 'logo.png'],
+    'type' => ['application/pdf', 'image/png'],
+    'tmp_name' => ['/tmp/brief', '/tmp/logo'],
+    'error' => [UPLOAD_ERR_OK, UPLOAD_ERR_OK],
+    'size' => [1234, 5678],
+]);
+assertSameValue(['brief.pdf', 'logo.png'], $multiUpload['name'], 'multi upload keeps array names');
+
 $tmpBase = sys_get_temp_dir() . '/cda-marketing-upload-test-' . bin2hex(random_bytes(4));
 $tmpDir = $tmpBase . '/nested';
 cdaMarketingEnsureUploadDir($tmpDir);

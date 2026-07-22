@@ -194,8 +194,10 @@ $allowedMimeTypes = [
 $maxFiles = 5;
 $maxFileSize = 25 * 1024 * 1024;
 
-if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
-    $uploadedCount = count(array_filter($_FILES['documents']['name'], function ($name) {
+$documentFiles = !empty($_FILES['documents']) ? cdaMarketingNormalizeFileUpload($_FILES['documents']) : null;
+
+if ($documentFiles) {
+    $uploadedCount = count(array_filter($documentFiles['name'], function ($name) {
         return trim((string) $name) !== '';
     }));
 
@@ -204,12 +206,12 @@ if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
         cdaMarketingJson(false, 'Puedes adjuntar maximo 5 archivos por ticket.');
     }
 
-    foreach ($_FILES['documents']['name'] as $index => $name) {
-        if ($_FILES['documents']['error'][$index] === UPLOAD_ERR_NO_FILE) {
+    foreach ($documentFiles['name'] as $index => $name) {
+        if ($documentFiles['error'][$index] === UPLOAD_ERR_NO_FILE) {
             continue;
         }
 
-        if ($_FILES['documents']['error'][$index] !== UPLOAD_ERR_OK || (int) ($_FILES['documents']['size'][$index] ?? 0) > $maxFileSize) {
+        if ($documentFiles['error'][$index] !== UPLOAD_ERR_OK || (int) ($documentFiles['size'][$index] ?? 0) > $maxFileSize) {
             http_response_code(422);
             cdaMarketingJson(false, 'Uno de los archivos supera el limite permitido o no se cargo correctamente.');
         }
@@ -221,9 +223,9 @@ if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
         }
 
         $mime = '';
-        if (is_uploaded_file($_FILES['documents']['tmp_name'][$index])) {
+        if (is_uploaded_file($documentFiles['tmp_name'][$index])) {
             $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime = (string) $finfo->file($_FILES['documents']['tmp_name'][$index]);
+            $mime = (string) $finfo->file($documentFiles['tmp_name'][$index]);
         }
 
         $prefixAllowed = false;
@@ -304,14 +306,14 @@ try {
     $messageStmt->execute([$ticketId, $requesterUserId, $requester, 'Ticket creado. Quedo listo el chat para seguimiento de esta solicitud.']);
 
     $uploadedFileNames = [];
-    if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
+    if ($documentFiles) {
         $uploadDir = dirname(__DIR__) . '/uploads/marketing/' . $folio;
         cdaMarketingEnsureUploadDir($uploadDir);
 
         $fileStmt = $db->prepare('INSERT INTO marketing_ticket_archivos (ticket_id, nombre_original, ruta, mime, tamano) VALUES (?, ?, ?, ?, ?)');
 
-        foreach ($_FILES['documents']['name'] as $index => $name) {
-            if ($_FILES['documents']['error'][$index] !== UPLOAD_ERR_OK) {
+        foreach ($documentFiles['name'] as $index => $name) {
+            if ($documentFiles['error'][$index] !== UPLOAD_ERR_OK) {
                 continue;
             }
 
@@ -326,14 +328,14 @@ try {
             $absolutePath = $uploadDir . '/' . $finalName;
             $relativePath = 'uploads/marketing/' . $folio . '/' . $finalName;
 
-            if (move_uploaded_file($_FILES['documents']['tmp_name'][$index], $absolutePath)) {
+            if (move_uploaded_file($documentFiles['tmp_name'][$index], $absolutePath)) {
                 $uploadedFileNames[] = $original;
                 $fileStmt->execute([
                     $ticketId,
                     $original,
                     $relativePath,
-                    $_FILES['documents']['type'][$index] ?? null,
-                    (int) ($_FILES['documents']['size'][$index] ?? 0),
+                    $documentFiles['type'][$index] ?? null,
+                    (int) ($documentFiles['size'][$index] ?? 0),
                 ]);
             } else {
                 throw new RuntimeException('upload_move_failed');
