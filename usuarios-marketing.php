@@ -107,17 +107,25 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
             inset:0 0 auto;
             height:315px;
             pointer-events:none;
-            background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.2) 1px, transparent 1.8px);
-            background-size:26px 26px;
+            background:linear-gradient(180deg, rgba(255,255,255,.08), transparent);
             mask-image:linear-gradient(180deg,#000,transparent);
         }
         body::after { content:""; position:fixed; inset:0; pointer-events:none; background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%); opacity:.34; }
         .shell { width:min(1180px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:1; }
+        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.58); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.36; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.16; } 42% { opacity:.58; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.3; } }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
-        .nav a { color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.1); font-size:.82rem; font-weight:850; transition:background .18s ease, color .18s ease; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.1); font-size:.82rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease; }
         .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
+        .nav a.admin-link { border-color:rgba(246,235,23,.5); box-shadow:inset 0 0 0 1px rgba(246,235,23,.12); }
+        .nav a.public-link { border-color:rgba(166,205,255,.38); background:rgba(13,98,173,.18); }
+        .nav a.session-link { border-color:rgba(254,202,202,.42); background:rgba(185,28,28,.16); }
+        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.16rem .34rem; font-size:.58rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
+        .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); position:relative; overflow:hidden; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
         .hero > * { position:relative; z-index:1; }
@@ -154,18 +162,21 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
         @media (max-width:820px) { body { background:linear-gradient(180deg,#061b39 0 390px,#eef5fb 390px,#f7faff 100%); } .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
+        @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
 <body>
+    <div class="ambient-points" aria-hidden="true"></div>
     <div class="shell">
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <a href="panel-marketing.php">Tickets</a>
-                <a href="control-marketing.php">Tablero</a>
-                <a class="active" href="usuarios-marketing.php">Usuarios</a>
-                <a href="marketing.html">Crear ticket</a>
-                <a href="logout.php">Salir</a>
+                <a class="admin-link" href="panel-marketing.php">Tickets</a>
+                <a class="admin-link" href="control-marketing.php">Tablero</a>
+                <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
+                <a class="public-link" href="marketing.html">Crear ticket</a>
+                <a class="public-link" href="seguimiento.php">Seguimiento</a>
+                <a class="session-link" href="logout.php">Salir</a>
             </nav>
         </header>
         <section class="hero">
@@ -239,5 +250,27 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
             </article>
         </section>
     </div>
+    <script>
+        (function () {
+            var layer = document.querySelector('.ambient-points');
+            if (!layer) return;
+            var count = window.matchMedia('(max-width: 620px)').matches ? 46 : 78;
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < count; i += 1) {
+                var point = document.createElement('span');
+                point.className = 'ambient-point';
+                point.style.setProperty('--size', (Math.random() * 2.8 + .8).toFixed(2) + 'px');
+                point.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
+                point.style.setProperty('--y', (Math.random() * 100).toFixed(2) + 'vh');
+                point.style.setProperty('--dx', (Math.random() * 82 - 41).toFixed(2) + 'px');
+                point.style.setProperty('--dy', (Math.random() * 82 - 41).toFixed(2) + 'px');
+                point.style.setProperty('--duration', (Math.random() * 22 + 20).toFixed(2) + 's');
+                point.style.setProperty('--delay', (Math.random() * -30).toFixed(2) + 's');
+                point.style.opacity = (Math.random() * .34 + .16).toFixed(2);
+                fragment.appendChild(point);
+            }
+            layer.appendChild(fragment);
+        }());
+    </script>
 </body>
 </html>

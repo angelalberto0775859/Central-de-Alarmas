@@ -89,8 +89,7 @@ foreach ($tickets as $ticket) {
             inset:0 0 auto;
             height:320px;
             pointer-events:none;
-            background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1.7px);
-            background-size:26px 26px;
+            background:linear-gradient(180deg, rgba(255,255,255,.08), transparent);
             mask-image:linear-gradient(180deg,#000,transparent);
         }
         body::after {
@@ -102,11 +101,20 @@ foreach ($tickets as $ticket) {
             opacity:.36;
         }
         .shell { width:min(1480px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.8rem; position:relative; z-index:1; }
+        .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+        .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:20px; --dy:-18px; --duration:24s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.58); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.36; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
+        @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.16; } 42% { opacity:.58; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.3; } }
         .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; }
-        .nav a { color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:900; transition:background .18s ease, color .18s ease, border-color .18s ease; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:900; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
         .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
+        .nav a.admin-link { border-color:rgba(246,235,23,.5); box-shadow:inset 0 0 0 1px rgba(246,235,23,.12); }
+        .nav a.public-link { border-color:rgba(166,205,255,.38); background:rgba(13,98,173,.18); }
+        .nav a.session-link { border-color:rgba(254,202,202,.42); background:rgba(185,28,28,.16); }
+        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.16rem .34rem; font-size:.58rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
+        .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
         .hero { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); overflow:hidden; position:relative; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
@@ -160,19 +168,22 @@ foreach ($tickets as $ticket) {
         .chat-form { display:grid; gap:.42rem; }
         @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:620px) { .stats { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
+        @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
 <body>
+    <div class="ambient-points" aria-hidden="true"></div>
     <div class="shell">
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                <a href="panel-marketing.php">Lista</a>
-                <a class="active" href="control-marketing.php">Tablero</a>
-                <a href="usuarios-marketing.php">Usuarios</a>
-                <a href="marketing.html">Crear ticket</a>
-                <a href="logout.php">Salir</a>
+                <a class="admin-link" href="panel-marketing.php">Tickets</a>
+                <a class="admin-link active" href="control-marketing.php">Tablero</a>
+                <a class="admin-link" href="usuarios-marketing.php">Usuarios</a>
+                <a class="public-link" href="marketing.html">Crear ticket</a>
+                <a class="public-link" href="seguimiento.php">Seguimiento</a>
+                <a class="session-link" href="logout.php">Salir</a>
             </nav>
         </header>
         <section class="hero">
@@ -258,5 +269,27 @@ foreach ($tickets as $ticket) {
             <?php endforeach; ?>
         </main>
     </div>
+    <script>
+        (function () {
+            var layer = document.querySelector('.ambient-points');
+            if (!layer) return;
+            var count = window.matchMedia('(max-width: 620px)').matches ? 46 : 78;
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < count; i += 1) {
+                var point = document.createElement('span');
+                point.className = 'ambient-point';
+                point.style.setProperty('--size', (Math.random() * 2.8 + .8).toFixed(2) + 'px');
+                point.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
+                point.style.setProperty('--y', (Math.random() * 100).toFixed(2) + 'vh');
+                point.style.setProperty('--dx', (Math.random() * 82 - 41).toFixed(2) + 'px');
+                point.style.setProperty('--dy', (Math.random() * 82 - 41).toFixed(2) + 'px');
+                point.style.setProperty('--duration', (Math.random() * 22 + 20).toFixed(2) + 's');
+                point.style.setProperty('--delay', (Math.random() * -30).toFixed(2) + 's');
+                point.style.opacity = (Math.random() * .34 + .16).toFixed(2);
+                fragment.appendChild(point);
+            }
+            layer.appendChild(fragment);
+        }());
+    </script>
 </body>
 </html>
