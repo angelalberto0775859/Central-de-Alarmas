@@ -163,6 +163,8 @@ if (!$email) {
 }
 
 $requester = cdaMarketingClean($_POST['requester']);
+$department = cdaMarketingOption($_POST['department'] ?? '', cdaMarketingDepartments());
+$audience = cdaMarketingOption($_POST['audience'] ?? '', cdaMarketingAudiences(), '');
 $accountPassword = (string) ($_POST['accountPassword'] ?? '');
 $currentUser = cdaCurrentUser();
 if (strlen($accountPassword) < 8) {
@@ -279,11 +281,11 @@ try {
         ':folio' => $folio,
         ':solicitante' => $requester,
         ':correo' => $email,
-        ':departamento' => cdaMarketingClean($_POST['department']),
+        ':departamento' => $department,
         ':actividad' => cdaMarketingClean($_POST['activity']),
         ':tipo_solicitud' => cdaMarketingClean($_POST['requestType']),
         ':objetivo' => cdaMarketingClean($_POST['objective']),
-        ':publico' => cdaMarketingClean($_POST['audience'] ?? ''),
+        ':publico' => $audience,
         ':referencias' => cdaMarketingClean($_POST['references'] ?? ''),
         ':fecha_requerida' => $neededDate,
         ':prioridad' => cdaMarketingPriority($_POST['priority']),
@@ -345,11 +347,11 @@ try {
         'folio' => $folio,
         'solicitante' => $requester,
         'correo' => $email,
-        'departamento' => cdaMarketingClean($_POST['department']),
+        'departamento' => $department,
         'actividad' => cdaMarketingClean($_POST['activity']),
         'tipo_solicitud' => cdaMarketingClean($_POST['requestType']),
         'objetivo' => cdaMarketingClean($_POST['objective']),
-        'publico' => cdaMarketingClean($_POST['audience'] ?? ''),
+        'publico' => $audience,
         'referencias' => cdaMarketingClean($_POST['references'] ?? ''),
         'fecha_requerida' => $neededDate,
         'prioridad' => cdaMarketingPriority($_POST['priority']),

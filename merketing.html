@@ -821,7 +821,19 @@
 	                                </div>
 	                                <div class="field">
 	                                    <label for="department">Área / departamento *</label>
-	                                    <input id="department" name="department" type="text" required placeholder="Ej. Ventas, Operaciones, RH">
+	                                    <select id="department" name="department" required>
+                                            <option value="" selected disabled>Selecciona departamento</option>
+                                            <option>Ventas</option>
+                                            <option>Operaciones</option>
+                                            <option>Monitoreo</option>
+                                            <option>Atención a clientes</option>
+                                            <option>Recursos Humanos</option>
+                                            <option>Administración</option>
+                                            <option>Tecnología</option>
+                                            <option>Dirección</option>
+                                            <option>Alianzas</option>
+                                            <option>Otro</option>
+                                        </select>
 	                                </div>
                             </div>
                         </div>
@@ -853,7 +865,18 @@
                                 </div>
                                 <div class="field">
                                     <label for="audience">Público objetivo</label>
-                                    <input id="audience" name="audience" type="text" placeholder="Clientes, colaboradores, sucursales, prospectos...">
+                                    <select id="audience" name="audience">
+                                        <option value="">Selecciona público</option>
+                                        <option>Clientes actuales</option>
+                                        <option>Prospectos</option>
+                                        <option>Colaboradores internos</option>
+                                        <option>Sucursales</option>
+                                        <option>Administradores</option>
+                                        <option>Técnicos</option>
+                                        <option>Corporativos</option>
+                                        <option>Público general</option>
+                                        <option>Otro</option>
+                                    </select>
                                 </div>
                                 <div class="field">
                                     <label for="references">Links de referencia</label>

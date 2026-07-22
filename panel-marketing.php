@@ -5,6 +5,7 @@ require_once __DIR__ . '/php/marketing_helpers.php';
 $user = cdaRequireLogin();
 $estado = cdaMarketingClean($_GET['estado'] ?? '');
 $query = cdaMarketingClean($_GET['q'] ?? '');
+$trashMode = $user['rol'] === 'admin' && ($_GET['papelera'] ?? '') === '1';
 $params = [];
 $where = [];
 
@@ -12,6 +13,8 @@ if ($user['rol'] !== 'admin') {
     $where[] = 'correo = ?';
     $params[] = $user['correo'];
 }
+
+$where[] = $trashMode ? 'eliminado_en IS NOT NULL' : 'eliminado_en IS NULL';
 
 if ($estado && cdaMarketingStatusAllowed($estado)) {
     $where[] = 'estado = ?';
@@ -41,9 +44,9 @@ $stats = [
     'done' => 0,
 ];
 $statsParams = [];
-$statsWhere = '';
+$statsWhere = 'WHERE eliminado_en IS NULL';
 if ($user['rol'] !== 'admin') {
-    $statsWhere = 'WHERE correo = ?';
+    $statsWhere .= ' AND correo = ?';
     $statsParams[] = $user['correo'];
 }
 $statsStmt = cdaDb()->prepare("
@@ -155,14 +158,12 @@ if ($statsRow) {
             white-space:nowrap;
             transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
         }
-        .nav a { background:rgba(255,255,255,.1); color:rgba(255,255,255,.9); }
-        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.72); background:rgba(246,235,23,.1); box-shadow:inset 0 0 0 1px rgba(246,235,23,.2); }
-        .nav a.public-link { border-color:rgba(166,205,255,.55); background:rgba(13,98,173,.24); }
-        .nav a.session-link { border-color:rgba(254,202,202,.58); background:rgba(185,28,28,.22); }
-        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a { background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.26); }
+        .nav a:hover, .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
+        .nav a.admin-link { border-color:rgba(246,235,23,.48); }
+        .nav a.session-link { border-color:rgba(254,202,202,.5); background:rgba(185,28,28,.2); }
+        .nav a.admin-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
         .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
-        .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
         .hero {
             display:flex;
@@ -258,6 +259,9 @@ if ($statsRow) {
             box-shadow:0 10px 22px rgba(6,57,112,.1);
         }
         .inline-form button:hover, .filters button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
+        .danger-button { background:#fee2e2 !important; color:#991b1b !important; box-shadow:none !important; }
+        .restore-button { background:#d1fae5 !important; color:#047857 !important; box-shadow:none !important; }
+        .ticket-actions { display:grid; gap:.5rem; margin-top:.6rem; }
         .muted { color:var(--muted); }
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
         .ticket-chat { display:grid; gap:.58rem; margin-top:.65rem; padding:.68rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
@@ -291,10 +295,11 @@ if ($statsRow) {
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link active" href="panel-marketing.php">Tickets</a><?php endif; ?>
+                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? '' : 'active'; ?>" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] !== 'admin'): ?><a class="active" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? 'active' : ''; ?>" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a class="public-link" href="marketing.html">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
                 <a class="session-link" href="logout.php">Salir</a>
@@ -302,9 +307,9 @@ if ($statsRow) {
         </header>
         <section class="hero">
             <div>
-                <div class="eyebrow"><?php echo $user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'; ?></div>
-                <h1>Tickets de Diseño y Marketing</h1>
-                <p class="muted">Cada solicitud vive por folio: registro validado, estado visible, conversacion del ticket y cierre con historial.</p>
+                <div class="eyebrow"><?php echo $trashMode ? 'Basurero admin' : ($user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'); ?></div>
+                <h1><?php echo $trashMode ? 'Tickets en basurero' : 'Tickets de Diseño y Marketing'; ?></h1>
+                <p class="muted"><?php echo $trashMode ? 'Restaura solicitudes enviadas al basurero o borralas definitivamente cuando ya no se necesiten.' : 'Cada solicitud vive por folio: registro validado, estado visible, conversacion del ticket y cierre con historial.'; ?></p>
             </div>
         </section>
         <section class="story-strip" aria-label="Historia del ticket">
@@ -322,11 +327,12 @@ if ($statsRow) {
         <section class="card">
             <div class="card-head">
                 <div>
-                    <h2>Listado operativo</h2>
-                    <p class="muted">Filtra, actualiza estado y conversa en el chat de cada solicitud.</p>
+                    <h2><?php echo $trashMode ? 'Basurero de tickets' : 'Listado operativo'; ?></h2>
+                    <p class="muted"><?php echo $trashMode ? 'Los tickets aqui ya no aparecen en el tablero ni en seguimiento.' : 'Filtra, actualiza estado y conversa en el chat de cada solicitud.'; ?></p>
                 </div>
             </div>
             <form class="filters" method="get" action="panel-marketing.php">
+                <?php if ($trashMode): ?><input type="hidden" name="papelera" value="1"><?php endif; ?>
                 <input name="q" value="<?php echo htmlspecialchars($query); ?>" placeholder="Buscar folio, solicitante, correo o actividad">
                 <select name="estado">
                     <option value="">Todos los estados</option>
@@ -355,6 +361,7 @@ if ($statsRow) {
                         <td><span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span><br><span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span></td>
                         <td><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?><br><span class="muted">Actualizado <?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></span></td>
                         <td>
+                            <?php if (!$trashMode): ?>
                             <form class="inline-form" method="post" action="ticket-actualizar.php">
                                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                                 <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
@@ -367,6 +374,36 @@ if ($statsRow) {
                                 <textarea name="respuesta_interna" rows="2" placeholder="Comentario visible para seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                                 <button type="submit">Guardar</button>
                             </form>
+                            <?php endif; ?>
+                            <?php if ($user['rol'] === 'admin'): ?>
+                            <div class="ticket-actions">
+                                <?php if ($trashMode): ?>
+                                <form class="inline-form" method="post" action="ticket-eliminar.php">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                    <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
+                                    <input type="hidden" name="action" value="restore">
+                                    <input type="hidden" name="return_to" value="panel-marketing.php?papelera=1">
+                                    <button class="restore-button" type="submit">Restaurar</button>
+                                </form>
+                                <form class="inline-form" method="post" action="ticket-eliminar.php" onsubmit="return confirm('Borrar definitivamente este ticket? Esta accion no se puede deshacer.');">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                    <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
+                                    <input type="hidden" name="action" value="purge">
+                                    <input type="hidden" name="return_to" value="panel-marketing.php?papelera=1">
+                                    <button class="danger-button" type="submit">Borrar definitivo</button>
+                                </form>
+                                <?php else: ?>
+                                <form class="inline-form" method="post" action="ticket-eliminar.php" onsubmit="return confirm('Enviar este ticket al basurero?');">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                    <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
+                                    <input type="hidden" name="action" value="trash">
+                                    <input type="hidden" name="return_to" value="panel-marketing.php">
+                                    <button class="danger-button" type="submit">Enviar al basurero</button>
+                                </form>
+                                <?php endif; ?>
+                            </div>
+                            <?php endif; ?>
+                            <?php if (!$trashMode): ?>
                             <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
                                 <h3>Chat de seguimiento</h3>
                                 <p class="chat-note">Este hilo queda asociado al folio; el solicitante puede responder desde seguimiento con su login.</p>
@@ -390,6 +427,7 @@ if ($statsRow) {
                                     <button type="submit">Enviar mensaje</button>
                                 </form>
                             </section>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

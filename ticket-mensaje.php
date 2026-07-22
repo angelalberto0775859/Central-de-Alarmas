@@ -26,7 +26,7 @@ if ($ticketId <= 0 || $mensaje === '') {
 
 try {
     $db = cdaDb();
-    $ticket = $db->prepare('SELECT id, correo FROM marketing_tickets WHERE id = ? LIMIT 1');
+    $ticket = $db->prepare('SELECT id, correo FROM marketing_tickets WHERE id = ? AND eliminado_en IS NULL LIMIT 1');
     $ticket->execute([$ticketId]);
     $ticketRow = $ticket->fetch();
 

@@ -18,5 +18,9 @@ assertSameValue('Normal', cdaMarketingPriority('Fuera'), 'unknown priority defau
 assertSameValue('En evaluación', cdaMarketingStatusLabel('En evaluacion'), 'status label uses accents');
 assertSameValue(4, cdaMarketingProgressIndex('Cerrado'), 'closed status maps to final progress');
 assertSameValue(1, cdaMarketingProgressIndex('Pendiente de informacion'), 'waiting info maps to evaluation progress');
+assertSameValue(true, in_array('Ventas', cdaMarketingDepartments(), true), 'departments expose ventas option');
+assertSameValue(true, in_array('Clientes actuales', cdaMarketingAudiences(), true), 'audiences expose clientes actuales option');
+assertSameValue('green', cdaMarketingStatusTone('Entregado'), 'delivered tickets use green tone');
+assertSameValue('red', cdaMarketingPriorityTone('Urgente'), 'urgent priority uses red tone');
 
 echo "marketing ticket smoke ok" . PHP_EOL;

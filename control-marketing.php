@@ -15,7 +15,7 @@ $lanes = [
     'Cierre' => ['Entregado', 'Cerrado', 'Rechazado'],
 ];
 
-$stmt = cdaDb()->query('SELECT * FROM marketing_tickets ORDER BY fecha_requerida ASC, actualizado_en DESC LIMIT 160');
+$stmt = cdaDb()->query('SELECT * FROM marketing_tickets WHERE eliminado_en IS NULL ORDER BY fecha_requerida ASC, actualizado_en DESC LIMIT 160');
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $laneTickets = array_fill_keys(array_keys($lanes), []);
@@ -109,14 +109,12 @@ foreach ($tickets as $ticket) {
         .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; }
-        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:900; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
-        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.72); background:rgba(246,235,23,.1); box-shadow:inset 0 0 0 1px rgba(246,235,23,.2); }
-        .nav a.public-link { border-color:rgba(166,205,255,.55); background:rgba(13,98,173,.24); }
-        .nav a.session-link { border-color:rgba(254,202,202,.58); background:rgba(185,28,28,.22); }
-        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.26); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.12); font-size:.8rem; font-weight:900; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
+        .nav a:hover, .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
+        .nav a.admin-link { border-color:rgba(246,235,23,.48); }
+        .nav a.session-link { border-color:rgba(254,202,202,.5); background:rgba(185,28,28,.2); }
+        .nav a.admin-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
         .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
-        .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
         .hero { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); overflow:hidden; position:relative; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
@@ -141,22 +139,33 @@ foreach ($tickets as $ticket) {
         .lane h2 { color:#fff; font-size:1rem; }
         .lane-kicker { color:rgba(255,255,255,.68); font-size:.7rem; font-weight:800; margin-top:.18rem; }
         .count { border-radius:999px; background:var(--yellow); color:var(--blue); padding:.28rem .52rem; font-size:.72rem; font-weight:950; }
-        .ticket-card { display:grid; gap:.72rem; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.88rem; margin-bottom:.75rem; box-shadow:0 10px 28px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+        .ticket-card { display:grid; gap:.62rem; border:1px solid var(--line); border-left:6px solid var(--blue-2); border-radius:var(--radius); background:#fff; padding:.55rem .62rem; margin-bottom:.62rem; box-shadow:0 10px 24px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
         .ticket-card:hover { border-color:rgba(6,57,112,.28); transform:translateY(-1px); box-shadow:0 16px 34px rgba(6,57,112,.13); }
+        .ticket-card.tone-amber { border-left-color:#d97706; }
+        .ticket-card.tone-green { border-left-color:var(--green); }
+        .ticket-card.tone-red { border-left-color:var(--red); }
+        .ticket-card.tone-purple { border-left-color:#6d28d9; }
+        .ticket-card summary { list-style:none; cursor:pointer; }
+        .ticket-card summary::-webkit-details-marker { display:none; }
+        .ticket-summary { display:grid; gap:.5rem; }
+        .summary-head { display:flex; justify-content:space-between; gap:.65rem; align-items:start; }
+        .summary-meta { display:flex; flex-wrap:wrap; gap:.35rem; align-items:center; }
+        .summary-date { color:var(--muted); font-size:.72rem; font-weight:850; }
+        .ticket-detail { display:grid; gap:.62rem; padding-top:.6rem; border-top:1px solid rgba(6,57,112,.09); }
         .ticket-top { display:flex; justify-content:space-between; gap:.75rem; align-items:start; }
         .folio { color:var(--blue); font-size:.75rem; font-weight:950; letter-spacing:.06em; }
         .ticket-card h3 { font-size:1rem; line-height:1.18; color:var(--ink); }
         .card-section { display:grid; gap:.45rem; padding:.65rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
         .section-label { color:var(--muted); font-size:.68rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
         .status, .priority { display:inline-flex; width:fit-content; border-radius:999px; padding:.32rem .5rem; font-size:.7rem; font-weight:950; }
-        .status { background:var(--soft); color:var(--blue); }
-        .status.entregado, .status.cerrado { background:#d1fae5; color:var(--green); }
-        .status.rechazado { background:#fee2e2; color:#991b1b; }
-        .status.en-diseno, .status.en-revision { background:#dbeafe; color:#1d4ed8; }
-        .status.pendiente-de-informacion, .status.ajustes-solicitados { background:#fff7cc; color:#7c5800; }
+        .status { background:#dbeafe; color:#1d4ed8; }
+        .status.tone-green { background:#d1fae5; color:var(--green); }
+        .status.tone-red { background:#fee2e2; color:#991b1b; }
+        .status.tone-amber { background:#fff7cc; color:#7c5800; }
+        .status.tone-purple { background:#ede9fe; color:#5b21b6; }
         .priority { background:#eef4fb; color:var(--ink); }
-        .priority.urgente { background:#fee2e2; color:var(--red); }
-        .priority.alta { background:#fff7cc; color:#7c5800; }
+        .priority.tone-red { background:#fee2e2; color:var(--red); }
+        .priority.tone-amber { background:#fff7cc; color:#7c5800; }
         .meta { display:grid; gap:.25rem; color:var(--muted); font-size:.78rem; line-height:1.35; }
         .quick-form { display:grid; gap:.48rem; }
         select, input, textarea { width:100%; border:1px solid var(--line); border-radius:var(--radius); padding:.68rem .72rem; font:inherit; font-size:.82rem; background:#fff; }
@@ -164,6 +173,7 @@ foreach ($tickets as $ticket) {
         textarea { resize:vertical; min-height:58px; }
         button { border:0; border-radius:var(--radius); padding:.72rem .8rem; background:var(--yellow); color:var(--blue); font-weight:950; text-transform:uppercase; cursor:pointer; box-shadow:0 10px 22px rgba(6,57,112,.1); transition:transform .18s ease, box-shadow .18s ease; }
         button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
+        .danger-button { background:#fee2e2; color:#991b1b; box-shadow:none; }
         .ticket-chat { display:grid; gap:.5rem; padding:.58rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
         .ticket-chat h4 { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
         .chat-note { color:var(--muted); font-size:.72rem; line-height:1.35; }
@@ -189,6 +199,7 @@ foreach ($tickets as $ticket) {
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link active" href="control-marketing.php">Tablero</a>
                 <a class="admin-link" href="usuarios-marketing.php">Usuarios</a>
+                <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="marketing.html">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
                 <a class="session-link" href="logout.php">Salir</a>
@@ -224,16 +235,19 @@ foreach ($tickets as $ticket) {
                     <span class="count"><?php echo count($items); ?></span>
                 </div>
                 <?php foreach ($items as $ticket): ?>
-                <article class="ticket-card" id="ticket-<?php echo (int) $ticket['id']; ?>">
-                    <div class="ticket-top">
-                        <span class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></span>
-                        <span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span>
-                    </div>
-                    <div class="card-section">
-                        <span class="section-label">Solicitud</span>
+                <details class="ticket-card tone-<?php echo htmlspecialchars(cdaMarketingStatusTone($ticket['estado'])); ?>" id="ticket-<?php echo (int) $ticket['id']; ?>">
+                    <summary class="ticket-summary">
+                        <div class="summary-head">
+                            <span class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></span>
+                            <span class="priority tone-<?php echo htmlspecialchars(cdaMarketingPriorityTone($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span>
+                        </div>
                         <h3><?php echo htmlspecialchars($ticket['actividad']); ?></h3>
-                        <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
-                    </div>
+                        <div class="summary-meta">
+                            <span class="status tone-<?php echo htmlspecialchars(cdaMarketingStatusTone($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
+                            <span class="summary-date"><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
+                        </div>
+                    </summary>
+                    <div class="ticket-detail">
                     <div class="card-section meta">
                         <span class="section-label">Datos</span>
                         <span><?php echo htmlspecialchars($ticket['solicitante']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
@@ -253,6 +267,13 @@ foreach ($tickets as $ticket) {
                         <input name="asignado_a" value="<?php echo htmlspecialchars($ticket['asignado_a'] ?? ''); ?>" placeholder="Asignado a">
                         <textarea name="respuesta_interna" placeholder="Comentario visible en seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                         <button type="submit">Actualizar</button>
+                    </form>
+                    <form class="quick-form" method="post" action="ticket-eliminar.php" onsubmit="return confirm('Enviar este ticket al basurero?');">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                        <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
+                        <input type="hidden" name="action" value="trash">
+                        <input type="hidden" name="return_to" value="control-marketing.php">
+                        <button class="danger-button" type="submit">Enviar al basurero</button>
                     </form>
                     <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
                         <h4>Chat del ticket</h4>
@@ -277,7 +298,8 @@ foreach ($tickets as $ticket) {
                             <button type="submit">Enviar</button>
                         </form>
                     </section>
-                </article>
+                    </div>
+                </details>
                 <?php endforeach; ?>
                 <?php if (!$items): ?><p class="muted">Sin tickets en esta etapa.</p><?php endif; ?>
             </section>

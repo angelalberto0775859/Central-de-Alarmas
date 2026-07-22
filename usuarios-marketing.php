@@ -119,14 +119,12 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
         .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
-        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.1); font-size:.82rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease; }
-        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
-        .nav a.admin-link { border-color:rgba(246,235,23,.72); background:rgba(246,235,23,.1); box-shadow:inset 0 0 0 1px rgba(246,235,23,.2); }
-        .nav a.public-link { border-color:rgba(166,205,255,.55); background:rgba(13,98,173,.24); }
-        .nav a.session-link { border-color:rgba(254,202,202,.58); background:rgba(185,28,28,.22); }
-        .nav a.admin-link::before, .nav a.public-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.26); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.12); font-size:.82rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease; }
+        .nav a:hover, .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
+        .nav a.admin-link { border-color:rgba(246,235,23,.48); }
+        .nav a.session-link { border-color:rgba(254,202,202,.5); background:rgba(185,28,28,.2); }
+        .nav a.admin-link::before { display:inline-block; margin-right:.42rem; border-radius:999px; padding:.2rem .42rem; font-size:.62rem; line-height:1; letter-spacing:.04em; vertical-align:middle; }
         .nav a.admin-link::before { content:"ADMIN"; background:var(--yellow); color:var(--blue); }
-        .nav a.public-link::before { content:"PUBLICO"; background:#dbeafe; color:#1d4ed8; }
         .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); position:relative; overflow:hidden; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
         .hero > * { position:relative; z-index:1; }
@@ -175,6 +173,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link" href="control-marketing.php">Tablero</a>
                 <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
+                <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="marketing.html">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
                 <a class="session-link" href="logout.php">Salir</a>

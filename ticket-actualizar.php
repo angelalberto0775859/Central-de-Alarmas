@@ -29,7 +29,7 @@ if ($id <= 0 || !cdaMarketingStatusAllowed($estado)) {
 $db = cdaDb();
 $db->beginTransaction();
 
-$update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ? WHERE id = ?');
+$update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ? WHERE id = ? AND eliminado_en IS NULL');
 $update->execute([$estado, $respuesta, $asignado, $id]);
 
 $hist = $db->prepare('INSERT INTO marketing_ticket_historial (ticket_id, usuario_id, estado, comentario) VALUES (?, ?, ?, ?)');

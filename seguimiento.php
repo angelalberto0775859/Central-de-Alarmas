@@ -14,7 +14,7 @@ $currentUser = cdaCurrentUser();
 
 if ($folio) {
     try {
-        $stmt = cdaDb()->prepare('SELECT * FROM marketing_tickets WHERE folio = ? LIMIT 1');
+        $stmt = cdaDb()->prepare('SELECT * FROM marketing_tickets WHERE folio = ? AND eliminado_en IS NULL LIMIT 1');
         $stmt->execute([$folio]);
         $ticket = $stmt->fetch();
 

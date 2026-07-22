@@ -26,10 +26,13 @@ CREATE TABLE marketing_tickets (
     comentarios TEXT NULL,
     respuesta_interna TEXT NULL,
     asignado_a VARCHAR(140) NULL,
+    eliminado_en TIMESTAMP NULL,
+    eliminado_por INT UNSIGNED NULL,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_folio_correo (folio, correo),
     INDEX idx_estado (estado),
+    INDEX idx_eliminado (eliminado_en),
     INDEX idx_creado (creado_en)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

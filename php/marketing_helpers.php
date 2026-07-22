@@ -28,6 +28,40 @@ function cdaMarketingPriority($priority) {
     return in_array($priority, ['Normal', 'Alta', 'Urgente'], true) ? $priority : 'Normal';
 }
 
+function cdaMarketingDepartments() {
+    return [
+        'Ventas',
+        'Operaciones',
+        'Monitoreo',
+        'Atención a clientes',
+        'Recursos Humanos',
+        'Administración',
+        'Tecnología',
+        'Dirección',
+        'Alianzas',
+        'Otro',
+    ];
+}
+
+function cdaMarketingAudiences() {
+    return [
+        'Clientes actuales',
+        'Prospectos',
+        'Colaboradores internos',
+        'Sucursales',
+        'Administradores',
+        'Técnicos',
+        'Corporativos',
+        'Público general',
+        'Otro',
+    ];
+}
+
+function cdaMarketingOption($value, array $allowed, $fallback = 'Otro') {
+    $value = cdaMarketingClean($value);
+    return in_array($value, $allowed, true) ? $value : $fallback;
+}
+
 function cdaMarketingFolio($date, $sequence, $suffix = '') {
     $compactDate = preg_replace('/[^0-9]/', '', (string) $date);
     $folio = 'MKT-' . $compactDate . '-' . str_pad((string) (int) $sequence, 4, '0', STR_PAD_LEFT);
@@ -76,6 +110,34 @@ function cdaMarketingStatusLabel($status) {
     ];
 
     return $labels[$status] ?? $status;
+}
+
+function cdaMarketingStatusTone($status) {
+    $tones = [
+        'Recibido' => 'blue',
+        'En evaluacion' => 'blue',
+        'Pendiente de informacion' => 'amber',
+        'Aprobado' => 'purple',
+        'Programado' => 'purple',
+        'En diseno' => 'blue',
+        'En revision' => 'amber',
+        'Ajustes solicitados' => 'amber',
+        'Entregado' => 'green',
+        'Cerrado' => 'green',
+        'Rechazado' => 'red',
+    ];
+
+    return $tones[$status] ?? 'blue';
+}
+
+function cdaMarketingPriorityTone($priority) {
+    $tones = [
+        'Normal' => 'gray',
+        'Alta' => 'amber',
+        'Urgente' => 'red',
+    ];
+
+    return $tones[$priority] ?? 'gray';
 }
 
 function cdaMarketingFetchTicketMessages(array $ticketIds) {
