@@ -24,7 +24,7 @@ if ($folio) {
             $histStmt->execute([$ticket['id']]);
             $historial = $histStmt->fetchAll();
 
-            $fileStmt = cdaDb()->prepare('SELECT nombre_original, ruta FROM marketing_ticket_archivos WHERE ticket_id = ? ORDER BY creado_en ASC');
+            $fileStmt = cdaDb()->prepare('SELECT id, nombre_original, ruta FROM marketing_ticket_archivos WHERE ticket_id = ? ORDER BY creado_en ASC');
             $fileStmt->execute([$ticket['id']]);
             $archivos = $fileStmt->fetchAll();
 
@@ -377,7 +377,7 @@ if ($folio) {
                                 <?php if (!empty($mensaje['archivos'])): ?>
                                     <div class="chat-files">
                                         <?php foreach ($mensaje['archivos'] as $file): ?>
-                                            <a class="chat-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                            <a class="chat-file" href="descargar-archivo.php?tipo=mensaje&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
                                         <?php endforeach; ?>
                                     </div>
                                 <?php endif; ?>
@@ -415,7 +415,7 @@ if ($folio) {
                 <h2 style="margin-top:1rem;">Archivos</h2>
                 <ul class="files">
                     <?php foreach ($archivos as $archivo): ?>
-                    <li><a href="<?php echo htmlspecialchars($archivo['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($archivo['nombre_original']); ?></a></li>
+                    <li><a href="descargar-archivo.php?tipo=ticket&id=<?php echo (int) $archivo['id']; ?>"><?php echo htmlspecialchars($archivo['nombre_original']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 <?php endif; ?>

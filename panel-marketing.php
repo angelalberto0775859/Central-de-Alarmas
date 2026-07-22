@@ -361,7 +361,7 @@ if ($statsRow) {
                             <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
                                 <div class="ticket-files" aria-label="Archivos iniciales">
                                     <?php foreach ($ticketFiles[(int) $ticket['id']] as $file): ?>
-                                        <a class="ticket-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                        <a class="ticket-file" href="descargar-archivo.php?tipo=ticket&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
@@ -426,7 +426,7 @@ if ($statsRow) {
                                             <?php if (!empty($message['archivos'])): ?>
                                                 <div class="chat-files">
                                                     <?php foreach ($message['archivos'] as $file): ?>
-                                                        <a class="chat-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                                        <a class="chat-file" href="descargar-archivo.php?tipo=mensaje&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
                                                     <?php endforeach; ?>
                                                 </div>
                                             <?php endif; ?>
