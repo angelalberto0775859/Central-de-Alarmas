@@ -79,44 +79,60 @@ foreach ($tickets as $ticket) {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                radial-gradient(circle at 14% 10%, rgba(246,235,23,.2), transparent 18rem),
-                linear-gradient(180deg,#062b58 0 255px,#edf5fb 255px,#f8fbff 100%);
+                radial-gradient(circle at 10% 8%, rgba(246,235,23,.2), transparent 19rem),
+                radial-gradient(circle at 88% 12%, rgba(13,98,173,.28), transparent 24rem),
+                linear-gradient(180deg,#061b39 0 320px,#edf5fb 320px,#f8fbff 100%);
         }
         body::before {
             content:"";
             position:fixed;
             inset:0 0 auto;
-            height:255px;
+            height:320px;
             pointer-events:none;
             background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1.7px);
             background-size:26px 26px;
             mask-image:linear-gradient(180deg,#000,transparent);
         }
-        .shell { width:min(1440px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.5rem; position:relative; z-index:1; }
-        .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1.15rem; color:#fff; }
-        .topbar img { width:146px; display:block; }
+        body::after {
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%);
+            opacity:.36;
+        }
+        .shell { width:min(1480px, calc(100% - 1.4rem)); margin:0 auto; padding:1rem 0 2.8rem; position:relative; z-index:1; }
+        .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
+        .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; }
         .nav a { color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.68rem .8rem; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:900; transition:background .18s ease, color .18s ease, border-color .18s ease; }
-        .nav a:hover { background:#fff; color:var(--blue); }
+        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
-        .hero { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin:1rem 0; color:#fff; }
+        .hero { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); overflow:hidden; position:relative; }
+        .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
+        .hero > * { position:relative; z-index:1; }
+        .eyebrow { color:var(--yellow); font-size:.74rem; font-weight:950; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.55rem; }
         h1 { color:#fff; font-size:clamp(1.9rem,4vw,3.35rem); line-height:1; letter-spacing:0; }
         .hero .muted { color:rgba(255,255,255,.76); margin-top:.45rem; }
         .muted { color:var(--muted); line-height:1.45; }
-        .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; margin-bottom:1rem; }
+        .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.85rem; margin-bottom:1rem; }
         .stat { border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); position:relative; overflow:hidden; }
         .stat::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:linear-gradient(90deg,var(--yellow),var(--blue-3)); }
         .stat span { display:block; color:var(--muted); font-size:.72rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
         .stat strong { display:block; color:var(--blue); font-size:2.15rem; line-height:1; margin-top:.25rem; }
-        .board { display:grid; grid-template-columns:repeat(4,minmax(275px,1fr)); gap:.85rem; align-items:start; overflow-x:auto; padding-bottom:.35rem; }
-        .lane { border:1px solid var(--line); border-radius:var(--radius); background:rgba(255,255,255,.78); min-height:540px; padding:.75rem; box-shadow:var(--shadow); backdrop-filter:blur(10px); }
-        .lane-head { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-bottom:.75rem; padding:.72rem .75rem; border-radius:var(--radius); background:linear-gradient(135deg,var(--blue),var(--blue-2)); color:#fff; }
+        .board { display:grid; grid-template-columns:repeat(4,minmax(290px,1fr)); gap:.9rem; align-items:start; overflow-x:auto; padding:.15rem .1rem .45rem; }
+        .lane { border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:rgba(255,255,255,.86); min-height:560px; padding:.75rem; box-shadow:var(--shadow); backdrop-filter:blur(10px); }
+        .lane-head { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-bottom:.75rem; padding:.8rem; border-radius:var(--radius); background:linear-gradient(135deg,var(--blue),var(--blue-2)); color:#fff; box-shadow:0 14px 30px rgba(6,57,112,.18); }
         .lane h2 { color:#fff; font-size:1rem; }
+        .lane-kicker { color:rgba(255,255,255,.68); font-size:.7rem; font-weight:800; margin-top:.18rem; }
         .count { border-radius:999px; background:var(--yellow); color:var(--blue); padding:.28rem .52rem; font-size:.72rem; font-weight:950; }
-        .ticket-card { display:grid; gap:.68rem; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.82rem; margin-bottom:.72rem; box-shadow:0 10px 28px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
-        .ticket-card:hover { border-color:rgba(6,57,112,.28); transform:translateY(-1px); }
+        .ticket-card { display:grid; gap:.72rem; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.88rem; margin-bottom:.75rem; box-shadow:0 10px 28px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+        .ticket-card:hover { border-color:rgba(6,57,112,.28); transform:translateY(-1px); box-shadow:0 16px 34px rgba(6,57,112,.13); }
         .ticket-top { display:flex; justify-content:space-between; gap:.75rem; align-items:start; }
         .folio { color:var(--blue); font-size:.75rem; font-weight:950; letter-spacing:.06em; }
+        .ticket-card h3 { font-size:1rem; line-height:1.18; color:var(--ink); }
+        .card-section { display:grid; gap:.45rem; padding:.65rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
+        .section-label { color:var(--muted); font-size:.68rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
         .status, .priority { display:inline-flex; width:fit-content; border-radius:999px; padding:.32rem .5rem; font-size:.7rem; font-weight:950; }
         .status { background:var(--soft); color:var(--blue); }
         .status.entregado, .status.cerrado { background:#d1fae5; color:var(--green); }
@@ -126,7 +142,6 @@ foreach ($tickets as $ticket) {
         .priority { background:#eef4fb; color:var(--ink); }
         .priority.urgente { background:#fee2e2; color:var(--red); }
         .priority.alta { background:#fff7cc; color:#7c5800; }
-        .ticket-card h3 { font-size:.98rem; line-height:1.18; color:var(--ink); }
         .meta { display:grid; gap:.25rem; color:var(--muted); font-size:.78rem; line-height:1.35; }
         .quick-form { display:grid; gap:.48rem; }
         select, input, textarea { width:100%; border:1px solid var(--line); border-radius:var(--radius); padding:.68rem .72rem; font:inherit; font-size:.82rem; background:#fff; }
@@ -154,6 +169,7 @@ foreach ($tickets as $ticket) {
             <nav class="nav" aria-label="Navegacion">
                 <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
                 <a href="panel-marketing.php">Lista</a>
+                <a class="active" href="control-marketing.php">Tablero</a>
                 <a href="usuarios-marketing.php">Usuarios</a>
                 <a href="marketing.html">Crear ticket</a>
                 <a href="logout.php">Salir</a>
@@ -161,6 +177,7 @@ foreach ($tickets as $ticket) {
         </header>
         <section class="hero">
             <div>
+                <div class="eyebrow">Dashboard administrativo</div>
                 <h1>Control admin de solicitudes</h1>
                 <p class="muted">Tablero operativo para priorizar, asignar y mover estatus de tickets de Diseño y Marketing.</p>
             </div>
@@ -175,7 +192,10 @@ foreach ($tickets as $ticket) {
             <?php foreach ($laneTickets as $laneName => $items): ?>
             <section class="lane">
                 <div class="lane-head">
-                    <h2><?php echo htmlspecialchars($laneName); ?></h2>
+                    <div>
+                        <h2><?php echo htmlspecialchars($laneName); ?></h2>
+                        <p class="lane-kicker"><?php echo htmlspecialchars(implode(' · ', array_map('cdaMarketingStatusLabel', $lanes[$laneName]))); ?></p>
+                    </div>
                     <span class="count"><?php echo count($items); ?></span>
                 </div>
                 <?php foreach ($items as $ticket): ?>
@@ -184,9 +204,13 @@ foreach ($tickets as $ticket) {
                         <span class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></span>
                         <span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span>
                     </div>
-                    <h3><?php echo htmlspecialchars($ticket['actividad']); ?></h3>
-                    <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
-                    <div class="meta">
+                    <div class="card-section">
+                        <span class="section-label">Solicitud</span>
+                        <h3><?php echo htmlspecialchars($ticket['actividad']); ?></h3>
+                        <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
+                    </div>
+                    <div class="card-section meta">
+                        <span class="section-label">Datos</span>
                         <span><?php echo htmlspecialchars($ticket['solicitante']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
                         <span><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></span>
                         <span>Requerido: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>

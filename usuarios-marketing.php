@@ -98,29 +98,37 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
             color:var(--ink);
             background:
                 radial-gradient(circle at 12% 8%, rgba(246,235,23,.22), transparent 17rem),
-                linear-gradient(180deg,#062b58 0 245px,#eef5fb 245px,#f7faff 100%);
+                radial-gradient(circle at 88% 12%, rgba(13,98,173,.24), transparent 24rem),
+                linear-gradient(180deg,#061b39 0 315px,#eef5fb 315px,#f7faff 100%);
         }
         body::before {
             content:"";
             position:fixed;
             inset:0 0 auto;
-            height:245px;
+            height:315px;
             pointer-events:none;
             background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.2) 1px, transparent 1.8px);
             background-size:26px 26px;
             mask-image:linear-gradient(180deg,#000,transparent);
         }
-        .shell { width:min(1100px, calc(100% - 2rem)); margin:0 auto; padding:1.2rem 0 3rem; position:relative; z-index:1; }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.2rem; color:#fff; }
-        .topbar img { width:146px; display:block; }
+        body::after { content:""; position:fixed; inset:0; pointer-events:none; background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%); opacity:.34; }
+        .shell { width:min(1180px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:1; }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.7rem; background:rgba(255,255,255,.08); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
+        .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
         .nav a { color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.1); font-size:.82rem; font-weight:850; transition:background .18s ease, color .18s ease; }
-        .nav a:hover { background:#fff; color:var(--blue); }
+        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
+        .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); position:relative; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
+        .hero > * { position:relative; z-index:1; }
+        .eyebrow { color:var(--yellow); font-size:.74rem; font-weight:950; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.55rem; }
         h1 { color:#fff; font-size:clamp(1.8rem,4vw,3rem); margin-bottom:.35rem; letter-spacing:0; }
-        h1 + .muted { color:rgba(255,255,255,.76); }
+        .hero .muted { color:rgba(255,255,255,.76); max-width:760px; }
         .muted { color:var(--muted); }
-        .grid { display:grid; grid-template-columns:360px 1fr; gap:1rem; align-items:start; margin-top:1rem; }
+        .grid { display:grid; grid-template-columns:380px minmax(0,1fr); gap:1rem; align-items:start; margin-top:1rem; }
         .card { background:rgba(255,255,255,.96); border:1px solid var(--line); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow); }
+        .card-head { display:grid; gap:.22rem; margin-bottom:.9rem; }
+        .card-head h2 { color:var(--blue); font-size:1.05rem; }
         form { display:grid; gap:.85rem; }
         label { display:grid; gap:.38rem; font-size:.78rem; font-weight:850; }
         input, select { width:100%; border:1px solid var(--line); border-radius:var(--radius); padding:.82rem .9rem; font:inherit; background:#fff; color:var(--ink); outline:none; }
@@ -132,7 +140,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .danger-button { min-height:auto; padding:.55rem .65rem; background:#fee2e2; color:#991b1b; box-shadow:none; font-size:.72rem; }
         .danger-button:hover { box-shadow:0 10px 20px rgba(185,28,28,.12); }
         .row-action { display:block; }
-        table { width:100%; border-collapse:separate; border-spacing:0; }
+        .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
+        table { width:100%; min-width:760px; border-collapse:separate; border-spacing:0; }
         th, td { padding:.78rem; border-bottom:1px solid var(--line); text-align:left; font-size:.9rem; }
         th { color:var(--blue); font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; background:#f3f8fd; }
         th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
@@ -144,7 +153,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ok, .error { margin-bottom:.8rem; border-radius:var(--radius); padding:.75rem; font-weight:750; }
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
-        @media (max-width:820px) { body { background:linear-gradient(180deg,#062b58 0 310px,#eef5fb 310px,#f7faff 100%); } .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
+        @media (max-width:820px) { body { background:linear-gradient(180deg,#061b39 0 390px,#eef5fb 390px,#f7faff 100%); } .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
     </style>
 </head>
 <body>
@@ -153,14 +162,23 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <a href="panel-marketing.php">Tickets</a>
+                <a href="control-marketing.php">Tablero</a>
+                <a class="active" href="usuarios-marketing.php">Usuarios</a>
                 <a href="marketing.html">Crear ticket</a>
                 <a href="logout.php">Salir</a>
             </nav>
         </header>
-        <h1>Usuarios autorizados</h1>
-        <p class="muted">Administra accesos registrados por contrasena o Google, cambia roles y desactiva usuarios cuando sea necesario.</p>
+        <section class="hero">
+            <div class="eyebrow">Facultades administrativas</div>
+            <h1>Usuarios autorizados</h1>
+            <p class="muted">Administra accesos registrados por contrasena o Google, cambia roles y desactiva usuarios cuando sea necesario.</p>
+        </section>
         <section class="grid">
             <article class="card">
+                <div class="card-head">
+                    <h2>Crear o actualizar acceso</h2>
+                    <p class="muted">Los usuarios también se registran al crear tickets o entrar con Google.</p>
+                </div>
                 <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="usuarios-marketing.php">
@@ -180,9 +198,14 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                 </form>
             </article>
             <article class="card">
-                <table>
-                    <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Google</th><th>Estado</th><th>Facultad admin</th></tr></thead>
-                    <tbody>
+                <div class="card-head">
+                    <h2>Directorio de accesos</h2>
+                    <p class="muted">Revisa estado, metodo de acceso y acciones disponibles.</p>
+                </div>
+                <div class="table-shell">
+                    <table>
+                        <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Google</th><th>Estado</th><th>Facultad admin</th></tr></thead>
+                        <tbody>
                         <?php foreach ($users as $item): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($item['nombre']); ?></td>
@@ -210,8 +233,9 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                             </td>
                         </tr>
                         <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </article>
         </section>
     </div>

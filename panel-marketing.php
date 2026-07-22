@@ -96,20 +96,29 @@ if ($statsRow) {
             color:var(--ink);
             background:
                 radial-gradient(circle at 12% 8%, rgba(246,235,23,.22), transparent 17rem),
-                linear-gradient(180deg,#062b58 0 260px,#eef5fb 260px,#f7faff 100%);
+                radial-gradient(circle at 88% 12%, rgba(13,98,173,.24), transparent 24rem),
+                linear-gradient(180deg,#061b39 0 315px,#eef5fb 315px,#f7faff 100%);
         }
         body::before {
             content:"";
             position:fixed;
             inset:0 0 auto;
-            height:260px;
+            height:315px;
             pointer-events:none;
             background:
                 radial-gradient(circle at 1px 1px, rgba(255,255,255,.2) 1px, transparent 1.8px);
             background-size:26px 26px;
             mask-image:linear-gradient(180deg,#000,transparent);
         }
-        .shell { width:min(1280px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:1; }
+        body::after {
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background:linear-gradient(120deg, transparent 0 40%, rgba(255,255,255,.08) 41%, transparent 44% 100%);
+            opacity:.34;
+        }
+        .shell { width:min(1320px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; z-index:1; }
         .topbar {
             display:flex;
             align-items:center;
@@ -117,8 +126,14 @@ if ($statsRow) {
             gap:1rem;
             margin-bottom:1.35rem;
             color:#fff;
+            border:1px solid rgba(255,255,255,.16);
+            border-radius:var(--radius);
+            padding:.7rem;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(14px);
+            box-shadow:0 18px 50px rgba(0,0,0,.14);
         }
-        .topbar img { width:146px; display:block; }
+        .topbar img { width:146px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
         .nav a, button {
             color:var(--blue);
@@ -133,7 +148,7 @@ if ($statsRow) {
             transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
         }
         .nav a { background:rgba(255,255,255,.1); color:rgba(255,255,255,.9); }
-        .nav a:hover { background:#fff; color:var(--blue); }
+        .nav a:hover, .nav a.active { background:#fff; color:var(--blue); }
         .user-chip { color:#fff; font-weight:850; opacity:.9; }
         .hero {
             display:flex;
@@ -142,7 +157,17 @@ if ($statsRow) {
             align-items:end;
             margin-bottom:1rem;
             color:#fff;
+            border:1px solid rgba(255,255,255,.16);
+            border-radius:var(--radius);
+            padding:1.2rem;
+            background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+            box-shadow:0 24px 70px rgba(0,0,0,.16);
+            position:relative;
+            overflow:hidden;
         }
+        .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
+        .hero > * { position:relative; z-index:1; }
+        .eyebrow { color:var(--yellow); font-size:.74rem; font-weight:950; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.55rem; }
         h1 { color:#fff; font-size:clamp(1.9rem,4vw,3.35rem); line-height:1; letter-spacing:0; }
         .hero .muted { color:rgba(255,255,255,.76); margin-top:.45rem; }
         .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.8rem; margin-bottom:1rem; }
@@ -165,6 +190,9 @@ if ($statsRow) {
             padding:1rem;
             box-shadow:var(--shadow);
         }
+        .card-head { display:flex; justify-content:space-between; align-items:start; gap:1rem; margin-bottom:.9rem; }
+        .card-head h2 { color:var(--blue); font-size:1.05rem; }
+        .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
         .filters {
             display:grid;
             grid-template-columns:1fr 240px auto;
@@ -186,7 +214,7 @@ if ($statsRow) {
             outline:none;
         }
         input:focus, select:focus, textarea:focus { border-color:var(--blue-2); box-shadow:0 0 0 4px rgba(6,57,112,.09); }
-        table { width:100%; border-collapse:separate; border-spacing:0; }
+        table { width:100%; border-collapse:separate; border-spacing:0; min-width:980px; }
         th, td { padding:.9rem .78rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; font-size:.88rem; }
         th { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; background:#f3f8fd; }
         th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
@@ -202,7 +230,7 @@ if ($statsRow) {
         .priority { display:inline-flex; margin-top:.42rem; border-radius:999px; padding:.34rem .55rem; background:#eef4fb; color:var(--ink); font-size:.72rem; font-weight:900; }
         .priority.urgente { background:#fee2e2; color:var(--red); }
         .priority.alta { background:#fff7cc; color:#7c5800; }
-        .inline-form { display:grid; gap:.5rem; min-width:280px; }
+        .inline-form { display:grid; gap:.5rem; min-width:280px; padding:.65rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
         .inline-form button, .filters button {
             background:var(--yellow);
             border-color:transparent;
@@ -223,10 +251,10 @@ if ($statsRow) {
         .chat-message p { margin-top:.24rem; color:var(--ink); font-size:.8rem; line-height:1.45; }
         .chat-form { display:grid; gap:.42rem; }
         @media (max-width:900px) {
-            body { background:linear-gradient(180deg,#062b58 0 330px,#eef5fb 330px,#f7faff 100%); }
+            body { background:linear-gradient(180deg,#061b39 0 390px,#eef5fb 390px,#f7faff 100%); }
             .filters, .hero, .stats { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
-            table, tbody, tr, td { display:block; }
+            table, tbody, tr, td { display:block; min-width:0; }
             thead { display:none; }
             tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.8rem; background:#fff; overflow:hidden; }
             td { border:0; }
@@ -243,6 +271,7 @@ if ($statsRow) {
                 <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
                 <?php if ($user['rol'] === 'admin'): ?><a href="control-marketing.php">Control admin</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <a class="active" href="panel-marketing.php">Tickets</a>
                 <a href="marketing.html">Crear ticket</a>
                 <a href="seguimiento.php">Seguimiento publico</a>
                 <a href="logout.php">Salir</a>
@@ -250,6 +279,7 @@ if ($statsRow) {
         </header>
         <section class="hero">
             <div>
+                <div class="eyebrow"><?php echo $user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'; ?></div>
                 <h1>Tickets de Diseño y Marketing</h1>
                 <p class="muted">Alta, revisión y actualización de solicitudes internas.</p>
             </div>
@@ -261,6 +291,12 @@ if ($statsRow) {
             <div class="stat"><span>Cerrados</span><strong><?php echo $stats['done']; ?></strong></div>
         </section>
         <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>Listado operativo</h2>
+                    <p class="muted">Filtra, actualiza estado y conversa en el chat de cada solicitud.</p>
+                </div>
+            </div>
             <form class="filters" method="get" action="panel-marketing.php">
                 <input name="q" value="<?php echo htmlspecialchars($query); ?>" placeholder="Buscar folio, solicitante, correo o actividad">
                 <select name="estado">
@@ -271,19 +307,20 @@ if ($statsRow) {
                 </select>
                 <button type="submit">Filtrar</button>
             </form>
-            <table>
-                <thead>
-                    <tr id="ticket-<?php echo (int) $ticket['id']; ?>">
-                        <th>Ticket</th>
-                        <th>Solicitud</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                        <th>Actualizar</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="table-shell">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Solicitud</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Actualizar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <?php foreach ($tickets as $ticket): ?>
-                    <tr>
+                    <tr id="ticket-<?php echo (int) $ticket['id']; ?>">
                         <td><div class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></div><div class="muted"><?php echo htmlspecialchars($ticket['solicitante']); ?><br><?php echo htmlspecialchars($ticket['correo']); ?></div></td>
                         <td><strong class="request-title"><?php echo htmlspecialchars($ticket['actividad']); ?></strong><br><span class="muted"><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span></td>
                         <td><span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span><br><span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span></td>
@@ -329,8 +366,9 @@ if ($statsRow) {
                     <?php if (!$tickets): ?>
                     <tr><td colspan="5" class="empty-state">No hay tickets con esos filtros.</td></tr>
                     <?php endif; ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </div>
 </body>
