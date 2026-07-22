@@ -86,7 +86,10 @@ function cdaGoogleClientSecret() {
 }
 
 function cdaGoogleRedirectUri() {
-    return cdaGoogleConfigValue('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
+    $redirectUri = cdaGoogleConfigValue('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
+    $redirectUri = str_replace('CDA_SITE_URL/', rtrim(CDA_SITE_URL, '/') . '/', $redirectUri);
+
+    return preg_match('/^https?:\/\//', $redirectUri) ? $redirectUri : CDA_SITE_URL . '/google-callback.php';
 }
 
 function cdaGoogleOAuthReady() {
