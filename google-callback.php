@@ -165,6 +165,9 @@ try {
     exit;
 } catch (PDOException $e) {
     error_log('CDA Google login database error: ' . $e->getMessage());
+    if (strpos($e->getMessage(), '1146') !== false || stripos($e->getMessage(), "doesn't exist") !== false) {
+        cdaGoogleLoginFail('google_db_schema');
+    }
     cdaGoogleLoginFail('google_db');
 } catch (Throwable $e) {
     error_log('CDA Google login error: ' . $e->getMessage());

@@ -17,6 +17,7 @@ $googleErrorMessages = [
     'google_not_allowed' => 'Ese correo de Google no está dado de alta en el panel.',
     'google_account_mismatch' => 'Ese correo ya está vinculado con otra cuenta de Google.',
     'google_db' => 'Google conectó, pero no fue posible validar el usuario en la base de datos.',
+    'google_db_schema' => 'Falta instalar las tablas de marketing en la base de datos.',
     'google_http' => 'No fue posible comunicarse con Google desde el servidor.',
     'google_config' => 'Google Login todavía no está configurado. Agrega Client ID y Secret.',
     'google' => 'No fue posible iniciar sesión con Google.',
