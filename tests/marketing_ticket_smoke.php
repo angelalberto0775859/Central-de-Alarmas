@@ -29,5 +29,8 @@ assertSameValue(false, cdaMarketingStatusSendsEmail('En diseno'), 'in design sta
 assertSameValue(true, strpos(cdaMarketingStatusEmailSubject('Entregado', 'MKT-1'), 'MKT-1') !== false, 'status email subject includes folio');
 assertSameValue(true, in_array('pdf', cdaMarketingChatFileExtensions(), true), 'chat files allow pdf');
 assertSameValue(false, in_array('exe', cdaMarketingChatFileExtensions(), true), 'chat files reject executables');
+assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can upload chat files');
+assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing users can upload chat files');
+assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
 
 echo "marketing ticket smoke ok" . PHP_EOL;

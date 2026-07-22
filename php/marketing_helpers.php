@@ -224,6 +224,10 @@ function cdaMarketingChatFileExtensions() {
     return ['pdf','doc','docx','ppt','pptx','xls','xlsx','jpg','jpeg','png','webp','mp4','mov','zip'];
 }
 
+function cdaMarketingCanUploadChatFiles($role) {
+    return in_array((string) $role, ['admin', 'marketing', 'usuario'], true);
+}
+
 function cdaMarketingNormalizeUploadName($name) {
     $safe = preg_replace('/[^a-zA-Z0-9._-]/', '-', basename((string) $name));
     return trim($safe, '.-') ?: 'archivo';
@@ -250,6 +254,32 @@ function cdaMarketingFetchMessageFiles(array $messageIds) {
     $files = [];
     foreach ($stmt->fetchAll() as $file) {
         $files[(int) $file['mensaje_id']][] = $file;
+    }
+
+    return $files;
+}
+
+function cdaMarketingFetchTicketFiles(array $ticketIds) {
+    $ticketIds = array_values(array_unique(array_filter(array_map('intval', $ticketIds))));
+    if (!$ticketIds) {
+        return [];
+    }
+
+    $placeholders = implode(',', array_fill(0, count($ticketIds), '?'));
+    try {
+        $stmt = cdaDb()->prepare(
+            "SELECT * FROM marketing_ticket_archivos
+            WHERE ticket_id IN ($placeholders)
+            ORDER BY creado_en ASC, id ASC"
+        );
+        $stmt->execute($ticketIds);
+    } catch (Throwable $e) {
+        return [];
+    }
+
+    $files = [];
+    foreach ($stmt->fetchAll() as $file) {
+        $files[(int) $file['ticket_id']][] = $file;
     }
 
     return $files;
@@ -370,6 +400,58 @@ function cdaMarketingSendChatEmail($ticket, $authorName, $messageText, array $fi
     $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
 
     return mail($ticket['correo'], $subject, $message, $headers);
+}
+
+function cdaMarketingSendChatAdminEmail($ticket, $authorName, $messageText, array $files = []) {
+    $stmt = cdaDb()->query("SELECT correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1");
+    $admins = array_filter(array_map(function ($row) {
+        return filter_var($row['correo'] ?? '', FILTER_VALIDATE_EMAIL);
+    }, $stmt->fetchAll()));
+
+    if (!$admins) {
+        return false;
+    }
+
+    $panelUrl = rtrim(CDA_SITE_URL, '/') . '/panel-marketing.php#ticket-' . (int) ($ticket['id'] ?? 0);
+    $fileHtml = $files
+        ? '<ul><li>' . implode('</li><li>', array_map(function ($file) {
+            return htmlspecialchars($file['nombre_original'] ?? 'Archivo');
+        }, $files)) . '</li></ul>'
+        : '<p>Sin archivos adjuntos.</p>';
+
+    $subject = 'Nuevo material en ticket ' . cdaMarketingClean($ticket['folio'] ?? '');
+    $message = '
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family:Arial,sans-serif;color:#10213f;line-height:1.55;">
+        <div style="max-width:680px;margin:0 auto;border:1px solid #d8e3f0;border-radius:8px;overflow:hidden;">
+            <div style="background:#063970;color:#fff;padding:18px 20px;">
+                <h1 style="margin:0;font-size:21px;">Nuevo material en el chat</h1>
+            </div>
+            <div style="padding:20px;background:#fff;">
+                <p><strong>Folio:</strong> ' . htmlspecialchars($ticket['folio'] ?? '') . '</p>
+                <p><strong>Solicitud:</strong> ' . htmlspecialchars($ticket['actividad'] ?? '') . '</p>
+                <p><strong>Enviado por:</strong> ' . htmlspecialchars($authorName) . '</p>
+                <div style="background:#f4f8fc;border:1px solid #d8e3f0;border-radius:8px;padding:12px;margin-top:12px;">
+                    ' . nl2br(htmlspecialchars($messageText)) . '
+                </div>
+                <div style="margin-top:12px;"><strong>Archivos enviados</strong>' . $fileHtml . '</div>
+                <a href="' . htmlspecialchars($panelUrl) . '" style="display:inline-block;margin-top:14px;background:#f6eb17;color:#063970;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Abrir ticket</a>
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
+
+    foreach ($admins as $adminEmail) {
+        mail($adminEmail, $subject, $message, $headers);
+    }
+
+    return true;
 }
 
 function cdaMarketingFetchTicketMessages(array $ticketIds) {

@@ -36,6 +36,7 @@ $stmt = cdaDb()->prepare($sql);
 $stmt->execute($params);
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
+$ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
 
 $stats = [
     'total' => 0,
@@ -268,6 +269,8 @@ if ($statsRow) {
         .chat-form { display:grid; gap:.42rem; }
         .chat-files { display:grid; gap:.35rem; margin-top:.42rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.34rem .48rem; background:#eef4fb; color:var(--blue); font-size:.72rem; font-weight:850; text-decoration:none; }
+        .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
+        .ticket-file { display:inline-flex; border-radius:6px; padding:.34rem .48rem; background:#fff7cc; color:#7c5800; font-size:.72rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.55rem; font-size:.76rem; background:#fff; }
         @media (max-width:900px) {
             .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
@@ -352,7 +355,17 @@ if ($statsRow) {
                     <?php foreach ($tickets as $ticket): ?>
                     <tr id="ticket-<?php echo (int) $ticket['id']; ?>">
                         <td><div class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></div><div class="muted"><?php echo htmlspecialchars($ticket['solicitante']); ?><br><?php echo htmlspecialchars($ticket['correo']); ?></div></td>
-                        <td><strong class="request-title"><?php echo htmlspecialchars($ticket['actividad']); ?></strong><br><span class="muted"><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span></td>
+                        <td>
+                            <strong class="request-title"><?php echo htmlspecialchars($ticket['actividad']); ?></strong><br>
+                            <span class="muted"><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
+                            <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
+                                <div class="ticket-files" aria-label="Archivos iniciales">
+                                    <?php foreach ($ticketFiles[(int) $ticket['id']] as $file): ?>
+                                        <a class="ticket-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </td>
                         <td><span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span><br><span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span></td>
                         <td><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?><br><span class="muted">Actualizado <?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></span></td>
                         <td>

@@ -18,6 +18,7 @@ $lanes = [
 $stmt = cdaDb()->query('SELECT * FROM marketing_tickets WHERE eliminado_en IS NULL ORDER BY fecha_requerida ASC, actualizado_en DESC LIMIT 160');
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
+$ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
 $laneTickets = array_fill_keys(array_keys($lanes), []);
 
 foreach ($tickets as $ticket) {
@@ -178,6 +179,8 @@ foreach ($tickets as $ticket) {
         .chat-form { display:grid; gap:.42rem; }
         .chat-files { display:grid; gap:.35rem; margin-top:.4rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.32rem .46rem; background:#eef4fb; color:var(--blue); font-size:.7rem; font-weight:850; text-decoration:none; }
+        .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
+        .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
         @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:620px) { .stats, .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
@@ -250,6 +253,14 @@ foreach ($tickets as $ticket) {
                         <span><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></span>
                         <span>Requerido: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
                         <?php if (!empty($ticket['asignado_a'])): ?><span>Asignado a: <?php echo htmlspecialchars($ticket['asignado_a']); ?></span><?php endif; ?>
+                        <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
+                            <span class="section-label">Archivos iniciales</span>
+                            <div class="ticket-files">
+                                <?php foreach ($ticketFiles[(int) $ticket['id']] as $file): ?>
+                                    <a class="ticket-file" href="<?php echo htmlspecialchars($file['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <form class="quick-form" method="post" action="ticket-actualizar.php">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">

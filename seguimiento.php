@@ -31,7 +31,7 @@ if ($folio) {
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chat') {
                 cdaRequirePostCsrf();
                 $mensajeChat = cdaMarketingClean($_POST['mensaje'] ?? '');
-                $hasChatFiles = $currentUser && $currentUser['rol'] === 'admin' && !empty($_FILES['archivos']['name']) && is_array($_FILES['archivos']['name']) && count(array_filter($_FILES['archivos']['name'])) > 0;
+                $hasChatFiles = $currentUser && cdaMarketingCanUploadChatFiles($currentUser['rol']) && !empty($_FILES['archivos']['name']) && is_array($_FILES['archivos']['name']) && count(array_filter($_FILES['archivos']['name'])) > 0;
                 $canChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0);
 
                 if (!$currentUser) {
@@ -54,7 +54,7 @@ if ($folio) {
                         $insert->execute([$ticket['id'], $currentUser['id'], $currentUser['nombre'], $authorRole, $messageText]);
                         $messageId = (int) $db->lastInsertId();
                         $savedFiles = [];
-                        if ($currentUser['rol'] === 'admin' && $hasChatFiles) {
+                        if ($hasChatFiles) {
                             $savedFiles = cdaMarketingStoreMessageFiles($ticket, $messageId, $_FILES['archivos']);
                         }
 
@@ -64,6 +64,8 @@ if ($folio) {
                         $db->commit();
                         if ($currentUser['rol'] === 'admin') {
                             cdaMarketingSendChatEmail($ticket, $currentUser['nombre'], $messageText, $savedFiles);
+                        } else {
+                            cdaMarketingSendChatAdminEmail($ticket, $currentUser['nombre'], $messageText, $savedFiles);
                         }
                         header('Location: seguimiento.php?folio=' . urlencode($ticket['folio']) . '#chat');
                         exit;
@@ -391,9 +393,7 @@ if ($folio) {
                             <input type="hidden" name="action" value="chat">
                             <input type="hidden" name="folio" value="<?php echo htmlspecialchars($ticket['folio']); ?>">
                             <label>Mensaje <textarea name="mensaje" placeholder="Escribe tu respuesta para el equipo"></textarea></label>
-                            <?php if ($currentUser && $currentUser['rol'] === 'admin'): ?>
-                                <label>Archivos de entrega <input name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip"></label>
-                            <?php endif; ?>
+                            <label>Archivos <input name="archivos[]" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip"></label>
                             <button type="submit">Enviar mensaje</button>
                         </form>
                     <?php else: ?>
@@ -415,7 +415,7 @@ if ($folio) {
                 <h2 style="margin-top:1rem;">Archivos</h2>
                 <ul class="files">
                     <?php foreach ($archivos as $archivo): ?>
-                    <li><?php echo htmlspecialchars($archivo['nombre_original']); ?></li>
+                    <li><a href="<?php echo htmlspecialchars($archivo['ruta']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($archivo['nombre_original']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 <?php endif; ?>
