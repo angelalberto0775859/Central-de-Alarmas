@@ -3,9 +3,9 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/marketing_helpers.php';
 
-function cdaMarketingEnsureRequesterUser($name, $email, $password) {
+function cdaMarketingEnsureRequesterUser($name, $email, $password, $currentUser = null) {
     $db = cdaDb();
-    $stmt = $db->prepare('SELECT id, password_hash, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
+    $stmt = $db->prepare('SELECT id, correo, password_hash, google_sub, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
@@ -14,8 +14,15 @@ function cdaMarketingEnsureRequesterUser($name, $email, $password) {
             throw new RuntimeException('inactive_user');
         }
 
-        if (!empty($user['password_hash']) && !password_verify($password, $user['password_hash'])) {
-            throw new RuntimeException('invalid_password');
+        $isCurrentUser = $currentUser && (int) $currentUser['id'] === (int) $user['id'];
+        if (!$isCurrentUser) {
+            if (!empty($user['password_hash']) && !password_verify($password, $user['password_hash'])) {
+                throw new RuntimeException('invalid_password');
+            }
+
+            if (empty($user['password_hash']) && !empty($user['google_sub'])) {
+                throw new RuntimeException('google_only_user');
+            }
         }
 
         $hash = !empty($user['password_hash']) ? $user['password_hash'] : password_hash($password, PASSWORD_DEFAULT);
@@ -157,6 +164,7 @@ if (!$email) {
 
 $requester = cdaMarketingClean($_POST['requester']);
 $accountPassword = (string) ($_POST['accountPassword'] ?? '');
+$currentUser = cdaCurrentUser();
 if (strlen($accountPassword) < 8) {
     http_response_code(422);
     cdaMarketingJson(false, 'La contrasena de seguimiento debe tener al menos 8 caracteres.');
@@ -236,12 +244,22 @@ try {
     $db->beginTransaction();
 
     try {
-        $requesterUserId = cdaMarketingEnsureRequesterUser($requester, $email, $accountPassword);
+        if ($currentUser && $currentUser['rol'] !== 'admin' && strcasecmp($currentUser['correo'], $email) !== 0) {
+            throw new RuntimeException('session_email_mismatch');
+        }
+
+        $requesterUserId = cdaMarketingEnsureRequesterUser($requester, $email, $accountPassword, $currentUser);
     } catch (RuntimeException $e) {
         $db->rollBack();
         http_response_code(422);
         if ($e->getMessage() === 'invalid_password') {
             cdaMarketingJson(false, 'Ese correo ya existe. Escribe la contrasena correcta para validar tu usuario.');
+        }
+        if ($e->getMessage() === 'google_only_user') {
+            cdaMarketingJson(false, 'Ese correo ya usa Google. Inicia sesion con Google para crear el ticket.');
+        }
+        if ($e->getMessage() === 'session_email_mismatch') {
+            cdaMarketingJson(false, 'El correo del ticket debe coincidir con tu usuario activo.');
         }
         cdaMarketingJson(false, 'Ese usuario existe, pero no esta activo. Pide a un administrador que lo reactive.');
     }
