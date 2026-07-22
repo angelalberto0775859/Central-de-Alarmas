@@ -13,31 +13,73 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     cdaRequirePostCsrf();
-    $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
-    $correo = filter_var(cdaMarketingClean($_POST['correo'] ?? ''), FILTER_VALIDATE_EMAIL);
-    $password = (string) ($_POST['password'] ?? '');
-    $rol = in_array($_POST['rol'] ?? '', ['admin', 'marketing'], true) ? $_POST['rol'] : 'marketing';
-    $activo = !empty($_POST['activo']) ? 1 : 0;
+    $action = $_POST['action'] ?? 'save';
 
-    if (!$nombre || !$correo) {
-        $error = 'Nombre y correo son obligatorios.';
+    if ($action === 'delete') {
+        $deleteId = (int) ($_POST['user_id'] ?? 0);
+
+        if ($deleteId <= 0) {
+            $error = 'Usuario no valido.';
+        } elseif ($deleteId === (int) $user['id']) {
+            $error = 'No puedes eliminar tu propio usuario.';
+        } else {
+            try {
+                $db = cdaDb();
+                $target = $db->prepare('SELECT id, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+                $target->execute([$deleteId]);
+                $targetUser = $target->fetch();
+
+                if (!$targetUser) {
+                    $error = 'El usuario no existe.';
+                } else {
+                    if ($targetUser['rol'] === 'admin' && (int) $targetUser['activo'] === 1) {
+                        $adminCount = (int) $db->query("SELECT COUNT(*) FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1")->fetchColumn();
+                        if ($adminCount <= 1) {
+                            throw new RuntimeException('last_admin');
+                        }
+                    }
+
+                    $delete = $db->prepare('DELETE FROM marketing_usuarios WHERE id = ?');
+                    $delete->execute([$deleteId]);
+                    $message = 'Usuario eliminado correctamente.';
+                }
+            } catch (RuntimeException $e) {
+                $error = 'No puedes eliminar al ultimo administrador activo.';
+            } catch (Throwable $e) {
+                $error = 'No fue posible eliminar el usuario.';
+            }
+        }
     } else {
-        try {
-            $hash = $password !== '' ? password_hash($password, PASSWORD_DEFAULT) : null;
-            $stmt = cdaDb()->prepare(
-                'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-                VALUES (?, ?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), rol = VALUES(rol), activo = VALUES(activo), password_hash = COALESCE(VALUES(password_hash), password_hash)'
-            );
-            $stmt->execute([$nombre, $correo, $hash, $rol, $activo]);
-            $message = 'Usuario guardado correctamente.';
-        } catch (Throwable $e) {
-            $error = 'No fue posible guardar el usuario.';
+        $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
+        $correo = filter_var(strtolower(cdaMarketingClean($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
+        $password = (string) ($_POST['password'] ?? '');
+        $rol = in_array($_POST['rol'] ?? '', ['admin', 'marketing'], true) ? $_POST['rol'] : 'marketing';
+        $activo = !empty($_POST['activo']) ? 1 : 0;
+
+        if (!$nombre || !$correo) {
+            $error = 'Nombre y correo son obligatorios.';
+        } elseif ($password !== '' && strlen($password) < 8) {
+            $error = 'La contrasena debe tener al menos 8 caracteres.';
+        } elseif (strcasecmp($correo, $user['correo']) === 0 && ($rol !== 'admin' || $activo !== 1)) {
+            $error = 'No puedes quitarte el rol administrador ni desactivar tu propio usuario.';
+        } else {
+            try {
+                $hash = $password !== '' ? password_hash($password, PASSWORD_DEFAULT) : null;
+                $stmt = cdaDb()->prepare(
+                    'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
+                    VALUES (?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), rol = VALUES(rol), activo = VALUES(activo), password_hash = COALESCE(VALUES(password_hash), password_hash)'
+                );
+                $stmt->execute([$nombre, $correo, $hash, $rol, $activo]);
+                $message = 'Usuario guardado correctamente.';
+            } catch (Throwable $e) {
+                $error = 'No fue posible guardar el usuario.';
+            }
         }
     }
 }
 
-$users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, creado_en FROM marketing_usuarios ORDER BY nombre ASC')->fetchAll();
+$users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, creado_en FROM marketing_usuarios ORDER BY nombre ASC')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,32 +90,61 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, creado_en FROM 
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
-        :root { --blue:#063970; --ink:#10213f; --muted:#66758d; --line:rgba(6,57,112,.14); --soft:#f4f8fc; --yellow:#f6eb17; --radius:8px; }
+        :root { --blue:#063970; --blue-2:#0b4f92; --blue-3:#0d62ad; --ink:#10213f; --muted:#66758d; --line:rgba(6,57,112,.14); --soft:#f4f8fc; --yellow:#f6eb17; --radius:8px; --shadow:0 18px 46px rgba(6,57,112,.12); }
         * { box-sizing:border-box; margin:0; padding:0; }
-        body { min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:var(--ink); background:#f3f7fb; }
-        .shell { width:min(1100px, calc(100% - 2rem)); margin:0 auto; padding:1.2rem 0 3rem; }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.2rem; }
+        body {
+            min-height:100vh;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+            color:var(--ink);
+            background:
+                radial-gradient(circle at 12% 8%, rgba(246,235,23,.22), transparent 17rem),
+                linear-gradient(180deg,#062b58 0 245px,#eef5fb 245px,#f7faff 100%);
+        }
+        body::before {
+            content:"";
+            position:fixed;
+            inset:0 0 auto;
+            height:245px;
+            pointer-events:none;
+            background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.2) 1px, transparent 1.8px);
+            background-size:26px 26px;
+            mask-image:linear-gradient(180deg,#000,transparent);
+        }
+        .shell { width:min(1100px, calc(100% - 2rem)); margin:0 auto; padding:1.2rem 0 3rem; position:relative; z-index:1; }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.2rem; color:#fff; }
         .topbar img { width:146px; display:block; }
         .nav { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
-        .nav a { color:var(--blue); text-decoration:none; border:1px solid var(--line); border-radius:8px; padding:.7rem .85rem; background:#fff; font-size:.82rem; font-weight:850; }
-        h1 { color:var(--blue); font-size:clamp(1.8rem,4vw,3rem); margin-bottom:.35rem; }
+        .nav a { color:rgba(255,255,255,.9); text-decoration:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.7rem .85rem; background:rgba(255,255,255,.1); font-size:.82rem; font-weight:850; transition:background .18s ease, color .18s ease; }
+        .nav a:hover { background:#fff; color:var(--blue); }
+        h1 { color:#fff; font-size:clamp(1.8rem,4vw,3rem); margin-bottom:.35rem; letter-spacing:0; }
+        h1 + .muted { color:rgba(255,255,255,.76); }
         .muted { color:var(--muted); }
         .grid { display:grid; grid-template-columns:360px 1fr; gap:1rem; align-items:start; margin-top:1rem; }
-        .card { background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:1rem; box-shadow:0 12px 38px rgba(6,57,112,.08); }
+        .card { background:rgba(255,255,255,.96); border:1px solid var(--line); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow); }
         form { display:grid; gap:.85rem; }
         label { display:grid; gap:.38rem; font-size:.78rem; font-weight:850; }
-        input, select { width:100%; border:1px solid var(--line); border-radius:var(--radius); padding:.82rem .9rem; font:inherit; background:#fff; }
+        input, select { width:100%; border:1px solid var(--line); border-radius:var(--radius); padding:.82rem .9rem; font:inherit; background:#fff; color:var(--ink); outline:none; }
+        input:focus, select:focus { border-color:var(--blue-2); box-shadow:0 0 0 4px rgba(6,57,112,.09); }
         .check { display:flex; align-items:center; gap:.5rem; }
         .check input { width:auto; }
-        button { min-height:46px; border:0; border-radius:var(--radius); padding:.85rem 1rem; background:var(--yellow); color:var(--blue); font-weight:900; text-transform:uppercase; cursor:pointer; }
-        table { width:100%; border-collapse:collapse; }
+        button { min-height:46px; border:0; border-radius:var(--radius); padding:.85rem 1rem; background:var(--yellow); color:var(--blue); font-weight:900; text-transform:uppercase; cursor:pointer; box-shadow:0 10px 22px rgba(6,57,112,.1); transition:transform .18s ease, box-shadow .18s ease; }
+        button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
+        .danger-button { min-height:auto; padding:.55rem .65rem; background:#fee2e2; color:#991b1b; box-shadow:none; font-size:.72rem; }
+        .danger-button:hover { box-shadow:0 10px 20px rgba(185,28,28,.12); }
+        .row-action { display:block; }
+        table { width:100%; border-collapse:separate; border-spacing:0; }
         th, td { padding:.78rem; border-bottom:1px solid var(--line); text-align:left; font-size:.9rem; }
-        th { color:var(--blue); font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; }
+        th { color:var(--blue); font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; background:#f3f8fd; }
+        th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
+        th:last-child { border-radius:0 var(--radius) var(--radius) 0; }
+        tr:hover td { background:#fbfdff; }
         .pill { display:inline-flex; border-radius:999px; padding:.36rem .58rem; background:var(--soft); color:var(--blue); font-size:.75rem; font-weight:900; }
+        .pill.ok-google { background:#d1fae5; color:#047857; }
+        .pill.pending-google { background:#fff7cc; color:#7c5800; }
         .ok, .error { margin-bottom:.8rem; border-radius:var(--radius); padding:.75rem; font-weight:750; }
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
-        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; } td { border:0; } }
+        @media (max-width:820px) { body { background:linear-gradient(180deg,#062b58 0 310px,#eef5fb 310px,#f7faff 100%); } .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
     </style>
 </head>
 <body>
@@ -87,16 +158,17 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, creado_en FROM 
             </nav>
         </header>
         <h1>Usuarios autorizados</h1>
-        <p class="muted">Da de alta correos que pueden entrar al panel por contrasena o por Google cuando este configurado.</p>
+        <p class="muted">Administra accesos registrados por contrasena o Google, cambia roles y desactiva usuarios cuando sea necesario.</p>
         <section class="grid">
             <article class="card">
                 <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="usuarios-marketing.php">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                    <input type="hidden" name="action" value="save">
                     <label>Nombre <input name="nombre" required></label>
                     <label>Correo autorizado <input name="correo" type="email" required></label>
-                    <label>Contrasena inicial <input name="password" type="password" placeholder="Opcional si usara Google"></label>
+                    <label>Contrasena inicial <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Opcional si usara Google"></label>
                     <label>Rol
                         <select name="rol">
                             <option value="marketing">Marketing</option>
@@ -109,14 +181,33 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, creado_en FROM 
             </article>
             <article class="card">
                 <table>
-                    <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th></tr></thead>
+                    <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Google</th><th>Estado</th><th>Facultad admin</th></tr></thead>
                     <tbody>
                         <?php foreach ($users as $item): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($item['nombre']); ?></td>
                             <td><?php echo htmlspecialchars($item['correo']); ?></td>
                             <td><span class="pill"><?php echo htmlspecialchars($item['rol']); ?></span></td>
+                            <td>
+                                <?php if (!empty($item['google_sub'])): ?>
+                                    <span class="pill ok-google">Vinculado</span>
+                                <?php else: ?>
+                                    <span class="pill pending-google">Pendiente</span>
+                                <?php endif; ?>
+                            </td>
                             <td><?php echo (int) $item['activo'] === 1 ? 'Activo' : 'Inactivo'; ?></td>
+                            <td>
+                                <?php if ((int) $item['id'] === (int) $user['id']): ?>
+                                    <span class="muted">Tu usuario</span>
+                                <?php else: ?>
+                                    <form class="row-action" method="post" action="usuarios-marketing.php" onsubmit="return confirm('Eliminar este usuario del panel?');">
+                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="user_id" value="<?php echo (int) $item['id']; ?>">
+                                        <button class="danger-button" type="submit">Eliminar</button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

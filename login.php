@@ -1,20 +1,26 @@
 <?php
 require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_config.php';
+require_once __DIR__ . '/php/marketing_helpers.php';
+
+$returnTo = cdaSafeLocalReturnTo($_GET['return_to'] ?? $_POST['return_to'] ?? 'panel-marketing.php');
 
 if (cdaCurrentUser()) {
-    header('Location: panel-marketing.php');
+    header('Location: ' . $returnTo);
     exit;
 }
 
 $error = '';
+$message = '';
+$mode = $_GET['modo'] ?? 'login';
+$mode = $mode === 'registro' ? 'registro' : 'login';
 $googleErrorMessages = [
     'google_state' => 'No fue posible validar la sesión de Google. Intenta nuevamente.',
     'google_code' => 'Google no devolvió un código válido. Intenta nuevamente.',
     'google_token' => 'No fue posible completar la conexión con Google.',
     'google_profile' => 'Google no devolvió un perfil válido.',
     'google_email' => 'Google no confirmó un correo verificado.',
-    'google_not_allowed' => 'Ese correo de Google no está dado de alta en el panel.',
+    'google_not_allowed' => 'Ese correo de Google no pudo registrarse en el panel.',
     'google_account_mismatch' => 'Ese correo ya está vinculado con otra cuenta de Google.',
     'google_db' => 'Google conectó, pero no fue posible validar el usuario en la base de datos.',
     'google_db_schema' => 'Falta instalar las tablas de marketing en la base de datos.',
@@ -25,13 +31,51 @@ $googleErrorMessages = [
 if (!empty($_GET['error']) && isset($googleErrorMessages[$_GET['error']])) {
     $error = $googleErrorMessages[$_GET['error']];
 }
+if (!empty($_GET['registro']) && $_GET['registro'] === 'ok') {
+    $message = 'Tu acceso quedó creado. Ya puedes entrar al panel.';
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     cdaRequirePostCsrf();
-    $correo = filter_var(trim($_POST['correo'] ?? ''), FILTER_VALIDATE_EMAIL);
+    $formAction = $_POST['form_action'] ?? 'login';
+    $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
+    $correo = filter_var(strtolower(trim($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
     $password = (string) ($_POST['password'] ?? '');
     $lockedUntil = (int) ($_SESSION['cda_login_locked_until'] ?? 0);
 
-    if ($lockedUntil > time()) {
+    if ($formAction === 'register') {
+        $mode = 'registro';
+        if (!$nombre || !$correo || !$password) {
+            $error = 'Escribe nombre, correo y contrasena para crear tu acceso.';
+        } elseif (strlen($password) < 8) {
+            $error = 'La contrasena debe tener al menos 8 caracteres.';
+        } else {
+            try {
+                $stmt = cdaDb()->prepare(
+                    'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
+                    VALUES (?, ?, ?, \'marketing\', 1)
+                    ON DUPLICATE KEY UPDATE
+                        nombre = VALUES(nombre),
+                        password_hash = VALUES(password_hash),
+                        activo = IF(rol = \'admin\', activo, 1)'
+                );
+                $stmt->execute([$nombre, $correo, password_hash($password, PASSWORD_DEFAULT)]);
+
+                $userStmt = cdaDb()->prepare('SELECT id, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
+                $userStmt->execute([$correo]);
+                $createdUser = $userStmt->fetch();
+
+                if ($createdUser && (int) $createdUser['activo'] === 1) {
+                    cdaLoginUser($createdUser['id']);
+                    header('Location: ' . $returnTo);
+                    exit;
+                }
+
+                $error = 'Tu usuario existe, pero no esta activo. Pide a un administrador que lo reactive.';
+            } catch (Throwable $e) {
+                $error = 'No fue posible crear el acceso. Revisa la configuracion.';
+            }
+        }
+    } elseif ($lockedUntil > time()) {
         $error = 'Demasiados intentos. Intenta nuevamente en unos minutos.';
     } elseif (!$correo || !$password) {
         $error = 'Escribe correo y contraseña.';
@@ -43,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($user && (int) $user['activo'] === 1 && $user['password_hash'] && password_verify($password, $user['password_hash'])) {
                 cdaLoginUser($user['id']);
-                header('Location: panel-marketing.php');
+                header('Location: ' . $returnTo);
                 exit;
             }
 
@@ -250,6 +294,26 @@ $googleReady = cdaGoogleOAuthReady();
             white-space:nowrap;
         }
         .card p { color:var(--muted); line-height:1.55; margin-bottom:1rem; }
+        .access-tabs {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:.5rem;
+            margin-bottom:1rem;
+            padding:.35rem;
+            border:1px solid var(--line-dark);
+            border-radius:var(--radius);
+            background:#eef4fb;
+        }
+        .access-tab {
+            border-radius:6px;
+            padding:.68rem .72rem;
+            color:var(--blue);
+            font-size:.78rem;
+            font-weight:950;
+            text-align:center;
+            text-decoration:none;
+        }
+        .access-tab.active { background:#fff; box-shadow:0 8px 18px rgba(6,57,112,.1); }
         form { display:grid; gap:.85rem; }
         label { display:grid; gap:.42rem; font-size:.78rem; font-weight:900; color:var(--ink); }
         input {
@@ -309,9 +373,10 @@ $googleReady = cdaGoogleOAuthReady();
             text-decoration:none;
             font-size:.82rem;
         }
-        .error, .note { margin:.8rem 0; border-radius:var(--radius); padding:.78rem; font-weight:800; line-height:1.45; }
+        .error, .note, .success { margin:.8rem 0; border-radius:var(--radius); padding:.78rem; font-weight:800; line-height:1.45; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
         .note { color:#7c5800; background:#fff8cf; border:1px solid #f5df76; }
+        .success { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         @media (max-width:860px) {
             .login-grid { grid-template-columns:1fr; align-items:start; }
             .intro { padding-top:1.2rem; }
@@ -344,32 +409,42 @@ $googleReady = cdaGoogleOAuthReady();
         <main class="login-grid">
             <section class="intro" aria-label="Portal interno">
                 <div class="eyebrow">Diseño y Marketing · Acceso interno</div>
-                <h1>Control de tickets con seguimiento claro.</h1>
-                <p>Entra al panel para revisar solicitudes, cambiar estados, asignar responsables y mantener informadas a las areas que pidieron apoyo creativo.</p>
+                <h1>Del pedido al entregable, todo queda visible.</h1>
+                <p>Registra tu acceso, entra al panel y dale seguimiento a cada solicitud sin depender de mensajes sueltos. El equipo ve el estado, la fecha requerida y el avance en un solo lugar.</p>
                 <div class="status-strip" aria-label="Funciones del panel">
-                    <div class="status-chip"><strong>01</strong>Altas y filtros por folio.</div>
-                    <div class="status-chip"><strong>02</strong>Estados visibles para usuarios.</div>
-                    <div class="status-chip"><strong>03</strong>Correos a administradores.</div>
+                    <div class="status-chip"><strong>01</strong>Solicitudes ordenadas por folio.</div>
+                    <div class="status-chip"><strong>02</strong>Usuarios creados al registrarse.</div>
+                    <div class="status-chip"><strong>03</strong>Google vinculado al primer acceso.</div>
                 </div>
             </section>
 
             <article class="card">
                 <div class="card-head">
                     <div>
-                        <h2>Iniciar sesión</h2>
-                        <p>Usa un correo autorizado del equipo.</p>
+                        <h2><?php echo $mode === 'registro' ? 'Crear acceso' : 'Iniciar sesión'; ?></h2>
+                        <p><?php echo $mode === 'registro' ? 'Registra tu correo para entrar al panel de tickets.' : 'Usa tu correo y contrasena para continuar.'; ?></p>
                     </div>
                     <span class="secure-pill">Acceso seguro</span>
                 </div>
+                <div class="access-tabs" aria-label="Tipo de acceso">
+                    <a class="access-tab <?php echo $mode === 'login' ? 'active' : ''; ?>" href="login.php?return_to=<?php echo urlencode($returnTo); ?>">Entrar</a>
+                    <a class="access-tab <?php echo $mode === 'registro' ? 'active' : ''; ?>" href="login.php?modo=registro&amp;return_to=<?php echo urlencode($returnTo); ?>">Crear acceso</a>
+                </div>
+                <?php if ($message): ?><div class="success"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
-                <form method="post" action="login.php">
+                <form method="post" action="login.php<?php echo $mode === 'registro' ? '?modo=registro' : ''; ?>">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                    <label>Correo autorizado <input name="correo" type="email" autocomplete="email" required placeholder="usuario@centraldealarmas.com.mx"></label>
-                    <label>Contraseña <input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
-                    <button type="submit">Entrar al panel</button>
+                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($returnTo); ?>">
+                    <input type="hidden" name="form_action" value="<?php echo $mode === 'registro' ? 'register' : 'login'; ?>">
+                    <?php if ($mode === 'registro'): ?>
+                        <label>Nombre <input name="nombre" autocomplete="name" required placeholder="Tu nombre"></label>
+                    <?php endif; ?>
+                    <label>Correo <input name="correo" type="email" autocomplete="email" required placeholder="usuario@centraldealarmas.com.mx"></label>
+                    <label>Contraseña <input name="password" type="password" autocomplete="<?php echo $mode === 'registro' ? 'new-password' : 'current-password'; ?>" minlength="<?php echo $mode === 'registro' ? '8' : '1'; ?>" required placeholder="<?php echo $mode === 'registro' ? 'Minimo 8 caracteres' : 'Tu contrasena'; ?>"></label>
+                    <button type="submit"><?php echo $mode === 'registro' ? 'Crear y entrar' : 'Entrar al panel'; ?></button>
                 </form>
                 <?php if ($googleReady): ?>
-                    <a class="button google" href="google-login.php">Continuar con Google</a>
+                    <a class="button google" href="google-login.php?return_to=<?php echo urlencode($returnTo); ?>">Entrar o registrarme con Google</a>
                 <?php else: ?>
                     <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong>, variables de entorno o la tabla <strong>marketing_configuracion</strong>.</div>
                 <?php endif; ?>

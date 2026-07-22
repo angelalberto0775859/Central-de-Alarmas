@@ -1,13 +1,16 @@
 <?php
-require_once __DIR__ . '/php/db.php';
+require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $folio = cdaMarketingClean($_GET['folio'] ?? $_POST['folio'] ?? '');
 $ticket = null;
 $historial = [];
 $archivos = [];
+$mensajes = [];
 $error = '';
+$chatError = '';
 $progressIndex = 0;
+$currentUser = cdaCurrentUser();
 
 if ($folio) {
     try {
@@ -24,6 +27,46 @@ if ($folio) {
             $fileStmt = cdaDb()->prepare('SELECT nombre_original, ruta FROM marketing_ticket_archivos WHERE ticket_id = ? ORDER BY creado_en ASC');
             $fileStmt->execute([$ticket['id']]);
             $archivos = $fileStmt->fetchAll();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chat') {
+                cdaRequirePostCsrf();
+                $mensajeChat = cdaMarketingClean($_POST['mensaje'] ?? '');
+                $canChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0);
+
+                if (!$currentUser) {
+                    $chatError = 'Inicia sesion con el usuario del ticket para enviar mensajes.';
+                } elseif (!$canChat) {
+                    $chatError = 'Tu usuario no coincide con el correo de este ticket.';
+                } elseif ($mensajeChat === '') {
+                    $chatError = 'Escribe un mensaje para enviarlo al equipo.';
+                } else {
+                    try {
+                        $db = cdaDb();
+                        $db->beginTransaction();
+
+                        $insert = $db->prepare(
+                            'INSERT INTO marketing_ticket_mensajes (ticket_id, usuario_id, autor_nombre, autor_rol, mensaje)
+                            VALUES (?, ?, ?, ?, ?)'
+                        );
+                        $authorRole = $currentUser['rol'] === 'admin' ? 'admin' : 'usuario';
+                        $insert->execute([$ticket['id'], $currentUser['id'], $currentUser['nombre'], $authorRole, $mensajeChat]);
+
+                        $touch = $db->prepare('UPDATE marketing_tickets SET actualizado_en = CURRENT_TIMESTAMP WHERE id = ?');
+                        $touch->execute([$ticket['id']]);
+
+                        $db->commit();
+                        header('Location: seguimiento.php?folio=' . urlencode($ticket['folio']) . '#chat');
+                        exit;
+                    } catch (Throwable $e) {
+                        if (isset($db) && $db->inTransaction()) {
+                            $db->rollBack();
+                        }
+                        $chatError = 'No fue posible enviar el mensaje. Revisa que la tabla de chat este instalada.';
+                    }
+                }
+            }
+
+            $mensajes = cdaMarketingFetchTicketMessages([(int) $ticket['id']])[(int) $ticket['id']] ?? [];
         } else {
             $error = 'No encontramos un ticket con ese folio.';
         }
@@ -116,7 +159,7 @@ if ($folio) {
         .mini-badge { border:1px solid var(--line); border-radius:999px; padding:.45rem .65rem; color:var(--blue); background:var(--soft); font-size:.72rem; font-weight:950; white-space:nowrap; }
         form { display:grid; grid-template-columns:1fr auto; gap:.85rem; align-items:end; }
         label { display:grid; gap:.42rem; color:var(--ink); font-size:.78rem; font-weight:900; }
-        input {
+        input, textarea {
             width:100%;
             border:1px solid var(--line);
             border-radius:var(--radius);
@@ -127,7 +170,8 @@ if ($folio) {
             outline:none;
             transition:border-color .2s ease, box-shadow .2s ease;
         }
-        input:focus { border-color:var(--blue); box-shadow:0 0 0 4px rgba(6,57,112,.1); }
+        textarea { min-height:84px; resize:vertical; }
+        input:focus, textarea:focus { border-color:var(--blue); box-shadow:0 0 0 4px rgba(6,57,112,.1); }
         button, .button {
             min-height:48px;
             border:0;
@@ -191,6 +235,15 @@ if ($folio) {
         }
         .timeline small { color:var(--muted); display:block; margin-top:.3rem; font-weight:750; }
         .files { display:grid; gap:.55rem; margin-top:.8rem; list-style:none; }
+        .chat-box { margin-top:1rem; display:grid; gap:.75rem; }
+        .chat-thread { display:grid; gap:.55rem; max-height:320px; overflow:auto; padding-right:.25rem; }
+        .chat-message { border-left:4px solid var(--blue-2); border-radius:0 var(--radius) var(--radius) 0; background:#fff; padding:.72rem .82rem; }
+        .chat-message.admin { border-left-color:var(--yellow); background:#fffbea; }
+        .chat-message.usuario { border-left-color:#047857; }
+        .chat-meta { display:flex; justify-content:space-between; gap:.75rem; color:var(--muted); font-size:.72rem; font-weight:900; }
+        .chat-message p { margin-top:.3rem; line-height:1.55; color:var(--ink); }
+        .chat-form { display:grid; grid-template-columns:1fr; gap:.7rem; border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; }
+        .chat-login { border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; color:var(--muted); line-height:1.55; }
         .empty-state {
             margin-top:1rem;
             border:1px solid rgba(255,255,255,.16);
@@ -245,9 +298,9 @@ if ($folio) {
             <div class="search-head">
                 <div>
                     <h2>Buscar solicitud</h2>
-                    <p>Usa el folio que recibiste al crear la solicitud. No necesitas iniciar sesión ni escribir correo.</p>
+                    <p>Usa el folio que recibiste al crear la solicitud. Para escribir en el chat, inicia sesion con el correo del ticket.</p>
                 </div>
-                <span class="mini-badge">Consulta sin login</span>
+                <span class="mini-badge">Consulta por folio</span>
             </div>
             <form method="get" action="seguimiento.php">
                 <label>Folio <input name="folio" value="<?php echo htmlspecialchars($folio); ?>" placeholder="MKT-20260721-0001-A1B2" required></label>
@@ -281,6 +334,37 @@ if ($folio) {
                 <?php if (!empty($ticket['respuesta_interna'])): ?>
                     <div class="response-box"><?php echo nl2br(htmlspecialchars($ticket['respuesta_interna'])); ?></div>
                 <?php endif; ?>
+                <section class="chat-box" id="chat" aria-label="Chat del ticket">
+                    <h2>Chat con el equipo</h2>
+                    <div class="chat-thread">
+                        <?php foreach ($mensajes as $mensaje): ?>
+                            <article class="chat-message <?php echo htmlspecialchars($mensaje['autor_rol']); ?>">
+                                <div class="chat-meta">
+                                    <strong><?php echo htmlspecialchars(cdaMarketingMessageAuthor($mensaje)); ?></strong>
+                                    <span><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($mensaje['creado_en']))); ?></span>
+                                </div>
+                                <p><?php echo nl2br(htmlspecialchars($mensaje['mensaje'])); ?></p>
+                            </article>
+                        <?php endforeach; ?>
+                        <?php if (!$mensajes): ?><p class="muted">Todavia no hay mensajes en este ticket.</p><?php endif; ?>
+                    </div>
+                    <?php if ($chatError): ?><div class="error"><?php echo htmlspecialchars($chatError); ?></div><?php endif; ?>
+                    <?php $canUseChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0); ?>
+                    <?php if ($canUseChat): ?>
+                        <form class="chat-form" method="post" action="seguimiento.php#chat">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                            <input type="hidden" name="action" value="chat">
+                            <input type="hidden" name="folio" value="<?php echo htmlspecialchars($ticket['folio']); ?>">
+                            <label>Mensaje <textarea name="mensaje" required placeholder="Escribe tu respuesta para el equipo"></textarea></label>
+                            <button type="submit">Enviar mensaje</button>
+                        </form>
+                    <?php else: ?>
+                        <div class="chat-login">
+                            Inicia sesion con el correo del ticket para escribir en el chat.
+                            <br><a class="button" href="login.php?return_to=<?php echo urlencode('seguimiento.php?folio=' . $ticket['folio'] . '#chat'); ?>">Iniciar sesion</a>
+                        </div>
+                    <?php endif; ?>
+                </section>
             </article>
             <aside class="card side">
                 <h2>Historial</h2>

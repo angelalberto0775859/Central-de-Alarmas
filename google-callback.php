@@ -7,6 +7,9 @@ function cdaGoogleLoginFail($reason = 'google') {
     exit;
 }
 
+$returnTo = cdaSafeLocalReturnTo($_SESSION['google_oauth_return_to'] ?? 'panel-marketing.php');
+unset($_SESSION['google_oauth_return_to']);
+
 if (empty($_GET['state']) || empty($_SESSION['google_oauth_state']) || !hash_equals($_SESSION['google_oauth_state'], $_GET['state'])) {
     cdaGoogleLoginFail('google_state');
 }
@@ -136,7 +139,7 @@ try {
         cdaGoogleLoginFail('google_profile');
     }
 
-    $correo = filter_var($profile['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $correo = filter_var(strtolower($profile['email'] ?? ''), FILTER_VALIDATE_EMAIL);
     $emailVerified = filter_var($profile['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
     if (!$correo || !$emailVerified) {
@@ -147,7 +150,24 @@ try {
     $stmt->execute([$correo]);
     $user = $stmt->fetch();
 
-    if (!$user || (int) $user['activo'] !== 1) {
+    if (!$user) {
+        $displayName = trim((string) ($profile['name'] ?? ''));
+        if ($displayName === '') {
+            $displayName = strstr($correo, '@', true) ?: $correo;
+        }
+
+        $insert = cdaDb()->prepare(
+            'INSERT INTO marketing_usuarios (nombre, correo, google_sub, rol, activo)
+            VALUES (?, ?, ?, \'marketing\', 1)'
+        );
+        $insert->execute([$displayName, $correo, $profile['sub']]);
+
+        cdaLoginUser(cdaDb()->lastInsertId());
+        header('Location: ' . $returnTo);
+        exit;
+    }
+
+    if ((int) $user['activo'] !== 1) {
         cdaGoogleLoginFail('google_not_allowed');
     }
 
@@ -161,7 +181,7 @@ try {
     }
 
     cdaLoginUser($user['id']);
-    header('Location: panel-marketing.php');
+    header('Location: ' . $returnTo);
     exit;
 } catch (PDOException $e) {
     error_log('CDA Google login database error: ' . $e->getMessage());

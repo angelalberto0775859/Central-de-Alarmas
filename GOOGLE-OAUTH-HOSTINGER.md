@@ -1,6 +1,6 @@
 # Configurar Google Login en Hostinger
 
-El login con Google solo permite entrar a correos que ya existan y esten activos en `marketing_usuarios`.
+El login con Google crea automaticamente usuarios activos de rol `marketing` cuando Google confirma un correo verificado que todavia no existe en `marketing_usuarios`.
 
 ## 1. Crear credenciales en Google Cloud
 
@@ -49,8 +49,20 @@ El sistema busca las credenciales en este orden:
 
 Si el Client ID o Secret estan vacios, el boton de Google no aparece y `google-login.php` regresa al login con error de configuracion.
 
-## 4. Dar acceso a usuarios
+## 4. Administrar usuarios
 
-En el panel interno, entra a **Usuarios** y agrega el correo exacto de Google.
+En el panel interno, entra a **Usuarios** para ver quien ya se registro, cambiar roles o desactivar accesos.
 
-El primer login con Google vincula ese correo con el identificador seguro de Google (`google_sub`). Despues, si Google devuelve otro identificador para el mismo correo, el acceso se bloquea.
+El primer login con Google vincula ese correo con el identificador seguro de Google (`google_sub`). Despues, si Google devuelve otro identificador para el mismo correo, el acceso se bloquea. Si desactivas un usuario, Google ya no lo deja entrar aunque su correo exista.
+
+## 5. Activar chat de tickets
+
+Para habilitar la conversacion entre administradores y usuarios dentro de cada ticket, importa en phpMyAdmin:
+
+```text
+db/marketing_ticket_mensajes.sql
+```
+
+Al crear un ticket desde `merketing.html`, el formulario pide una contrasena de seguimiento. Con ese correo y contrasena se crea o valida el usuario en `marketing_usuarios`, se inicia sesion automaticamente y se abre `seguimiento.php` con el chat listo para continuar la conversacion.
+
+Cada ticket nuevo envia correo de confirmacion al solicitante y aviso a los administradores activos.

@@ -8,6 +8,7 @@ if (!cdaGoogleOAuthReady()) {
 }
 
 $_SESSION['google_oauth_state'] = bin2hex(random_bytes(16));
+$_SESSION['google_oauth_return_to'] = cdaSafeLocalReturnTo($_GET['return_to'] ?? 'panel-marketing.php');
 $params = [
     'client_id' => cdaGoogleClientId(),
     'redirect_uri' => cdaGoogleRedirectUri(),

@@ -58,6 +58,22 @@ function cdaRequireLogin() {
     return $user;
 }
 
+function cdaSafeLocalReturnTo($value, $fallback = 'panel-marketing.php') {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return $fallback;
+    }
+
+    if (preg_match('/[\r\n]/', $value) || preg_match('#^[a-z][a-z0-9+.-]*:#i', $value) || substr($value, 0, 2) === '//') {
+        return $fallback;
+    }
+
+    $allowed = ['panel-marketing.php', 'control-marketing.php', 'seguimiento.php'];
+    $path = parse_url($value, PHP_URL_PATH) ?: $value;
+
+    return in_array($path, $allowed, true) ? $value : $fallback;
+}
+
 function cdaLoginUser($userId) {
     session_regenerate_id(true);
     $_SESSION['cda_user_id'] = (int) $userId;

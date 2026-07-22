@@ -78,6 +78,42 @@ function cdaMarketingStatusLabel($status) {
     return $labels[$status] ?? $status;
 }
 
+function cdaMarketingFetchTicketMessages(array $ticketIds) {
+    $ticketIds = array_values(array_unique(array_filter(array_map('intval', $ticketIds))));
+    if (!$ticketIds) {
+        return [];
+    }
+
+    $placeholders = implode(',', array_fill(0, count($ticketIds), '?'));
+    try {
+        $stmt = cdaDb()->prepare(
+            "SELECT m.*, u.nombre AS usuario_nombre, u.rol AS usuario_rol
+            FROM marketing_ticket_mensajes m
+            LEFT JOIN marketing_usuarios u ON u.id = m.usuario_id
+            WHERE m.ticket_id IN ($placeholders)
+            ORDER BY m.creado_en ASC, m.id ASC"
+        );
+        $stmt->execute($ticketIds);
+    } catch (PDOException $e) {
+        return [];
+    }
+
+    $messages = [];
+    foreach ($stmt->fetchAll() as $message) {
+        $messages[(int) $message['ticket_id']][] = $message;
+    }
+
+    return $messages;
+}
+
+function cdaMarketingMessageAuthor($message) {
+    if (!empty($message['usuario_nombre'])) {
+        return $message['usuario_nombre'];
+    }
+
+    return !empty($message['autor_nombre']) ? $message['autor_nombre'] : 'Equipo';
+}
+
 function cdaMarketingProgressSteps() {
     return [
         'Recibido' => 'Recibido',

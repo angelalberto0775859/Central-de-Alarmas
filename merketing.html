@@ -811,14 +811,18 @@
                                     <label for="requester">Solicitante *</label>
                                     <input id="requester" name="requester" type="text" autocomplete="name" required placeholder="Nombre y apellido">
                                 </div>
-                                <div class="field">
-                                    <label for="email">Correo del solicitante *</label>
-                                    <input id="email" name="email" type="email" autocomplete="email" required placeholder="correo@centraldealarmas.com.mx">
-                                </div>
-                                <div class="field">
-                                    <label for="department">Área / departamento *</label>
-                                    <input id="department" name="department" type="text" required placeholder="Ej. Ventas, Operaciones, RH">
-                                </div>
+	                                <div class="field">
+	                                    <label for="email">Correo del solicitante *</label>
+	                                    <input id="email" name="email" type="email" autocomplete="email" required placeholder="correo@centraldealarmas.com.mx">
+	                                </div>
+	                                <div class="field">
+	                                    <label for="accountPassword">Contraseña para seguimiento *</label>
+	                                    <input id="accountPassword" name="accountPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres">
+	                                </div>
+	                                <div class="field">
+	                                    <label for="department">Área / departamento *</label>
+	                                    <input id="department" name="department" type="text" required placeholder="Ej. Ventas, Operaciones, RH">
+	                                </div>
                             </div>
                         </div>
 
@@ -1031,16 +1035,16 @@
                 }
 
                 ticketNumber.textContent = data.folio;
-                successNotice.innerHTML = `
-                    <div class="success-card">
-                        <h3>Solicitud enviada a evaluación</h3>
-                        <p>Guarda este folio para consultar el avance sin iniciar sesión.</p>
-                        <div class="success-folio">${data.folio}</div>
-                        <div class="success-actions">
-                            <a href="${data.seguimiento}">Ver seguimiento</a>
-                            <button type="button" id="copyFolio">Copiar folio</button>
-                        </div>
-                    </div>
+	                successNotice.innerHTML = `
+	                    <div class="success-card">
+	                        <h3>Solicitud enviada a evaluación</h3>
+	                        <p>Tu usuario quedó validado. Guarda este folio y entra al seguimiento para usar el chat del ticket.</p>
+	                        <div class="success-folio">${data.folio}</div>
+	                        <div class="success-actions">
+	                            <a href="${data.seguimiento}">Abrir seguimiento y chat</a>
+	                            <button type="button" id="copyFolio">Copiar folio</button>
+	                        </div>
+	                    </div>
                 `;
                 successNotice.className = 'notice visible';
                 const copyButton = document.getElementById('copyFolio');
