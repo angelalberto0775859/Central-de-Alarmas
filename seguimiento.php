@@ -59,12 +59,11 @@ if ($folio) {
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px),
-                linear-gradient(0deg, rgba(255,255,255,.045) 1px, transparent 1px),
+                radial-gradient(circle at 1px 1px, rgba(255,255,255,.17) 1px, transparent 1.7px),
                 radial-gradient(circle at 16% 18%, rgba(246,235,23,.18), transparent 23rem),
                 radial-gradient(circle at 78% 12%, rgba(69,143,255,.22), transparent 25rem),
                 linear-gradient(135deg,#061226,#063970 58%,#031025);
-            background-size:64px 64px,64px 64px,auto,auto,auto;
+            background-size:28px 28px,auto,auto,auto;
         }
         .shell { width:min(1160px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; position:relative; }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#fff; margin-bottom:clamp(2rem,5vw,3.8rem); }

@@ -84,12 +84,11 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                linear-gradient(90deg, rgba(246,235,23,.09) 1px, transparent 1px),
-                linear-gradient(0deg, rgba(255,255,255,.06) 1px, transparent 1px),
+                radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1.7px),
                 radial-gradient(circle at 18% 18%, rgba(246,235,23,.2), transparent 23rem),
                 radial-gradient(circle at 82% 24%, rgba(71,151,255,.2), transparent 25rem),
                 linear-gradient(135deg,#061226,#063970 58%,#031025);
-            background-size:64px 64px,64px 64px,auto,auto,auto;
+            background-size:28px 28px,auto,auto,auto;
         }
         body::before {
             content:"";
