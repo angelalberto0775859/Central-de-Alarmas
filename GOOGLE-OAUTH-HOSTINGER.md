@@ -37,6 +37,8 @@ define('CDA_GOOGLE_CLIENT_SECRET', 'TU_CLIENT_SECRET');
 define('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 ```
 
+Tambien puedes definir `CDA_GOOGLE_CLIENT_ID`, `CDA_GOOGLE_CLIENT_SECRET` y `CDA_GOOGLE_REDIRECT_URI` como variables de entorno del hosting. Si el Client ID o Secret estan vacios, el boton de Google no aparece.
+
 ## 4. Dar acceso a usuarios
 
 En el panel interno, entra a **Usuarios** y agrega el correo exacto de Google.

@@ -61,9 +61,9 @@ function cdaGoogleGet($url, $token) {
 
 $token = cdaGooglePost('https://oauth2.googleapis.com/token', [
     'code' => $_GET['code'],
-    'client_id' => CDA_GOOGLE_CLIENT_ID,
-    'client_secret' => CDA_GOOGLE_CLIENT_SECRET,
-    'redirect_uri' => CDA_GOOGLE_REDIRECT_URI,
+    'client_id' => cdaGoogleClientId(),
+    'client_secret' => cdaGoogleClientSecret(),
+    'redirect_uri' => cdaGoogleRedirectUri(),
     'grant_type' => 'authorization_code',
 ]);
 

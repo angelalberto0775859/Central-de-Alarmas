@@ -16,6 +16,7 @@ $googleErrorMessages = [
     'google_email' => 'Google no confirmó un correo verificado.',
     'google_not_allowed' => 'Ese correo de Google no está dado de alta en el panel.',
     'google_account_mismatch' => 'Ese correo ya está vinculado con otra cuenta de Google.',
+    'google_config' => 'Google Login todavía no está configurado. Agrega Client ID y Secret.',
     'google' => 'No fue posible iniciar sesión con Google.',
 ];
 if (!empty($_GET['error']) && isset($googleErrorMessages[$_GET['error']])) {
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
+$googleReady = cdaGoogleOAuthReady();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -84,11 +85,10 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
             color:var(--ink);
             background:
-                radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1.7px),
                 radial-gradient(circle at 18% 18%, rgba(246,235,23,.2), transparent 23rem),
                 radial-gradient(circle at 82% 24%, rgba(71,151,255,.2), transparent 25rem),
                 linear-gradient(135deg,#061226,#063970 58%,#031025);
-            background-size:28px 28px,auto,auto,auto;
+            overflow-x:hidden;
         }
         body::before {
             content:"";
@@ -98,6 +98,38 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             background:linear-gradient(120deg, transparent 0 44%, rgba(255,255,255,.09) 45%, transparent 48% 100%);
             opacity:.45;
         }
+        .ambient-points {
+            position:fixed;
+            inset:0;
+            overflow:hidden;
+            pointer-events:none;
+            z-index:0;
+        }
+        .ambient-point {
+            --size:2px;
+            --x:50vw;
+            --y:50vh;
+            --dx:18px;
+            --dy:-22px;
+            --duration:18s;
+            --delay:0s;
+            position:absolute;
+            left:var(--x);
+            top:var(--y);
+            width:var(--size);
+            height:var(--size);
+            border-radius:50%;
+            background:rgba(255,255,255,.55);
+            box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28);
+            opacity:.42;
+            transform:translate3d(0,0,0);
+            animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate;
+        }
+        @keyframes ambientDrift {
+            0% { transform:translate3d(0,0,0); opacity:.18; }
+            38% { opacity:.56; }
+            100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; }
+        }
         .shell {
             width:min(1120px, calc(100% - 2rem));
             min-height:100vh;
@@ -106,6 +138,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             display:grid;
             grid-template-rows:auto 1fr;
             position:relative;
+            z-index:1;
         }
         .topbar {
             display:flex;
@@ -287,9 +320,13 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             .status-strip, .links { grid-template-columns:1fr; }
             .card-head { flex-direction:column; }
         }
+        @media (prefers-reduced-motion:reduce) {
+            .ambient-point { animation:none; }
+        }
     </style>
 </head>
 <body>
+    <div class="ambient-points" aria-hidden="true"></div>
     <div class="shell">
         <header class="topbar">
             <a class="brand" href="index.html" aria-label="Central de Alarmas">
@@ -331,7 +368,7 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
                 <?php if ($googleReady): ?>
                     <a class="button google" href="google-login.php">Continuar con Google</a>
                 <?php else: ?>
-                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong>.</div>
+                    <div class="note">Google Login se activa al agregar Client ID y Secret en <strong>php/marketing_secrets.php</strong> o como variables de entorno.</div>
                 <?php endif; ?>
                 <div class="links">
                     <a href="marketing.html">Nueva solicitud</a>
@@ -340,5 +377,38 @@ $googleReady = CDA_GOOGLE_CLIENT_ID !== '' && CDA_GOOGLE_CLIENT_SECRET !== '';
             </article>
         </main>
     </div>
+    <script>
+        (function () {
+            var layer = document.querySelector('.ambient-points');
+            if (!layer) return;
+
+            var count = window.matchMedia('(max-width: 620px)').matches ? 54 : 86;
+            var fragment = document.createDocumentFragment();
+
+            for (var i = 0; i < count; i += 1) {
+                var point = document.createElement('span');
+                var size = (Math.random() * 2.8 + .9).toFixed(2);
+                var x = (Math.random() * 100).toFixed(2);
+                var y = (Math.random() * 100).toFixed(2);
+                var dx = (Math.random() * 72 - 36).toFixed(2);
+                var dy = (Math.random() * 72 - 36).toFixed(2);
+                var duration = (Math.random() * 18 + 16).toFixed(2);
+                var delay = (Math.random() * -24).toFixed(2);
+
+                point.className = 'ambient-point';
+                point.style.setProperty('--size', size + 'px');
+                point.style.setProperty('--x', x + 'vw');
+                point.style.setProperty('--y', y + 'vh');
+                point.style.setProperty('--dx', dx + 'px');
+                point.style.setProperty('--dy', dy + 'px');
+                point.style.setProperty('--duration', duration + 's');
+                point.style.setProperty('--delay', delay + 's');
+                point.style.opacity = (Math.random() * .32 + .18).toFixed(2);
+                fragment.appendChild(point);
+            }
+
+            layer.appendChild(fragment);
+        }());
+    </script>
 </body>
 </html>
