@@ -28,6 +28,7 @@ assertSameValue(true, cdaMarketingStatusSendsEmail('Entregado'), 'delivered stat
 assertSameValue(false, cdaMarketingStatusSendsEmail('En diseno'), 'in design status stays internal');
 assertSameValue(true, strpos(cdaMarketingStatusEmailSubject('Entregado', 'MKT-1'), 'MKT-1') !== false, 'status email subject includes folio');
 assertSameValue(true, in_array('zip', cdaMarketingTicketFileExtensions(), true), 'initial files allow zip');
+assertSameValue(true, in_array('rar', cdaMarketingTicketFileExtensions(), true), 'initial files allow rar');
 assertSameValue(true, in_array('svg', cdaMarketingTicketFileExtensions(), true), 'initial files allow svg');
 assertSameValue(true, in_array('ai', cdaMarketingTicketFileExtensions(), true), 'initial files allow ai');
 assertSameValue(true, in_array('psd', cdaMarketingTicketFileExtensions(), true), 'initial files allow psd');
@@ -37,10 +38,12 @@ assertSameValue(true, in_array('xlsm', cdaMarketingTicketFileExtensions(), true)
 assertSameValue(true, in_array('csv', cdaMarketingTicketFileExtensions(), true), 'initial files allow csv');
 assertSameValue(true, in_array('pdf', cdaMarketingChatFileExtensions(), true), 'chat files allow pdf');
 assertSameValue(true, in_array('zip', cdaMarketingChatFileExtensions(), true), 'chat files allow zip');
+assertSameValue(true, in_array('rar', cdaMarketingChatFileExtensions(), true), 'chat files allow rar');
 assertSameValue(true, in_array('svg', cdaMarketingChatFileExtensions(), true), 'chat files allow svg');
 assertSameValue(true, in_array('ai', cdaMarketingChatFileExtensions(), true), 'chat files allow ai');
 assertSameValue(true, in_array('psd', cdaMarketingChatFileExtensions(), true), 'chat files allow psd');
 assertSameValue(false, in_array('exe', cdaMarketingChatFileExtensions(), true), 'chat files reject executables');
+assertSameValue(true, strpos(cdaMarketingAllowedUploadAccept(), '.rar') !== false, 'file input accept includes rar');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing users can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
@@ -48,6 +51,10 @@ assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
 assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
+
+$marketingFormHtml = file_get_contents(__DIR__ . '/../merketing.html');
+assertSameValue(true, strpos($marketingFormHtml, '.zip,.rar') !== false, 'public marketing form accepts zip and rar');
+assertSameValue(true, strpos($marketingFormHtml, 'ZIP/RAR') !== false, 'public marketing form explains compressed files');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',

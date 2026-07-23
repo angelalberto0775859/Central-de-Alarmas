@@ -157,7 +157,7 @@ function cdaMarketingStatusSendsEmail($status) {
 }
 
 function cdaMarketingTicketFileExtensions() {
-    return ['pdf','doc','docx','docm','ppt','pptx','pptm','xls','xlsx','xlsm','csv','jpg','jpeg','png','webp','mp4','mov','zip','svg','ai','psd'];
+    return ['pdf','doc','docx','docm','ppt','pptx','pptm','xls','xlsx','xlsm','csv','jpg','jpeg','png','webp','mp4','mov','zip','rar','svg','ai','psd'];
 }
 
 function cdaMarketingAllowedUploadAccept() {
