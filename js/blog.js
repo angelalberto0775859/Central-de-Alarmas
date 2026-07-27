@@ -244,7 +244,7 @@
                     <div class="footer-col">
                         <h4>Legal</h4>
                         <a href="../pdf/POLÍTICA DE ATENCIÓN A CLIENTES 2025 HOME.pdf" target="_blank">Terminos y Condiciones</a>
-                        <a href="../pdf/AVISO-DE-PRIVACIDAD.pdf" target="_blank">Politica de Privacidad</a>
+                        <a href="../aviso-de-privacidad.html" target="_blank">Politica de Privacidad</a>
                     </div>
                 </div>
                 <div class="footer-bottom">

@@ -218,7 +218,7 @@ ${blogSuggestions}    </main>
                 <div class="footer-col">
                     <h4>Legal</h4>
                     <a href="./pdf/POLÍTICA DE ATENCIÓN A CLIENTES 2025 HOME.pdf" target="_blank">Terminos y Condiciones</a>
-                    <a href="./pdf/AVISO-DE-PRIVACIDAD.pdf" target="_blank">Politica de Privacidad</a>
+                    <a href="./aviso-de-privacidad.html" target="_blank">Politica de Privacidad</a>
                     <h4 style="margin-top:1.5rem;">Siguenos</h4>
                     <a target="_blank" href="https://www.facebook.com/NewCAMSA/">Facebook</a>
                     <a target="_blank" href="https://www.instagram.com/centraldealarmas.mx/?hl=es">Instagram</a>
@@ -336,7 +336,7 @@ ${post.sections.map((section) => `
             <div class="footer-top">
                 <div class="footer-brand"><div class="logo"><a href="../index.html#inicio"><img src="../img/CDA_LOGO.svg" alt="Central de Alarmas"></a></div><p style="margin-top:1rem;">Empresa mexicana de seguridad electronica con mas de 79 anos protegiendo lo que mas importa.</p></div>
                 <div class="footer-col"><h4>Navegacion</h4><a href="../index.html#servicios-preview">Servicios</a><a href="../index.html#nosotros">Nosotros</a><a href="../index.html#contacto">Contacto</a><a href="../blog.html">News</a><a href="../empleos.html" data-i18n="nav.jobs">Empleos</a></div>
-                <div class="footer-col"><h4>Legal</h4><a href="../pdf/POLÍTICA DE ATENCIÓN A CLIENTES 2025 HOME.pdf" target="_blank">Terminos y Condiciones</a><a href="../pdf/AVISO-DE-PRIVACIDAD.pdf" target="_blank">Politica de Privacidad</a></div>
+                <div class="footer-col"><h4>Legal</h4><a href="../pdf/POLÍTICA DE ATENCIÓN A CLIENTES 2025 HOME.pdf" target="_blank">Terminos y Condiciones</a><a href="../aviso-de-privacidad.html" target="_blank">Politica de Privacidad</a></div>
             </div>
             <div class="footer-bottom"><div class="gsi"><img src="../img/GRUPO_LOGO.svg" alt="GSI"></div><p>© 2026 Central de Alarmas de Mexico, S.A. de C.V. Todos los derechos reservados.</p></div>
         </div>
