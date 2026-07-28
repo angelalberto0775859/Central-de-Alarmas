@@ -286,7 +286,7 @@ const translations = {
         'packages.colorAria': 'Colores disponibles: blanco y negro',
         'packages.colorWhiteAria': 'Color blanco',
         'packages.colorBlackAria': 'Color negro',
-        'packages.termsNote': '*Precio de monitoreo sujeto a términos y condiciones.',
+        'packages.termsNote': 'Sujeto a términos y condiciones',
         'gallery.count': '{current} de {total}',
         'gallery.prev': 'Ver componente anterior',
         'gallery.next': 'Ver siguiente componente',
