@@ -135,13 +135,16 @@ foreach ($tickets as $ticket) {
         .lane h2 { color:#fff; font-size:1rem; }
         .lane-kicker { color:rgba(255,255,255,.68); font-size:.7rem; font-weight:800; margin-top:.18rem; }
         .count { border-radius:999px; background:var(--yellow); color:var(--blue); padding:.28rem .52rem; font-size:.72rem; font-weight:950; }
-        .ticket-card { display:grid; gap:.62rem; border:1px solid var(--line); border-left:6px solid var(--blue-2); border-radius:var(--radius); background:#fff; padding:.55rem .62rem; margin-bottom:.62rem; box-shadow:0 10px 24px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+        .ticket-card { display:grid; gap:.62rem; border:1px solid var(--line); border-left:6px solid var(--blue-2); border-radius:var(--radius); background:linear-gradient(180deg,#fff,#fbfdff); padding:.62rem .68rem; margin-bottom:.68rem; box-shadow:0 10px 24px rgba(6,57,112,.08); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
         .ticket-card:hover { border-color:rgba(6,57,112,.28); transform:translateY(-1px); box-shadow:0 16px 34px rgba(6,57,112,.13); }
-        .ticket-card.tone-amber { border-left-color:#d97706; }
+        .ticket-card.tone-amber { border-left-color:#f59e0b; }
         .ticket-card.tone-green { border-left-color:var(--green); }
         .ticket-card.tone-red { border-left-color:var(--red); }
         .ticket-card.tone-purple { border-left-color:#6d28d9; }
-        .ticket-card summary { list-style:none; cursor:pointer; }
+        .ticket-card[open] { box-shadow:0 18px 38px rgba(6,57,112,.14); }
+        .ticket-card summary { list-style:none; cursor:pointer; position:relative; padding-right:1.25rem; }
+        .ticket-card summary::after { content:""; position:absolute; right:.12rem; top:.35rem; width:.55rem; height:.55rem; border-right:2px solid var(--blue); border-bottom:2px solid var(--blue); transform:rotate(45deg); transition:transform .18s ease; opacity:.75; }
+        .ticket-card[open] summary::after { transform:rotate(225deg); top:.55rem; }
         .ticket-card summary::-webkit-details-marker { display:none; }
         .ticket-summary { display:grid; gap:.5rem; }
         .summary-head { display:flex; justify-content:space-between; gap:.65rem; align-items:start; }
@@ -170,16 +173,16 @@ foreach ($tickets as $ticket) {
         button { border:0; border-radius:var(--radius); padding:.72rem .8rem; background:var(--yellow); color:var(--blue); font-weight:950; text-transform:uppercase; cursor:pointer; box-shadow:0 10px 22px rgba(6,57,112,.1); transition:transform .18s ease, box-shadow .18s ease; }
         button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
         .danger-button { background:#fee2e2; color:#991b1b; box-shadow:none; }
-        .ticket-chat { display:grid; gap:.5rem; padding:.58rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
-        .ticket-chat h4 { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
-        .chat-note { color:var(--muted); font-size:.72rem; line-height:1.35; }
-        .chat-thread { display:grid; gap:.4rem; max-height:150px; overflow:auto; padding-right:.15rem; }
-        .chat-message { border-left:3px solid var(--blue-2); padding:.44rem .5rem; border-radius:0 6px 6px 0; background:#fff; }
-        .chat-message.admin { border-left-color:var(--yellow); }
-        .chat-message.usuario { border-left-color:var(--green); }
-        .chat-meta { display:flex; justify-content:space-between; gap:.45rem; color:var(--muted); font-size:.66rem; font-weight:850; }
-        .chat-message p { margin-top:.22rem; color:var(--ink); font-size:.76rem; line-height:1.42; }
-        .chat-form { display:grid; gap:.42rem; }
+        .ticket-chat { display:grid; gap:.58rem; padding:.78rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:linear-gradient(180deg,#f8fbff,#fff); box-shadow:0 10px 24px rgba(6,57,112,.06); }
+        .ticket-chat h4 { color:var(--blue); font-size:.76rem; text-transform:uppercase; letter-spacing:.05em; }
+        .chat-note { color:var(--muted); font-size:.74rem; line-height:1.4; }
+        .chat-thread { display:grid; gap:.48rem; max-height:240px; overflow:auto; padding-right:.18rem; }
+        .chat-message { border:1px solid rgba(6,57,112,.08); border-left:4px solid var(--blue-2); padding:.62rem .68rem; border-radius:var(--radius); background:#fff; box-shadow:0 8px 18px rgba(6,57,112,.05); }
+        .chat-message.admin { border-left-color:#f59e0b; background:#fffaf0; }
+        .chat-message.usuario { border-left-color:var(--green); background:#fbfffd; }
+        .chat-meta { display:flex; justify-content:space-between; gap:.45rem; color:var(--muted); font-size:.7rem; font-weight:850; }
+        .chat-message p { margin-top:.28rem; color:var(--ink); font-size:.84rem; line-height:1.5; }
+        .chat-form { display:grid; gap:.5rem; }
         .chat-files { display:grid; gap:.35rem; margin-top:.4rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.32rem .46rem; background:#eef4fb; color:var(--blue); font-size:.7rem; font-weight:850; text-decoration:none; }
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }

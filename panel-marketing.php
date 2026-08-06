@@ -236,17 +236,41 @@ if ($statsRow) {
         th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
         th:last-child { border-radius:0 var(--radius) var(--radius) 0; }
         tr:hover td { background:#fbfdff; }
+        .ticket-list { display:grid; gap:.7rem; }
+        .ticket-row-card { border:1px solid var(--line); border-left:6px solid var(--blue-2); border-radius:var(--radius); background:linear-gradient(180deg,#fff,#fbfdff); box-shadow:0 12px 28px rgba(6,57,112,.08); overflow:hidden; transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+        .ticket-row-card:hover { border-color:rgba(6,57,112,.28); box-shadow:0 16px 34px rgba(6,57,112,.12); transform:translateY(-1px); }
+        .ticket-row-card.tone-amber { border-left-color:#f59e0b; }
+        .ticket-row-card.tone-green { border-left-color:var(--green); }
+        .ticket-row-card.tone-red { border-left-color:var(--red); }
+        .ticket-row-card.tone-purple { border-left-color:#6d28d9; }
+        .ticket-row-card[open] { box-shadow:0 18px 38px rgba(6,57,112,.13); }
+        .ticket-row-card summary { list-style:none; cursor:pointer; padding:.9rem 2.2rem .9rem 1rem; position:relative; }
+        .ticket-row-card summary::after { content:""; position:absolute; right:1rem; top:50%; width:.55rem; height:.55rem; border-right:2px solid var(--blue); border-bottom:2px solid var(--blue); transform:translateY(-60%) rotate(45deg); transition:transform .18s ease; opacity:.75; }
+        .ticket-row-card[open] summary::after { transform:translateY(-30%) rotate(225deg); }
+        .ticket-row-card summary::-webkit-details-marker { display:none; }
+        .ticket-row-summary { display:grid; grid-template-columns:190px minmax(0,1fr) auto; gap:.9rem; align-items:center; }
+        .ticket-main { min-width:0; }
+        .ticket-main .muted { display:block; margin-top:.2rem; font-size:.78rem; }
+        .ticket-pills { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:.38rem; }
+        .summary-date { color:var(--muted); font-size:.72rem; font-weight:850; white-space:nowrap; }
+        .ticket-drawer { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.54fr); gap:.85rem; padding:0 1rem 1rem; border-top:1px solid rgba(6,57,112,.08); }
+        .ticket-panel { display:grid; gap:.65rem; align-content:start; padding-top:.85rem; }
+        .ticket-meta-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; }
+        .ticket-meta-grid div { border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; padding:.62rem .7rem; }
+        .ticket-meta-grid span { display:block; color:var(--muted); font-size:.68rem; font-weight:950; text-transform:uppercase; letter-spacing:.05em; margin-bottom:.18rem; }
+        .ticket-meta-grid strong { color:var(--ink); font-size:.84rem; }
+        .section-label { color:var(--muted); font-size:.68rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
         .folio { font-weight:950; color:var(--blue); letter-spacing:.02em; }
         .request-title { color:var(--ink); font-weight:900; line-height:1.2; }
-        .status { display:inline-flex; border-radius:999px; padding:.28rem .5rem; background:var(--soft); color:var(--blue); font-size:.7rem; font-weight:900; white-space:nowrap; }
+        .status { display:inline-flex; border-radius:999px; padding:.34rem .56rem; background:var(--soft); color:var(--blue); font-size:.72rem; font-weight:900; white-space:nowrap; }
         .status.entregado, .status.cerrado { background:#d1fae5; color:var(--green); }
         .status.rechazado { background:#fee2e2; color:#991b1b; }
         .status.en-diseno, .status.en-revision { background:#dbeafe; color:#1d4ed8; }
         .status.pendiente-de-informacion, .status.ajustes-solicitados { background:#fff7cc; color:#7c5800; }
-        .priority { display:inline-flex; margin-top:.34rem; border-radius:999px; padding:.25rem .46rem; background:#eef4fb; color:var(--ink); font-size:.68rem; font-weight:900; }
+        .priority { display:inline-flex; border-radius:999px; padding:.3rem .5rem; background:#eef4fb; color:var(--ink); font-size:.7rem; font-weight:900; }
         .priority.urgente { background:#fee2e2; color:var(--red); }
         .priority.alta { background:#fff7cc; color:#7c5800; }
-        .inline-form { display:grid; gap:.38rem; min-width:240px; padding:.48rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
+        .inline-form { display:grid; gap:.5rem; min-width:240px; padding:.7rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
         .inline-form button, .filters button {
             background:var(--yellow);
             border-color:transparent;
@@ -261,16 +285,16 @@ if ($statsRow) {
         .ticket-actions { display:grid; gap:.5rem; margin-top:.6rem; }
         .muted { color:var(--muted); }
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
-        .ticket-chat { display:grid; gap:.42rem; margin-top:.48rem; padding:.5rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:#f8fbff; }
-        .ticket-chat h3 { color:var(--blue); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
-        .chat-note { color:var(--muted); font-size:.68rem; line-height:1.3; }
-        .chat-thread { display:grid; gap:.34rem; max-height:128px; overflow:auto; padding-right:.15rem; }
-        .chat-message { border-left:3px solid var(--blue-2); padding:.38rem .45rem; border-radius:0 6px 6px 0; background:#fff; }
-        .chat-message.admin { border-left-color:var(--yellow); }
-        .chat-message.usuario { border-left-color:var(--green); }
-        .chat-meta { display:flex; justify-content:space-between; gap:.5rem; color:var(--muted); font-size:.68rem; font-weight:850; }
-        .chat-message p { margin-top:.24rem; color:var(--ink); font-size:.8rem; line-height:1.45; }
-        .chat-form { display:grid; gap:.42rem; }
+        .ticket-chat { display:grid; gap:.58rem; padding:.78rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:linear-gradient(180deg,#f8fbff,#fff); box-shadow:0 10px 24px rgba(6,57,112,.06); }
+        .ticket-chat h3 { color:var(--blue); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }
+        .chat-note { color:var(--muted); font-size:.74rem; line-height:1.4; }
+        .chat-thread { display:grid; gap:.48rem; max-height:230px; overflow:auto; padding-right:.2rem; }
+        .chat-message { border:1px solid rgba(6,57,112,.08); border-left:4px solid var(--blue-2); padding:.6rem .68rem; border-radius:var(--radius); background:#fff; box-shadow:0 8px 18px rgba(6,57,112,.05); }
+        .chat-message.admin { border-left-color:#f59e0b; background:#fffaf0; }
+        .chat-message.usuario { border-left-color:var(--green); background:#fbfffd; }
+        .chat-meta { display:flex; justify-content:space-between; gap:.5rem; color:var(--muted); font-size:.7rem; font-weight:850; }
+        .chat-message p { margin-top:.28rem; color:var(--ink); font-size:.84rem; line-height:1.5; }
+        .chat-form { display:grid; gap:.5rem; }
         .chat-files { display:grid; gap:.35rem; margin-top:.42rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.34rem .48rem; background:#eef4fb; color:var(--blue); font-size:.72rem; font-weight:850; text-decoration:none; }
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
@@ -279,6 +303,8 @@ if ($statsRow) {
         @media (max-width:900px) {
             .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
+            .ticket-row-summary, .ticket-drawer, .ticket-meta-grid { grid-template-columns:1fr; }
+            .ticket-pills { justify-content:flex-start; }
             table, tbody, tr, td { display:block; min-width:0; }
             thead { display:none; }
             tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.8rem; background:#fff; overflow:hidden; }
@@ -347,35 +373,44 @@ if ($statsRow) {
                 </select>
                 <button type="submit">Filtrar</button>
             </form>
-            <div class="table-shell">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ticket</th>
-                            <th>Solicitud</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                            <th>Actualizar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($tickets as $ticket): ?>
-                    <tr id="ticket-<?php echo (int) $ticket['id']; ?>">
-                        <td><div class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></div><div class="muted"><?php echo htmlspecialchars($ticket['solicitante']); ?><br><?php echo htmlspecialchars($ticket['correo']); ?></div></td>
-                        <td>
-                            <strong class="request-title"><?php echo htmlspecialchars($ticket['actividad']); ?></strong><br>
-                            <span class="muted"><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
+            <div class="ticket-list">
+                <?php foreach ($tickets as $ticket): ?>
+                <details class="ticket-row-card tone-<?php echo htmlspecialchars(cdaMarketingStatusTone($ticket['estado'])); ?>" id="ticket-<?php echo (int) $ticket['id']; ?>">
+                    <summary>
+                        <div class="ticket-row-summary">
+                            <div>
+                                <div class="folio"><?php echo htmlspecialchars($ticket['folio']); ?></div>
+                                <span class="muted"><?php echo htmlspecialchars($ticket['solicitante']); ?></span>
+                            </div>
+                            <div class="ticket-main">
+                                <strong class="request-title"><?php echo htmlspecialchars($ticket['actividad']); ?></strong>
+                                <span class="muted"><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
+                            </div>
+                            <div class="ticket-pills">
+                                <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
+                                <span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span>
+                                <span class="summary-date"><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="ticket-drawer">
+                        <div class="ticket-panel">
+                            <div class="ticket-meta-grid">
+                                <div><span>Correo</span><strong><?php echo htmlspecialchars($ticket['correo']); ?></strong></div>
+                                <div><span>Actualizado</span><strong><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></strong></div>
+                                <div><span>Asignado</span><strong><?php echo htmlspecialchars($ticket['asignado_a'] ?: 'Sin asignar'); ?></strong></div>
+                                <div><span>Área</span><strong><?php echo htmlspecialchars($ticket['departamento']); ?></strong></div>
+                            </div>
                             <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
-                                <div class="ticket-files" aria-label="Archivos iniciales">
-                                    <?php foreach ($ticketFiles[(int) $ticket['id']] as $file): ?>
-                                        <a class="ticket-file" href="descargar-archivo.php?tipo=ticket&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
-                                    <?php endforeach; ?>
+                                <div>
+                                    <div class="section-label">Archivos iniciales</div>
+                                    <div class="ticket-files" aria-label="Archivos iniciales">
+                                        <?php foreach ($ticketFiles[(int) $ticket['id']] as $file): ?>
+                                            <a class="ticket-file" href="descargar-archivo.php?tipo=ticket&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
                             <?php endif; ?>
-                        </td>
-                        <td><span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span><br><span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span></td>
-                        <td><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?><br><span class="muted">Actualizado <?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></span></td>
-                        <td>
                             <?php if (!$trashMode): ?>
                             <form class="inline-form" method="post" action="ticket-actualizar.php">
                                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
@@ -392,8 +427,8 @@ if ($statsRow) {
                                         <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName); ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <textarea name="respuesta_interna" rows="2" placeholder="Comentario visible para seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
-                                <button type="submit">Guardar</button>
+                                <textarea name="respuesta_interna" rows="3" placeholder="Comentario visible para seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
+                                <button type="submit">Guardar cambios</button>
                             </form>
                             <?php endif; ?>
                             <?php if ($user['rol'] === 'admin'): ?>
@@ -424,47 +459,46 @@ if ($statsRow) {
                                 <?php endif; ?>
                             </div>
                             <?php endif; ?>
-                            <?php if (!$trashMode): ?>
-                            <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
-                                <h3>Chat de seguimiento</h3>
-                                <p class="chat-note">Este hilo queda asociado al folio; el solicitante puede responder desde seguimiento con su login.</p>
-                                <div class="chat-thread">
-                                    <?php foreach (($ticketMessages[(int) $ticket['id']] ?? []) as $message): ?>
-                                        <article class="chat-message <?php echo htmlspecialchars($message['autor_rol']); ?>">
-                                            <div class="chat-meta">
-                                                <strong><?php echo htmlspecialchars(cdaMarketingMessageAuthor($message)); ?></strong>
-                                                <span><?php echo htmlspecialchars(date('d/m H:i', strtotime($message['creado_en']))); ?></span>
+                        </div>
+                        <?php if (!$trashMode): ?>
+                        <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
+                            <h3>Chat de seguimiento</h3>
+                            <p class="chat-note">Este hilo queda asociado al folio; el solicitante puede responder desde seguimiento con su login.</p>
+                            <div class="chat-thread">
+                                <?php foreach (($ticketMessages[(int) $ticket['id']] ?? []) as $message): ?>
+                                    <article class="chat-message <?php echo htmlspecialchars($message['autor_rol']); ?>">
+                                        <div class="chat-meta">
+                                            <strong><?php echo htmlspecialchars(cdaMarketingMessageAuthor($message)); ?></strong>
+                                            <span><?php echo htmlspecialchars(date('d/m H:i', strtotime($message['creado_en']))); ?></span>
+                                        </div>
+                                        <p><?php echo nl2br(htmlspecialchars($message['mensaje'])); ?></p>
+                                        <?php if (!empty($message['archivos'])): ?>
+                                            <div class="chat-files">
+                                                <?php foreach ($message['archivos'] as $file): ?>
+                                                    <a class="chat-file" href="descargar-archivo.php?tipo=mensaje&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
+                                                <?php endforeach; ?>
                                             </div>
-                                            <p><?php echo nl2br(htmlspecialchars($message['mensaje'])); ?></p>
-                                            <?php if (!empty($message['archivos'])): ?>
-                                                <div class="chat-files">
-                                                    <?php foreach ($message['archivos'] as $file): ?>
-                                                        <a class="chat-file" href="descargar-archivo.php?tipo=mensaje&id=<?php echo (int) $file['id']; ?>"><?php echo htmlspecialchars($file['nombre_original']); ?></a>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </article>
-                                    <?php endforeach; ?>
-                                    <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; escribe aqui si necesitas aclarar el brief o pedir aprobacion.</p><?php endif; ?>
-                                </div>
-                                <form class="chat-form" method="post" action="ticket-mensaje.php" enctype="multipart/form-data">
-                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                                    <input type="hidden" name="ticket_id" value="<?php echo (int) $ticket['id']; ?>">
-                                    <input type="hidden" name="return_to" value="panel-marketing.php">
-                                    <textarea name="mensaje" rows="2" placeholder="Escribe un mensaje para este ticket"></textarea>
-                                    <input class="file-input" name="archivos[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>">
-                                    <button type="submit">Enviar mensaje</button>
-                                </form>
-                            </section>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                    <?php if (!$tickets): ?>
-                    <tr><td colspan="5" class="empty-state">No hay tickets con esos filtros.</td></tr>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
+                                        <?php endif; ?>
+                                    </article>
+                                <?php endforeach; ?>
+                                <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; escribe aqui si necesitas aclarar el brief o pedir aprobacion.</p><?php endif; ?>
+                            </div>
+                            <form class="chat-form" method="post" action="ticket-mensaje.php" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                <input type="hidden" name="ticket_id" value="<?php echo (int) $ticket['id']; ?>">
+                                <input type="hidden" name="return_to" value="panel-marketing.php">
+                                <textarea name="mensaje" rows="3" placeholder="Escribe un mensaje para este ticket"></textarea>
+                                <input class="file-input" name="archivos[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>">
+                                <button type="submit">Enviar mensaje</button>
+                            </form>
+                        </section>
+                        <?php endif; ?>
+                    </div>
+                </details>
+                <?php endforeach; ?>
+                <?php if (!$tickets): ?>
+                    <div class="empty-state">No hay tickets con esos filtros.</div>
+                <?php endif; ?>
             </div>
         </section>
     </div>

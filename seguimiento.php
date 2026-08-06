@@ -10,6 +10,8 @@ $mensajes = [];
 $error = '';
 $chatError = '';
 $progressIndex = 0;
+$isTicketFinished = false;
+$deliveryFiles = [];
 $currentUser = cdaCurrentUser();
 
 if ($folio) {
@@ -20,6 +22,7 @@ if ($folio) {
 
         if ($ticket) {
             $progressIndex = cdaMarketingProgressIndex($ticket['estado']);
+            $isTicketFinished = in_array($ticket['estado'], ['Entregado', 'Cerrado'], true);
             $histStmt = cdaDb()->prepare('SELECT estado, comentario, creado_en FROM marketing_ticket_historial WHERE ticket_id = ? ORDER BY creado_en DESC');
             $histStmt->execute([$ticket['id']]);
             $historial = $histStmt->fetchAll();
@@ -79,6 +82,15 @@ if ($folio) {
             }
 
             $mensajes = cdaMarketingFetchTicketMessages([(int) $ticket['id']])[(int) $ticket['id']] ?? [];
+            if ($isTicketFinished) {
+                foreach ($mensajes as $mensaje) {
+                    if (!empty($mensaje['archivos'])) {
+                        foreach ($mensaje['archivos'] as $file) {
+                            $deliveryFiles[] = $file;
+                        }
+                    }
+                }
+            }
         } else {
             $error = 'No encontramos un ticket con ese folio.';
         }
@@ -217,14 +229,21 @@ if ($folio) {
         .ticket-head { display:flex; align-items:start; justify-content:space-between; gap:1rem; margin-bottom:.75rem; }
         .ticket-title { display:grid; gap:.35rem; }
         .folio { color:var(--muted); font-size:.78rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
-        .status { display:inline-flex; width:fit-content; border-radius:999px; padding:.46rem .72rem; background:var(--blue); color:#fff; font-size:.78rem; font-weight:950; white-space:nowrap; }
+        .status { display:inline-flex; width:fit-content; border-radius:999px; padding:.46rem .72rem; background:var(--blue); color:#fff; font-size:.78rem; font-weight:950; white-space:nowrap; box-shadow:0 10px 20px rgba(6,57,112,.14); }
         .status.rechazado { background:#991b1b; }
         .status.cerrado, .status.entregado { background:#047857; }
         .progress { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.45rem; margin:1rem 0 .25rem; }
-        .progress-step { min-height:72px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.72rem .55rem; color:var(--muted); font-size:.76rem; font-weight:900; text-align:center; }
-        .progress-step::before { content:""; display:block; width:18px; height:18px; border-radius:50%; margin:0 auto .42rem; background:#dbe5f0; }
-        .progress-step.done { border-color:rgba(6,57,112,.22); background:linear-gradient(180deg,#fff,#f5f9ff); color:var(--blue); }
-        .progress-step.done::before { background:var(--yellow); box-shadow:0 0 0 5px rgba(246,235,23,.18); }
+        .progress-step { min-height:78px; position:relative; border:1px solid var(--line); border-radius:var(--radius); background:#fff; padding:.74rem .58rem; color:var(--muted); font-size:.76rem; font-weight:900; text-align:center; overflow:hidden; }
+        .progress-step::before { content:""; display:block; width:18px; height:18px; border-radius:50%; margin:0 auto .42rem; background:#dbe5f0; box-shadow:0 0 0 5px rgba(219,229,240,.35); }
+        .progress-step.done { border-color:rgba(29,78,216,.24); background:linear-gradient(180deg,#fff,#eff6ff); color:#1d4ed8; }
+        .progress-step.done::before { background:#1d4ed8; box-shadow:0 0 0 5px rgba(29,78,216,.13); }
+        .progress-step.current { border-color:#f59e0b; background:linear-gradient(180deg,#fff7ed,#fff); color:#9a3412; box-shadow:0 0 0 1px rgba(245,158,11,.12), 0 16px 28px rgba(245,158,11,.14); }
+        .progress-step.current::before { background:#f59e0b; animation:currentPulse 1.1s ease-in-out infinite; }
+        .progress-step.finalized { border-color:rgba(4,120,87,.24); background:linear-gradient(180deg,#ecfdf5,#fff); color:#047857; }
+        .progress-step.finalized::before { background:#047857; box-shadow:0 0 0 5px rgba(4,120,87,.14); }
+        @keyframes currentPulse { 0%,100% { box-shadow:0 0 0 4px rgba(245,158,11,.2); transform:scale(1); } 50% { box-shadow:0 0 0 10px rgba(245,158,11,.05); transform:scale(1.08); } }
+        .completion-box { margin-top:1rem; border:1px solid rgba(4,120,87,.2); border-left:5px solid #047857; border-radius:var(--radius); background:linear-gradient(180deg,#ecfdf5,#fff); padding:1rem; color:#065f46; line-height:1.55; box-shadow:0 16px 36px rgba(4,120,87,.1); }
+        .completion-box strong { display:block; margin-bottom:.25rem; color:#047857; font-size:1rem; }
         .meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.72rem; margin-top:1rem; }
         .meta div, .files li {
             border:1px solid var(--line);
@@ -258,17 +277,18 @@ if ($folio) {
         }
         .timeline small { color:var(--muted); display:block; margin-top:.3rem; font-weight:750; }
         .files { display:grid; gap:.55rem; margin-top:.8rem; list-style:none; }
-        .chat-box { margin-top:1rem; display:grid; gap:.75rem; }
-        .chat-intro { color:var(--muted); line-height:1.55; font-size:.9rem; }
-        .chat-thread { display:grid; gap:.55rem; max-height:320px; overflow:auto; padding-right:.25rem; }
-        .chat-message { border-left:4px solid var(--blue-2); border-radius:0 var(--radius) var(--radius) 0; background:#fff; padding:.72rem .82rem; }
-        .chat-message.admin { border-left-color:var(--yellow); background:#fffbea; }
-        .chat-message.usuario { border-left-color:#047857; }
-        .chat-meta { display:flex; justify-content:space-between; gap:.75rem; color:var(--muted); font-size:.72rem; font-weight:900; }
-        .chat-message p { margin-top:.3rem; line-height:1.55; color:var(--ink); }
+        .files a { color:var(--blue); font-weight:900; text-decoration:none; }
+        .chat-box { margin-top:1.1rem; display:grid; gap:.85rem; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); background:linear-gradient(180deg,#fbfdff,#fff); padding:1rem; box-shadow:0 16px 36px rgba(6,57,112,.08); }
+        .chat-intro { color:var(--muted); line-height:1.55; font-size:.94rem; }
+        .chat-thread { display:grid; gap:.7rem; max-height:460px; overflow:auto; padding:.2rem .35rem .2rem 0; }
+        .chat-message { border:1px solid rgba(6,57,112,.1); border-left:5px solid var(--blue-2); border-radius:var(--radius); background:#fff; padding:.9rem 1rem; box-shadow:0 10px 24px rgba(6,57,112,.07); }
+        .chat-message.admin { border-left-color:#f59e0b; background:#fffaf0; }
+        .chat-message.usuario { border-left-color:#047857; background:#fbfffd; }
+        .chat-meta { display:flex; justify-content:space-between; gap:.75rem; color:var(--muted); font-size:.76rem; font-weight:900; }
+        .chat-message p { margin-top:.42rem; line-height:1.65; color:var(--ink); font-size:.96rem; }
         .chat-files { display:grid; gap:.4rem; margin-top:.55rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.38rem .55rem; background:#eef4fb; color:var(--blue); font-size:.78rem; font-weight:850; text-decoration:none; }
-        .chat-form { display:grid; grid-template-columns:1fr; gap:.7rem; border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; }
+        .chat-form { display:grid; grid-template-columns:1fr; gap:.78rem; border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:1rem; }
         .chat-login { border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); padding:.85rem; color:var(--muted); line-height:1.55; }
         .empty-state {
             margin-top:1rem;
@@ -292,7 +312,7 @@ if ($folio) {
             .progress-step::before { margin:0; flex:0 0 auto; }
             button { width:100%; }
         }
-        @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
+        @media (prefers-reduced-motion:reduce) { .ambient-point, .progress-step.current::before { animation:none; } }
     </style>
 </head>
 <body>
@@ -350,9 +370,25 @@ if ($folio) {
                 </div>
                 <div class="progress" aria-label="Progreso del ticket">
                     <?php $stepIndex = 0; foreach (cdaMarketingProgressSteps() as $stepStatus => $stepLabel): ?>
-                        <div class="progress-step <?php echo $stepIndex <= $progressIndex ? 'done' : ''; ?>"><?php echo htmlspecialchars($stepLabel); ?></div>
+                        <?php
+                            $stepClass = 'progress-step';
+                            if ($isTicketFinished) {
+                                $stepClass .= ' finalized';
+                            } elseif ($stepIndex < $progressIndex) {
+                                $stepClass .= ' done';
+                            } elseif ($stepIndex === $progressIndex) {
+                                $stepClass .= ' current';
+                            }
+                        ?>
+                        <div class="<?php echo htmlspecialchars($stepClass); ?>"><?php echo htmlspecialchars($stepLabel); ?></div>
                     <?php $stepIndex++; endforeach; ?>
                 </div>
+                <?php if ($isTicketFinished): ?>
+                    <div class="completion-box">
+                        <strong>Ticket finalizado</strong>
+                        La solicitud quedó cerrada en el flujo. Si hubo archivos de entrega adjuntos en el chat, aparecen también en el apartado de entrega.
+                    </div>
+                <?php endif; ?>
                 <div class="meta">
                     <div><span>Tipo</span><strong><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></strong></div>
                     <div><span>Prioridad</span><strong><?php echo htmlspecialchars($ticket['prioridad']); ?></strong></div>
@@ -412,10 +448,18 @@ if ($folio) {
                     <?php endforeach; ?>
                 </ul>
                 <?php if ($archivos): ?>
-                <h2 style="margin-top:1rem;">Archivos</h2>
+                <h2 style="margin-top:1rem;">Archivos iniciales</h2>
                 <ul class="files">
                     <?php foreach ($archivos as $archivo): ?>
                     <li><a href="descargar-archivo.php?tipo=ticket&id=<?php echo (int) $archivo['id']; ?>"><?php echo htmlspecialchars($archivo['nombre_original']); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+                <?php if ($deliveryFiles): ?>
+                <h2 style="margin-top:1rem;">Archivos de entrega</h2>
+                <ul class="files">
+                    <?php foreach ($deliveryFiles as $archivo): ?>
+                    <li><a href="descargar-archivo.php?tipo=mensaje&id=<?php echo (int) $archivo['id']; ?>"><?php echo htmlspecialchars($archivo['nombre_original']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 <?php endif; ?>
