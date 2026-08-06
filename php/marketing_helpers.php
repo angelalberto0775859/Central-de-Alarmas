@@ -262,6 +262,58 @@ function cdaMarketingAssigneeValue($value, array $allowedNames) {
     return in_array($value, $allowedNames, true) ? $value : '';
 }
 
+function cdaMarketingPasswordResetToken() {
+    return bin2hex(random_bytes(32));
+}
+
+function cdaMarketingPasswordResetHash($token) {
+    return hash('sha256', (string) $token);
+}
+
+function cdaMarketingPasswordResetUrl($token) {
+    $siteUrl = defined('CDA_SITE_URL') ? CDA_SITE_URL : 'https://centraldealarmas.com.mx';
+    return rtrim($siteUrl, '/') . '/reset-password.php?token=' . urlencode((string) $token);
+}
+
+function cdaMarketingPasswordResetExpiresAt($ttlSeconds = 3600) {
+    return date('Y-m-d H:i:s', time() + (int) $ttlSeconds);
+}
+
+function cdaMarketingSendPasswordResetEmail($user, $token) {
+    $email = filter_var($user['correo'] ?? '', FILTER_VALIDATE_EMAIL);
+    if (!$email) {
+        return false;
+    }
+
+    $name = cdaMarketingClean($user['nombre'] ?? 'Usuario');
+    $url = cdaMarketingPasswordResetUrl($token);
+    $subject = 'Recuperacion de acceso | Marketing Central de Alarmas';
+    $message = '
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family:Arial,sans-serif;color:#10213f;line-height:1.55;">
+        <div style="max-width:680px;margin:0 auto;border:1px solid #d8e3f0;border-radius:8px;overflow:hidden;">
+            <div style="background:#063970;color:#fff;padding:18px 20px;">
+                <h1 style="margin:0;font-size:21px;">Recuperacion de acceso</h1>
+            </div>
+            <div style="padding:20px;background:#fff;">
+                <p>Hola ' . htmlspecialchars($name) . ', recibimos una solicitud para restablecer o crear la contraseña de tu acceso al panel de Marketing.</p>
+                <p>Por seguridad no enviamos contraseñas por correo. Usa el siguiente enlace para definir una nueva contraseña:</p>
+                <a href="' . htmlspecialchars($url) . '" style="display:inline-block;margin-top:14px;background:#f6eb17;color:#063970;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Crear nueva contraseña</a>
+                <p style="margin-top:16px;color:#66758d;">Este enlace vence en 1 hora. Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
+
+    return mail($email, $subject, $message, $headers);
+}
+
 function cdaMarketingFetchAssignableAdmins() {
     try {
         $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1 ORDER BY nombre ASC");

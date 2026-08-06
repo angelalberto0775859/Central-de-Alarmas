@@ -358,7 +358,7 @@ $googleReady = cdaGoogleOAuthReady();
         }
         .links {
             display:grid;
-            grid-template-columns:1fr 1fr;
+            grid-template-columns:repeat(3, minmax(0, 1fr));
             gap:.7rem;
             margin-top:1rem;
         }
@@ -451,6 +451,7 @@ $googleReady = cdaGoogleOAuthReady();
                 <div class="links">
                     <a href="marketing.html">Nueva solicitud</a>
                     <a href="seguimiento.php">Consultar ticket</a>
+                    <a href="recuperar-password.php">Recuperar contraseña</a>
                 </div>
             </article>
         </main>

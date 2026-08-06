@@ -53,10 +53,13 @@ assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
 assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
+assertSameValue(64, strlen(cdaMarketingPasswordResetToken()), 'password reset token uses 32 random bytes');
+assertSameValue(64, strlen(cdaMarketingPasswordResetHash('abc123')), 'password reset token hash is sha256 hex');
+assertSameValue(true, strpos(cdaMarketingPasswordResetUrl('abc123'), 'reset-password.php?token=abc123') !== false, 'password reset url includes token');
 
 $marketingFormHtml = file_get_contents(__DIR__ . '/../merketing.html');
 assertSameValue(true, strpos($marketingFormHtml, '.zip,.rar') !== false, 'public marketing form accepts zip and rar');
-assertSameValue(true, strpos($marketingFormHtml, 'ZIP/RAR') !== false, 'public marketing form explains compressed files');
+assertSameValue(true, strpos($marketingFormHtml, 'Subida de editables y material requerido') !== false, 'public marketing form explains editable uploads');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',

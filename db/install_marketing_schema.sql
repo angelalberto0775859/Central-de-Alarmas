@@ -4,9 +4,12 @@ CREATE TABLE IF NOT EXISTS marketing_usuarios (
     correo VARCHAR(160) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NULL,
     google_sub VARCHAR(160) NULL,
+    reset_token_hash VARCHAR(64) NULL,
+    reset_token_expira DATETIME NULL,
     rol ENUM('admin','marketing','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario',
     activo TINYINT(1) NOT NULL DEFAULT 1,
-    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_reset_token_hash (reset_token_hash)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS marketing_tickets (
