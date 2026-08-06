@@ -906,6 +906,17 @@ header.scrolled .hamburger span { background: var(--accent); }
     font-weight: 750;
 }
 
+.package-modal-terms a,
+.package-card li.package-terms-note a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.package-modal-terms a:hover,
+.package-card li.package-terms-note a:hover {
+    text-decoration: underline;
+}
+
 .solution-modal-heading {
     margin-bottom: 1rem;
 }

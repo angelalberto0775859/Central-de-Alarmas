@@ -32,6 +32,7 @@ const packageModalData = {
         title: 'Essential/Monitoreo 24/7',
         intro: 'Protección ideal para espacios pequeños con componentes básicos de seguridad.',
         price: '*',
+        installationTextKey: 'packages.included.installationOnePeso',
         components: [
             {
                 name: 'Hub 2 (4G) Jeweller',
@@ -81,6 +82,7 @@ const packageModalData = {
         title: 'Profesional/Monitoreo 24/7',
         intro: 'Paquete ideal para hogares y PyMES con vigilancia y acceso controlado.',
         price: '*',
+        installationTextKey: 'packages.included.installationOnePeso',
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -137,6 +139,7 @@ const packageModalData = {
         title: 'Elite/Monitoreo 24/7',
         intro: 'Solución corporativa para negocios que necesitan cobertura completa y respuesta garantizada.',
         price: '*',
+        hasInstallationIncluded: false,
         components: [
             {
                 name: 'Hub 2 Plus Jeweller',
@@ -279,6 +282,7 @@ const translations = {
         'packages.included.monitoring': 'Monitoreo 24 hrs/7',
         'packages.included.apps': 'App incluida',
         'packages.included.installation': 'Instalación gratuita',
+        'packages.included.installationOnePeso': 'Instalación por $1.00 MXN',
         'packages.included.colors': 'Disponible en blanco o negro',
         'packages.ajaxCard.title': 'Sistema AJAX incluido',
         'packages.ajaxCard.badge': 'INCLUIDO',
@@ -322,6 +326,7 @@ const translations = {
         'packages.included.monitoring': '24/7 monitoring',
         'packages.included.apps': 'App included',
         'packages.included.installation': 'Free installation',
+        'packages.included.installationOnePeso': 'Installation for $1.00 MXN',
         'packages.included.colors': 'Available in white or black',
         'packages.ajaxCard.title': 'AJAX system included',
         'packages.ajaxCard.badge': 'INCLUDED',
@@ -365,6 +370,7 @@ const translations = {
         'packages.included.monitoring': '全天候监控',
         'packages.included.apps': '包含应用',
         'packages.included.installation': '免费安装',
+        'packages.included.installationOnePeso': '安装费 $1.00 MXN',
         'packages.included.colors': '提供白色或黑色',
         'packages.ajaxCard.title': '包含 AJAX 系统',
         'packages.ajaxCard.badge': '已包含',
@@ -639,15 +645,18 @@ function openPackageModal(packageKey) {
         image: 'img/Apps/ajax-security-system.jpeg',
         description: t('packages.ajaxCard.description')
     });
+    const installationText = packageData.installationTextKey
+        ? t(packageData.installationTextKey)
+        : t('packages.included.installation');
     modalBody.innerHTML = `
         <p class="package-modal-intro">${escapeHtml(packageData.intro)}</p>
         <div class="package-included">
             <span>${escapeHtml(monitoringText)}</span>
             ${packageData.hasAppIncluded === false ? '' : `<span>${escapeHtml(t('packages.included.apps'))}</span>`}
-            <span>${escapeHtml(t('packages.included.installation'))}</span>
+            ${packageData.hasInstallationIncluded === false ? '' : `<span>${escapeHtml(installationText)}</span>`}
             ${colorPill}
         </div>
-        <p class="package-modal-terms">${escapeHtml(t('packages.termsNote'))}</p>
+        <p class="package-modal-terms"><a href="./terminos-y-condiciones.html">${escapeHtml(t('packages.termsNote'))}</a></p>
         <div class="package-components-grid">
             ${packageData.components.map((component) => `
                 <article class="package-component-card">
