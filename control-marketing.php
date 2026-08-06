@@ -59,7 +59,7 @@ foreach ($tickets as $ticket) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control admin | Diseño y Marketing</title>
+    <title>Control admin | Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>

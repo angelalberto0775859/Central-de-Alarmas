@@ -78,7 +78,7 @@ if ($statsRow) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de tickets | Diseño y Marketing</title>
+    <title>Panel de tickets | Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -310,7 +310,7 @@ if ($statsRow) {
         <section class="hero">
             <div>
                 <div class="eyebrow"><?php echo $trashMode ? 'Basurero admin' : ($user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'); ?></div>
-                <h1><?php echo $trashMode ? 'Tickets en basurero' : 'Tickets de Diseño y Marketing'; ?></h1>
+                <h1><?php echo $trashMode ? 'Tickets en basurero' : 'Tickets de Marketing'; ?></h1>
                 <p class="muted"><?php echo $trashMode ? 'Restaura solicitudes enviadas al basurero o borralas definitivamente cuando ya no se necesiten.' : 'Cada solicitud vive por folio: registro validado, estado visible, conversacion del ticket y cierre con historial.'; ?></p>
             </div>
         </section>

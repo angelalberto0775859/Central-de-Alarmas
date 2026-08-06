@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = cdaDb()->prepare(
                     'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-                    VALUES (?, ?, ?, \'marketing\', 1)
+                    VALUES (?, ?, ?, \'usuario\', 1)
                     ON DUPLICATE KEY UPDATE
                         nombre = VALUES(nombre),
                         password_hash = VALUES(password_hash),
@@ -109,7 +109,7 @@ $googleReady = cdaGoogleOAuthReady();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión | Diseño y Marketing</title>
+    <title>Iniciar sesión | Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -408,7 +408,7 @@ $googleReady = cdaGoogleOAuthReady();
 
         <main class="login-grid">
             <section class="intro" aria-label="Portal interno">
-                <div class="eyebrow">Diseño y Marketing · Acceso interno</div>
+                <div class="eyebrow">Marketing · Acceso interno</div>
                 <h1>Del pedido al entregable, todo queda visible.</h1>
                 <p>Registra tu acceso, entra al panel y dale seguimiento a cada solicitud sin depender de mensajes sueltos. El equipo ve el estado, la fecha requerida y el avance en un solo lugar.</p>
                 <div class="status-strip" aria-label="Funciones del panel">

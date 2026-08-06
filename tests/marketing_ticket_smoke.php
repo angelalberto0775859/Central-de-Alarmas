@@ -47,6 +47,8 @@ assertSameValue(true, strpos(cdaMarketingAllowedUploadAccept(), '.rar') !== fals
 assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing users can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
+assertSameValue(true, cdaMarketingCanUploadChatFiles('manager'), 'managers can upload chat files');
+assertSameValue(true, cdaMarketingCanUploadChatFiles('trabajador'), 'workers can upload chat files');
 assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');

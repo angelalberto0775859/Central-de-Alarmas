@@ -100,7 +100,7 @@ function cdaMarketingStatusLabel($status) {
         'En evaluacion' => 'En evaluación',
         'Pendiente de informacion' => 'Pendiente de información',
         'Aprobado' => 'Aprobado',
-        'En diseno' => 'En diseño',
+        'En diseno' => 'En producción',
         'En revision' => 'En revisión',
         'Ajustes solicitados' => 'Ajustes solicitados',
         'Programado' => 'Programado',
@@ -233,7 +233,7 @@ function cdaMarketingChatFileExtensions() {
 }
 
 function cdaMarketingCanUploadChatFiles($role) {
-    return in_array((string) $role, ['admin', 'marketing', 'usuario'], true);
+    return in_array((string) $role, ['admin', 'marketing', 'usuario', 'manager', 'trabajador'], true);
 }
 
 function cdaMarketingNormalizeUploadName($name) {
@@ -550,7 +550,7 @@ function cdaMarketingProgressSteps() {
     return [
         'Recibido' => 'Recibido',
         'En evaluacion' => 'Evaluación',
-        'En diseno' => 'Diseño',
+        'En diseno' => 'Producción',
         'En revision' => 'Revisión',
         'Entregado' => 'Entrega',
     ];

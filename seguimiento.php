@@ -92,7 +92,7 @@ if ($folio) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento de ticket | Diseño y Marketing</title>
+    <title>Seguimiento de ticket | Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -308,7 +308,7 @@ if ($folio) {
 
         <section class="hero-grid">
             <div class="hero">
-                <div class="eyebrow">Portal de Diseño y Marketing</div>
+                <div class="eyebrow">Portal de Marketing</div>
                 <h1>Del folio al cierre, sin perder contexto.</h1>
                 <p>Consulta el estado de tu ticket, revisa el historial y usa el chat para aclarar materiales, aprobar ajustes o dejar comentarios junto a la solicitud.</p>
             </div>

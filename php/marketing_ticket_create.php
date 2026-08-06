@@ -34,7 +34,7 @@ function cdaMarketingEnsureRequesterUser($name, $email, $password, $currentUser 
 
     $insert = $db->prepare(
         'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-        VALUES (?, ?, ?, \'marketing\', 1)'
+        VALUES (?, ?, ?, \'usuario\', 1)'
     );
     $insert->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
 
@@ -98,9 +98,9 @@ function cdaMarketingNotifyAdmins($ticket, $files) {
 
     $panelUrl = rtrim(CDA_SITE_URL, '/') . '/panel-marketing.php';
 
-    $subject = 'Nuevo ticket de Diseño y Marketing: ' . $ticket['folio'];
+    $subject = 'Nuevo ticket de Marketing: ' . $ticket['folio'];
     $message = cdaMarketingTicketEmailTemplate(
-        'Nuevo ticket de Diseño y Marketing',
+        'Nuevo ticket de Marketing',
         $ticket,
         $files,
         'Se registro una nueva solicitud para evaluacion del equipo.',
@@ -314,7 +314,7 @@ try {
 
     $ticketId = (int) $db->lastInsertId();
     $hist = $db->prepare('INSERT INTO marketing_ticket_historial (ticket_id, estado, comentario) VALUES (?, ?, ?)');
-    $hist->execute([$ticketId, 'Recibido', 'Ticket creado desde el formulario de Diseño y Marketing.']);
+    $hist->execute([$ticketId, 'Recibido', 'Ticket creado desde el formulario de Marketing.']);
 
     $messageStmt = $db->prepare(
         'INSERT INTO marketing_ticket_mensajes (ticket_id, usuario_id, autor_nombre, autor_rol, mensaje)

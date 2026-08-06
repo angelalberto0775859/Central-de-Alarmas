@@ -158,7 +158,7 @@ try {
 
         $insert = cdaDb()->prepare(
             'INSERT INTO marketing_usuarios (nombre, correo, google_sub, rol, activo)
-            VALUES (?, ?, ?, \'marketing\', 1)'
+            VALUES (?, ?, ?, \'usuario\', 1)'
         );
         $insert->execute([$displayName, $correo, $profile['sub']]);
 

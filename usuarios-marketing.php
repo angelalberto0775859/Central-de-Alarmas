@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
         $correo = filter_var(strtolower(cdaMarketingClean($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
         $password = (string) ($_POST['password'] ?? '');
-        $rol = in_array($_POST['rol'] ?? '', ['admin', 'marketing'], true) ? $_POST['rol'] : 'marketing';
+        $rol = in_array($_POST['rol'] ?? '', ['admin', 'marketing', 'usuario', 'manager', 'trabajador'], true) ? $_POST['rol'] : 'usuario';
         $activo = !empty($_POST['activo']) ? 1 : 0;
 
         if (!$nombre || !$correo) {
@@ -86,7 +86,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios autorizados | Diseño y Marketing</title>
+    <title>Usuarios autorizados | Marketing</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
     <style>
@@ -203,8 +203,11 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <label>Contrasena inicial <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Opcional si usara Google"></label>
                     <label>Rol
                         <select name="rol">
-                            <option value="marketing">Marketing</option>
                             <option value="admin">Administrador</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="usuario">Usuario</option>
+                            <option value="manager">Manager</option>
+                            <option value="trabajador">Trabajador</option>
                         </select>
                     </label>
                     <label class="check"><input name="activo" type="checkbox" value="1" checked> Usuario activo</label>
