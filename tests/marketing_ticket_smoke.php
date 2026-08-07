@@ -81,6 +81,7 @@ assertSameValue(true, function_exists('cdaMarketingSaveTicketUpdate'), 'ticket u
 assertSameValue(true, function_exists('cdaMarketingInsertTicketHistorySafe'), 'ticket history safe insert helper exists');
 assertSameValue(true, function_exists('cdaMarketingCanAssignTickets'), 'ticket assignment permission helper exists');
 assertSameValue(true, function_exists('cdaMarketingFetchAssignableUsers'), 'managers and workers can be fetched for assignment');
+assertSameValue(true, function_exists('cdaMarketingAssignableAssigneeValue'), 'ticket assignment validates assignee directly');
 assertSameValue(true, function_exists('cdaMarketingTicketAssignmentLabel'), 'ticket assignment label helper exists');
 assertSameValue('America/Mexico_City', date_default_timezone_get(), 'marketing uses Mexico City timezone');
 assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
@@ -156,10 +157,12 @@ assertSameValue(true, strpos($helpersSource, "cdaMarketingTicketInternalRecipien
 assertSameValue(true, strpos($helpersSource, "rol) IN ('manager','trabajador')") !== false, 'assignable users are only managers and workers');
 assertSameValue(true, strpos($helpersSource, 'LOWER(rol)') !== false, 'assignable user query tolerates role casing');
 assertSameValue(true, strpos($helpersSource, 'No fue posible consultar asignables') !== false, 'assignable user query logs failures');
+assertSameValue(true, strpos($helpersSource, 'function cdaMarketingAssignableAssigneeValue') !== false, 'assignment validation is independent from rendered options');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingSaveTicketUpdate') !== false, 'ticket update helper centralizes resilient saves');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingInsertTicketHistorySafe') !== false, 'ticket history insert does not block ticket saves');
 $ticketUpdateSource = file_get_contents(__DIR__ . '/../ticket-actualizar.php');
 assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingSaveTicketUpdate') !== false, 'ticket update endpoint uses resilient save helper');
+assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingAssignableAssigneeValue') !== false, 'ticket update endpoint validates assignee from database');
 assertSameValue(true, strpos($ticketUpdateSource, 'No se pudo asignar') !== false, 'ticket update endpoint rejects invalid assignment instead of clearing it');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSyncUserTicketEmail') !== false, 'users page updates ticket requester emails when user email changes');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSendPasswordChangedEmail') !== false, 'users page emails users when password changes');

@@ -19,12 +19,8 @@ $estado = cdaMarketingClean($_POST['estado'] ?? '');
 $respuesta = cdaMarketingClean($_POST['respuesta_interna'] ?? '');
 $fechaEntregaRaw = cdaMarketingClean($_POST['fecha_entrega_estimada'] ?? '');
 $fechaEntregaEstimada = cdaMarketingOptionalDate($fechaEntregaRaw);
-$assignableAdmins = cdaMarketingFetchAssignableUsers();
-$assignableAdminNames = array_map(function ($admin) {
-    return (string) ($admin['nombre'] ?? '');
-}, $assignableAdmins);
 $asignadoRaw = cdaMarketingClean($_POST['asignado_a'] ?? '');
-$asignado = cdaMarketingAssigneeValue($asignadoRaw, $assignableAdminNames);
+$asignado = cdaMarketingAssignableAssigneeValue($asignadoRaw);
 $returnTo = cdaMarketingClean($_POST['return_to'] ?? 'panel-marketing.php');
 $allowedReturnTo = ['panel-marketing.php', 'control-marketing.php'];
 if (!in_array($returnTo, $allowedReturnTo, true)) {

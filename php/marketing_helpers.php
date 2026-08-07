@@ -867,6 +867,36 @@ function cdaMarketingAssigneeValue($value, array $allowedNames) {
     return in_array($value, $allowedNames, true) ? $value : '';
 }
 
+function cdaMarketingAssignableAssigneeValue($value) {
+    $value = cdaMarketingClean($value);
+    if ($value === '') {
+        return '';
+    }
+
+    try {
+        cdaMarketingEnsureUserRoleSchema();
+        cdaMarketingEnsureColumn('marketing_usuarios', 'activo', "ALTER TABLE marketing_usuarios ADD COLUMN activo TINYINT(1) NOT NULL DEFAULT 1");
+
+        $hasActiveColumn = cdaMarketingColumnExists('marketing_usuarios', 'activo');
+        $activeSql = $hasActiveColumn ? 'AND activo = 1' : '';
+        $stmt = cdaDb()->prepare(
+            "SELECT nombre
+            FROM marketing_usuarios
+            WHERE nombre = ?
+            AND LOWER(rol) IN ('manager','trabajador')
+            $activeSql
+            LIMIT 1"
+        );
+        $stmt->execute([$value]);
+        $row = $stmt->fetch();
+
+        return $row ? (string) $row['nombre'] : '';
+    } catch (Throwable $e) {
+        error_log('No fue posible validar asignable de marketing: ' . $e->getMessage());
+        return '';
+    }
+}
+
 function cdaMarketingPasswordResetToken() {
     return bin2hex(random_bytes(32));
 }
