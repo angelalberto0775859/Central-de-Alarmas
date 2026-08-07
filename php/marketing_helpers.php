@@ -793,6 +793,10 @@ function cdaMarketingCanManageTickets($role) {
     return in_array((string) $role, ['admin', 'manager'], true);
 }
 
+function cdaMarketingCanAssignTickets($role) {
+    return cdaMarketingCanManageTickets($role);
+}
+
 function cdaMarketingCanAccessBoard($role) {
     return in_array((string) $role, ['admin', 'manager', 'trabajador'], true);
 }
@@ -910,13 +914,72 @@ function cdaMarketingSendPasswordResetEmail($user, $token) {
     return mail($email, $subject, $message, cdaMarketingMailHeaders());
 }
 
+function cdaMarketingSendPasswordChangedEmail($user) {
+    $email = filter_var($user['correo'] ?? '', FILTER_VALIDATE_EMAIL);
+    if (!$email) {
+        return false;
+    }
+
+    $name = cdaMarketingClean($user['nombre'] ?? 'Usuario');
+    $resetUrl = rtrim((defined('CDA_SITE_URL') ? CDA_SITE_URL : 'https://centraldealarmas.com.mx'), '/') . '/recuperar-password.php';
+    $subject = 'Contrasena actualizada | Marketing Central de Alarmas';
+    $message = '
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family:Arial,sans-serif;color:#10213f;line-height:1.55;">
+        <div style="max-width:680px;margin:0 auto;border:1px solid #d8e3f0;border-radius:8px;overflow:hidden;">
+            <div style="background:#063970;color:#fff;padding:18px 20px;">
+                <h1 style="margin:0;font-size:21px;">Contrasena actualizada</h1>
+            </div>
+            <div style="padding:20px;background:#fff;">
+                <p>Hola ' . htmlspecialchars($name) . ', la contrasena de tu acceso al panel de Marketing fue actualizada.</p>
+                <p>Por seguridad no enviamos contrasenas por correo. Si no solicitaste este cambio o necesitas definir una nueva, usa el enlace de recuperacion:</p>
+                <a href="' . htmlspecialchars($resetUrl) . '" style="display:inline-block;margin-top:14px;background:#f6eb17;color:#063970;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Recuperar acceso</a>
+                <p style="margin-top:16px;color:#66758d;">Si reconoces este cambio, no necesitas hacer nada mas.</p>
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    return mail($email, $subject, $message, cdaMarketingMailHeaders());
+}
+
 function cdaMarketingFetchAssignableAdmins() {
+    return cdaMarketingFetchAssignableUsers();
+}
+
+function cdaMarketingFetchAssignableUsers() {
     try {
-        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol IN ('admin','manager','trabajador') AND activo = 1 ORDER BY nombre ASC");
+        $stmt = cdaDb()->query("SELECT nombre, correo, rol FROM marketing_usuarios WHERE activo = 1 ORDER BY nombre ASC, correo ASC");
         return $stmt->fetchAll();
     } catch (Throwable $e) {
         return [];
     }
+}
+
+function cdaMarketingTicketBelongsToUser($ticket, $user) {
+    $assignedTo = cdaMarketingClean($ticket['asignado_a'] ?? '');
+    $userName = cdaMarketingClean($user['nombre'] ?? '');
+
+    return $assignedTo !== '' && $userName !== '' && strcasecmp($assignedTo, $userName) === 0;
+}
+
+function cdaMarketingTicketAssignmentLabel($ticket, $user = []) {
+    $assignedTo = cdaMarketingClean($ticket['asignado_a'] ?? '');
+    if ($assignedTo === '') {
+        return 'Sin asignar';
+    }
+
+    return cdaMarketingTicketBelongsToUser($ticket, $user) ? 'Te toca a ti' : 'Asignado a ' . $assignedTo;
+}
+
+function cdaMarketingTicketAssignmentClass($ticket, $user = []) {
+    $assignedTo = cdaMarketingClean($ticket['asignado_a'] ?? '');
+    if ($assignedTo === '') {
+        return 'unassigned';
+    }
+
+    return cdaMarketingTicketBelongsToUser($ticket, $user) ? 'mine' : 'assigned';
 }
 
 function cdaMarketingEnsureUploadDir($path) {

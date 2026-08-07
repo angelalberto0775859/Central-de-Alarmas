@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'bulk_save') {
         $rows = is_array($_POST['users'] ?? null) ? $_POST['users'] : [];
         $updated = 0;
+        $passwordChangedUsers = [];
 
         try {
             $db = cdaDb();
@@ -120,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($password !== '') {
                     $stmt = $db->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ?, password_hash = ? WHERE id = ?');
                     $stmt->execute([$nombre, $correo, $rol, $activo, password_hash($password, PASSWORD_DEFAULT), $editId]);
+                    $passwordChangedUsers[] = ['nombre' => $nombre, 'correo' => $correo];
                 } else {
                     $stmt = $db->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
                     $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
@@ -129,6 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $db->commit();
+            foreach ($passwordChangedUsers as $changedUser) {
+                cdaMarketingSendPasswordChangedEmail($changedUser);
+            }
             $message = 'Cambios guardados para ' . $updated . ' usuarios.';
             $user = cdaCurrentUser();
         } catch (Throwable $e) {
@@ -186,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($password !== '') {
                         $stmt = cdaDb()->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ?, password_hash = ? WHERE id = ?');
                         $stmt->execute([$nombre, $correo, $rol, $activo, password_hash($password, PASSWORD_DEFAULT), $editId]);
+                        cdaMarketingSendPasswordChangedEmail(['nombre' => $nombre, 'correo' => $correo]);
                     } else {
                         $stmt = cdaDb()->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
                         $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
@@ -202,6 +208,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), rol = VALUES(rol), activo = VALUES(activo), password_hash = COALESCE(VALUES(password_hash), password_hash)'
                     );
                     $stmt->execute([$nombre, $correo, $hash, $rol, $activo]);
+                    if ($password !== '') {
+                        cdaMarketingSendPasswordChangedEmail(['nombre' => $nombre, 'correo' => $correo]);
+                    }
                     $message = 'Usuario guardado correctamente.';
                 }
             } catch (Throwable $e) {

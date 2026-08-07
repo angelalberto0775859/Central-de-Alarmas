@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('America/Mexico_City');
+
 // Este archivo es seguro para versionar. Las credenciales reales viven en
 // php/marketing_secrets.php, archivo ignorado por Git.
 $secretFile = __DIR__ . '/marketing_secrets.php';

@@ -43,7 +43,7 @@ $stmt->execute($params);
 $tickets = $stmt->fetchAll();
 $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
-$assignableAdmins = cdaMarketingFetchAssignableAdmins();
+$assignableUsers = cdaMarketingFetchAssignableUsers();
 $flashError = $_SESSION['cda_marketing_error'] ?? '';
 $flashSuccess = $_SESSION['cda_marketing_success'] ?? '';
 unset($_SESSION['cda_marketing_error']);
@@ -273,6 +273,10 @@ if ($statsRow) {
         .priority { display:inline-flex; border-radius:999px; padding:.3rem .5rem; background:#eef4fb; color:var(--ink); font-size:.7rem; font-weight:900; }
         .priority.urgente { background:#fee2e2; color:var(--red); }
         .priority.alta { background:#fff7cc; color:#7c5800; }
+        .assignment-badge { display:inline-flex; width:fit-content; border-radius:999px; padding:.32rem .55rem; font-size:.7rem; font-weight:950; background:#eef4fb; color:var(--blue); }
+        .assignment-badge.mine { background:#d1fae5; color:#047857; }
+        .assignment-badge.assigned { background:#ede9fe; color:#5b21b6; }
+        .assignment-badge.unassigned { background:#f1f5f9; color:#475569; }
         .inline-form { display:grid; gap:.5rem; min-width:240px; padding:.7rem; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fbfdff; }
         .inline-form button, .filters button {
             background:var(--yellow);
@@ -404,6 +408,7 @@ if ($statsRow) {
                             <div class="ticket-pills">
                                 <span class="status <?php echo htmlspecialchars(cdaMarketingStatusClass($ticket['estado'])); ?>"><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?></span>
                                 <span class="priority <?php echo htmlspecialchars(strtolower($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span>
+                                <span class="assignment-badge <?php echo htmlspecialchars(cdaMarketingTicketAssignmentClass($ticket, $user)); ?>"><?php echo htmlspecialchars(cdaMarketingTicketAssignmentLabel($ticket, $user)); ?></span>
                                 <span class="summary-date"><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
                             </div>
                         </div>
@@ -439,9 +444,10 @@ if ($statsRow) {
                                 </select>
                                 <select name="asignado_a" aria-label="Asignar ticket">
                                     <option value="">Sin asignar</option>
-                                    <?php foreach ($assignableAdmins as $admin): ?>
-                                        <?php $adminName = (string) ($admin['nombre'] ?? ''); ?>
-                                        <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName); ?></option>
+                                    <?php foreach ($assignableUsers as $assignableUser): ?>
+                                        <?php $adminName = (string) ($assignableUser['nombre'] ?? ''); ?>
+                                        <?php $roleLabel = cdaMarketingRoleLabel($assignableUser['rol'] ?? 'usuario'); ?>
+                                        <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName . ' · ' . $roleLabel); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <label class="section-label">Entrega aproximada

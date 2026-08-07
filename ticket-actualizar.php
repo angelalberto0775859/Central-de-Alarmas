@@ -19,7 +19,7 @@ $estado = cdaMarketingClean($_POST['estado'] ?? '');
 $respuesta = cdaMarketingClean($_POST['respuesta_interna'] ?? '');
 $fechaEntregaRaw = cdaMarketingClean($_POST['fecha_entrega_estimada'] ?? '');
 $fechaEntregaEstimada = cdaMarketingOptionalDate($fechaEntregaRaw);
-$assignableAdmins = cdaMarketingFetchAssignableAdmins();
+$assignableAdmins = cdaMarketingFetchAssignableUsers();
 $assignableAdminNames = array_map(function ($admin) {
     return (string) ($admin['nombre'] ?? '');
 }, $assignableAdmins);

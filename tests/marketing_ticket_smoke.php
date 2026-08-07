@@ -79,9 +79,16 @@ assertSameValue(true, function_exists('cdaMarketingSyncUserTicketEmail'), 'user 
 assertSameValue(true, function_exists('cdaMarketingTicketOptionalColumns'), 'ticket optional column helper exists');
 assertSameValue(true, function_exists('cdaMarketingSaveTicketUpdate'), 'ticket update save helper exists');
 assertSameValue(true, function_exists('cdaMarketingInsertTicketHistorySafe'), 'ticket history safe insert helper exists');
+assertSameValue(true, function_exists('cdaMarketingCanAssignTickets'), 'ticket assignment permission helper exists');
+assertSameValue(true, function_exists('cdaMarketingFetchAssignableUsers'), 'all active users can be fetched for assignment');
+assertSameValue(true, function_exists('cdaMarketingTicketAssignmentLabel'), 'ticket assignment label helper exists');
+assertSameValue('America/Mexico_City', date_default_timezone_get(), 'marketing uses Mexico City timezone');
 assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('marketing'), 'old marketing role cannot manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('trabajador'), 'workers cannot manage tickets');
+assertSameValue(true, cdaMarketingCanAssignTickets('admin'), 'admins can assign tickets');
+assertSameValue(true, cdaMarketingCanAssignTickets('manager'), 'managers can assign tickets');
+assertSameValue(false, cdaMarketingCanAssignTickets('trabajador'), 'workers cannot assign tickets');
 assertSameValue(true, cdaMarketingCanAccessBoard('trabajador'), 'workers can access board');
 assertSameValue(false, cdaMarketingCanAccessBoard('usuario'), 'regular users do not access board');
 assertSameValue('usuario', cdaMarketingRoleClass('marketing'), 'old marketing role normalizes to usuario');
@@ -99,9 +106,13 @@ assertSameValue(null, cdaMarketingOptionalDate('20/08/2026'), 'optional date rej
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
 assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
+assertSameValue('Te toca a ti', cdaMarketingTicketAssignmentLabel(['asignado_a' => 'Angel Admin'], ['nombre' => 'Angel Admin']), 'ticket assignment marks current user');
+assertSameValue('Asignado a Maria', cdaMarketingTicketAssignmentLabel(['asignado_a' => 'Maria'], ['nombre' => 'Angel Admin']), 'ticket assignment shows owner');
+assertSameValue('Sin asignar', cdaMarketingTicketAssignmentLabel(['asignado_a' => ''], ['nombre' => 'Angel Admin']), 'ticket assignment shows unassigned');
 assertSameValue(64, strlen(cdaMarketingPasswordResetToken()), 'password reset token uses 32 random bytes');
 assertSameValue(64, strlen(cdaMarketingPasswordResetHash('abc123')), 'password reset token hash is sha256 hex');
 assertSameValue(true, strpos(cdaMarketingPasswordResetUrl('abc123'), 'reset-password.php?token=abc123') !== false, 'password reset url includes token');
+assertSameValue(true, function_exists('cdaMarketingSendPasswordChangedEmail'), 'password changed email helper exists');
 
 $marketingFormHtml = file_get_contents(__DIR__ . '/../crear-ticket.php');
 assertSameValue(true, strpos($marketingFormHtml, 'cdaMarketingAllowedUploadAccept()') !== false, 'authenticated marketing form uses shared accept list');
@@ -115,6 +126,10 @@ $profileHtml = file_get_contents(__DIR__ . '/../perfil-marketing.php');
 $schemaSql = file_get_contents(__DIR__ . '/../db/install_marketing_schema.sql');
 assertSameValue(true, strpos($panelHtml, 'fecha_entrega_estimada') !== false, 'panel can edit estimated delivery date');
 assertSameValue(true, strpos($controlHtml, 'fecha_entrega_estimada') !== false, 'board can edit estimated delivery date');
+assertSameValue(true, strpos($panelHtml, 'cdaMarketingFetchAssignableUsers') !== false, 'panel assigns tickets to any active user');
+assertSameValue(true, strpos($controlHtml, 'cdaMarketingFetchAssignableUsers') !== false, 'board assigns tickets to any active user');
+assertSameValue(true, strpos($panelHtml, 'cdaMarketingTicketAssignmentLabel') !== false, 'panel distinguishes assigned ticket owner');
+assertSameValue(true, strpos($controlHtml, 'cdaMarketingTicketAssignmentLabel') !== false, 'board distinguishes assigned ticket owner');
 assertSameValue(true, strpos($profileHtml, 'function cdaProfileInitials') !== false, 'profile has local initials helper');
 assertSameValue(false, strpos($profileHtml, 'mb_substr') !== false, 'profile does not require mbstring initials');
 assertSameValue(true, strpos($profileHtml, 'function cdaProfileTicketColumns') !== false, 'profile guards optional ticket columns');
@@ -142,6 +157,7 @@ assertSameValue(true, strpos($helpersSource, 'function cdaMarketingSaveTicketUpd
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingInsertTicketHistorySafe') !== false, 'ticket history insert does not block ticket saves');
 assertSameValue(true, strpos(file_get_contents(__DIR__ . '/../ticket-actualizar.php'), 'cdaMarketingSaveTicketUpdate') !== false, 'ticket update endpoint uses resilient save helper');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSyncUserTicketEmail') !== false, 'users page updates ticket requester emails when user email changes');
+assertSameValue(true, strpos($usersHtml, 'cdaMarketingSendPasswordChangedEmail') !== false, 'users page emails users when password changes');
 $fixedRolesSql = file_get_contents(__DIR__ . '/../db/marketing_fixed_user_roles.sql');
 assertSameValue(true, strpos($fixedRolesSql, "ENUM('admin','usuario','manager','trabajador')") !== false, 'fixed roles migration updates user role enum');
 
