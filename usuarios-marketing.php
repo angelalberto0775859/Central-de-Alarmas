@@ -352,10 +352,9 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <label>Contrasena inicial <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Opcional si usara Google"></label>
                     <label>Rol
                         <select name="rol">
-                            <option value="admin">Administrador</option>
+                            <option value="usuario">Usuario</option>
                             <option value="manager">Manager</option>
                             <option value="trabajador">Trabajador</option>
-                            <option value="usuario">Usuario</option>
                         </select>
                     </label>
                     <label class="check"><input name="activo" type="checkbox" value="1" checked> Usuario activo</label>
@@ -377,17 +376,24 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                             <thead><tr><th>Gestionar usuario</th><th>Google</th><th>Creado</th><th>Acciones</th></tr></thead>
                             <tbody>
                             <?php foreach ($users as $item): ?>
-                            <?php $isProtected = cdaMarketingProtectedUserEmail($item['correo']); ?>
+                            <?php
+                                $itemEmail = strtolower((string) $item['correo']);
+                                $fixedItemRole = cdaMarketingFixedRoleByEmail($itemEmail);
+                                $isProtected = $fixedItemRole !== null;
+                                $rowRole = cdaMarketingUserRoleValue($itemEmail, $item['rol'] ?? 'usuario');
+                            ?>
                             <tr>
                                 <td>
                                     <div class="user-edit">
                                         <input name="users[<?php echo (int) $item['id']; ?>][nombre]" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre">
                                         <input name="users[<?php echo (int) $item['id']; ?>][correo]" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo">
-                                        <select name="users[<?php echo (int) $item['id']; ?>][rol]" aria-label="Rol">
-                                            <option value="admin" <?php echo $item['rol'] === 'admin' ? 'selected' : ''; ?>>Administrador</option>
-                                            <option value="manager" <?php echo $item['rol'] === 'manager' ? 'selected' : ''; ?>>Manager</option>
-                                            <option value="trabajador" <?php echo $item['rol'] === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
-                                            <option value="usuario" <?php echo $item['rol'] === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
+                                        <select name="users[<?php echo (int) $item['id']; ?>][rol]" aria-label="Rol" <?php echo $isProtected ? 'disabled' : ''; ?>>
+                                            <?php if ($fixedItemRole === 'admin'): ?>
+                                                <option value="admin" selected>Administrador</option>
+                                            <?php endif; ?>
+                                            <option value="usuario" <?php echo $rowRole === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
+                                            <option value="manager" <?php echo $rowRole === 'manager' ? 'selected' : ''; ?>>Manager</option>
+                                            <option value="trabajador" <?php echo $rowRole === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
                                         </select>
                                         <label class="check"><input name="users[<?php echo (int) $item['id']; ?>][activo]" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?> <?php echo $isProtected ? 'disabled' : ''; ?>> Activo</label>
                                         <input name="users[<?php echo (int) $item['id']; ?>][password]" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña">

@@ -111,6 +111,9 @@ assertSameValue(true, strpos($usersHtml, 'cdaMarketingEnforceFixedUserRoles()') 
 assertSameValue(true, strpos($usersHtml, 'Guarda los cambios de rol') !== false, 'users page explains the bottom save button');
 assertSameValue(true, strpos($usersHtml, "value=\"bulk_save\"") !== false, 'users page posts bulk save action');
 assertSameValue(true, strpos($usersHtml, 'name="users[') !== false, 'users page submits editable user rows');
+assertSameValue(false, strpos($usersHtml, '<option value="admin">Administrador</option>') !== false, 'new user form does not offer admin role');
+assertSameValue(true, strpos($usersHtml, '$rowRole = cdaMarketingUserRoleValue') !== false, 'users page normalizes row role before rendering select');
+assertSameValue(true, strpos($usersHtml, '$fixedItemRole === \'admin\'') !== false, 'users page only renders admin option for fixed admin email');
 assertSameValue(true, strpos($usersHtml, 'formaction="usuarios-marketing.php?action=delete"') !== false, 'users page keeps delete action per row');
 assertSameValue(true, strpos($usersHtml, 'Rol protegido por correo') !== false, 'users page explains protected roles');
 assertSameValue(true, strpos($schemaSql, 'fecha_entrega_estimada DATE NULL') !== false, 'schema includes estimated delivery date');
