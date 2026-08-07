@@ -76,10 +76,10 @@ $tickets = $ticketStmt->fetchAll();
 
 // Role Descriptions
 $roleDescriptions = [
-    'admin' => 'Administrador · Tienes acceso total al panel, gestión de tickets, tablero Kanban, reportes y administración de usuarios.',
-    'manager' => 'Coordinador / Manager · Tienes acceso a la gestión de tickets, asignación de responsables, tablero Kanban y estadísticas.',
-    'trabajador' => 'Equipo de Marketing · Tienes acceso al tablero Kanban de producción y atención de solicitudes asignadas.',
-    'usuario' => 'Solicitante · Puedes crear solicitudes de marketing, adjuntar archivos y dar seguimiento a tus tickets.'
+    'admin' => 'Administrador · Acceso completo al panel, gestión de tickets, tablero Kanban, estadísticas y administración de usuarios.',
+    'manager' => 'Coordinador / Manager · Gestión de tickets, asignación de tareas, tablero Kanban y estadísticas.',
+    'trabajador' => 'Equipo de Marketing · Acceso al tablero Kanban de producción y atención de solicitudes asignadas.',
+    'usuario' => 'Solicitante · Creación de solicitudes de marketing, carga de archivos y seguimiento de tickets.'
 ];
 $roleDesc = $roleDescriptions[$user['rol']] ?? $roleDescriptions['usuario'];
 
@@ -107,14 +107,13 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             --blue-dark: #031833;
             --ink: #10213f;
             --muted: #66758d;
-            --line: rgba(6, 57, 112, .14);
+            --line: rgba(6, 57, 112, .15);
             --soft: #f4f8fc;
             --yellow: #f6eb17;
             --radius: 12px;
-            --shadow: 0 18px 46px rgba(6, 57, 112, .12);
+            --shadow: 0 18px 46px rgba(6, 57, 112, .14);
             --green: #047857;
             --red: #b91c1c;
-            --orange: #b45309;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -129,6 +128,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             margin: 0 auto;
             padding: 1.1rem 0 3rem;
         }
+
         /* Top Navigation Header */
         .topbar {
             display: flex;
@@ -155,7 +155,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             min-height: 40px;
             display: inline-flex;
             align-items: center;
-            color: rgba(255,255,255,.86);
+            color: rgba(255,255,255,.9);
             text-decoration: none;
             border: 1px solid rgba(255,255,255,.2);
             border-radius: 8px;
@@ -166,15 +166,16 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             transition: all .15s ease;
         }
         .nav a:hover {
-            background: rgba(255,255,255,.15);
+            background: rgba(255,255,255,.16);
             color: #fff;
-            border-color: rgba(255,255,255,.34);
+            border-color: rgba(255,255,255,.36);
         }
         .nav a.active {
-            background: rgba(255,255,255,.18);
+            background: rgba(255,255,255,.2);
             color: #fff;
-            border-color: rgba(246,235,23,.48);
+            border-color: rgba(246,235,23,.6);
         }
+
         .profile-menu { position: relative; }
         .profile-menu summary {
             min-height: 40px;
@@ -190,7 +191,6 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             font-size: .8rem;
             font-weight: 850;
             cursor: pointer;
-            transition: all .15s ease;
         }
         .profile-menu summary::-webkit-details-marker { display: none; }
         .profile-menu summary::after {
@@ -203,22 +203,18 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             opacity: .75;
         }
         .profile-menu[open] summary { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.36); }
-        .profile-menu.role-usuario summary { border-color: rgba(246,235,23,.82); box-shadow: 0 0 0 1px rgba(246,235,23,.18); }
-        .profile-menu.role-admin summary { border-color: rgba(248,113,113,.9); box-shadow: 0 0 0 1px rgba(248,113,113,.2); }
-        .profile-menu.role-trabajador summary { border-color: rgba(34,197,94,.88); box-shadow: 0 0 0 1px rgba(34,197,94,.18); }
-        .profile-menu.role-manager summary { border-color: rgba(96,165,250,.88); box-shadow: 0 0 0 1px rgba(96,165,250,.18); }
         .profile-dropdown {
             position: absolute;
             right: 0;
             top: calc(100% + .45rem);
-            z-index: 20;
+            z-index: 50;
             display: grid;
             min-width: 200px;
             padding: .45rem;
-            border: 1px solid rgba(6,57,112,.12);
+            border: 1px solid rgba(6,57,112,.15);
             border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 18px 40px rgba(0,0,0,.22);
+            background: #ffffff;
+            box-shadow: 0 18px 40px rgba(0,0,0,.25);
         }
         .profile-dropdown a {
             min-height: 38px;
@@ -226,9 +222,8 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             border: 0;
             background: #fff;
             color: var(--ink);
-            box-shadow: none;
         }
-        .profile-dropdown a:hover { background: var(--soft); color: var(--blue); border-color: transparent; }
+        .profile-dropdown a:hover { background: var(--soft); color: var(--blue); }
         .profile-dropdown a.logout-link { color: #991b1b; }
 
         /* Profile Hero Banner */
@@ -281,7 +276,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
         }
         .user-email {
             font-size: .88rem;
-            color: rgba(255,255,255,.82);
+            color: rgba(255,255,255,.88);
         }
         .role-pill {
             display: inline-flex;
@@ -289,7 +284,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             padding: .22rem .65rem;
             border-radius: 20px;
             font-size: .72rem;
-            font-weight: 800;
+            font-weight: 850;
             letter-spacing: .03em;
             text-transform: uppercase;
             background: rgba(246,235,23,.22);
@@ -306,15 +301,15 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             flex-wrap: wrap;
         }
         .stat-box {
-            background: rgba(0, 0, 0, .22);
-            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(0, 0, 0, .28);
+            border: 1px solid rgba(255,255,255,.14);
             border-radius: 10px;
-            padding: .7rem 1rem;
+            padding: .75rem 1.1rem;
             min-width: 110px;
             text-align: center;
         }
         .stat-box .num {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: var(--yellow);
             line-height: 1;
@@ -322,61 +317,48 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
         .stat-box .lbl {
             font-size: .7rem;
             font-weight: 750;
-            color: rgba(255,255,255,.75);
+            color: rgba(255,255,255,.8);
             text-transform: uppercase;
             margin-top: .3rem;
         }
 
-        /* Tabs Nav Header */
-        .tabs-header {
+        /* Section Navigation Shortcuts */
+        .section-nav {
             display: flex;
-            gap: .5rem;
-            margin-bottom: 1.2rem;
-            border-bottom: 1px solid rgba(255,255,255,.15);
-            padding-bottom: .6rem;
-            overflow-x: auto;
+            gap: .6rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
         }
-        .tab-btn {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.14);
+        .section-link {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.18);
             border-radius: 8px;
-            color: rgba(255,255,255,.8);
-            padding: .65rem 1.1rem;
-            font-size: .84rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all .2s ease;
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-        }
-        .tab-btn:hover {
-            background: rgba(255,255,255,.12);
             color: #fff;
+            padding: .6rem 1rem;
+            font-size: .84rem;
+            font-weight: 850;
+            text-decoration: none;
+            transition: all .15s ease;
         }
-        .tab-btn.active {
+        .section-link:hover {
             background: var(--yellow);
             color: var(--blue-dark);
             border-color: var(--yellow);
-            box-shadow: 0 4px 14px rgba(246,235,23,.25);
         }
 
-        /* Card container */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
+        /* Cards & Section Container */
         .card {
-            background: rgba(255,255,255,.98);
+            background: #ffffff;
             border: 1px solid var(--line);
             border-radius: var(--radius);
             padding: 1.4rem;
             box-shadow: var(--shadow);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.4rem;
+            color: var(--ink);
         }
         .card h2 {
             color: var(--blue);
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 800;
             margin-bottom: 1rem;
             display: flex;
@@ -384,7 +366,6 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             gap: .5rem;
         }
 
-        /* Grid layout for two columns */
         .two-cols {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -394,15 +375,15 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             .two-cols { grid-template-columns: 1fr; }
         }
 
-        /* Data list styling */
+        /* Information Grid */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: .8rem;
             margin-bottom: 1rem;
         }
         .info-item {
-            border: 1px solid rgba(6,57,112,.08);
+            border: 1px solid rgba(6,57,112,.1);
             border-radius: 8px;
             background: var(--soft);
             padding: .75rem .9rem;
@@ -426,14 +407,14 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             background: #eff6ff;
             border: 1px solid #bfdbfe;
             border-radius: 8px;
-            padding: .9rem 1.1rem;
+            padding: .95rem 1.1rem;
             color: #1e40af;
-            font-size: .86rem;
-            line-height: 1.45;
+            font-size: .88rem;
+            line-height: 1.5;
             margin-bottom: 1rem;
         }
 
-        /* Alert notifications */
+        /* Notifications */
         .ok, .error {
             margin-bottom: 1rem;
             border-radius: 8px;
@@ -447,31 +428,31 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
         .ok { color: #047857; background: #d1fae5; border: 1px solid #a7f3d0; }
         .error { color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca; }
 
-        /* Form Controls */
+        /* Forms */
         .form-group {
             margin-bottom: 1.1rem;
         }
         .form-group label {
             display: block;
-            font-size: .82rem;
+            font-size: .84rem;
             font-weight: 850;
             color: var(--ink);
             margin-bottom: .38rem;
         }
         .form-group input {
             width: 100%;
-            border: 1px solid var(--line);
+            border: 1px solid rgba(6,57,112,.25);
             border-radius: 8px;
             padding: .8rem .9rem;
             font: inherit;
-            background: #fff;
+            background: #ffffff;
             color: var(--ink);
             outline: none;
             transition: all .15s ease;
         }
         .form-group input:focus {
             border-color: var(--blue-2);
-            box-shadow: 0 0 0 4px rgba(6,57,112,.09);
+            box-shadow: 0 0 0 4px rgba(6,57,112,.12);
         }
         .form-hint {
             font-size: .75rem;
@@ -496,16 +477,15 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             align-items: center;
             justify-content: center;
             gap: .4rem;
-            box-shadow: 0 4px 12px rgba(6,57,112,.15);
+            box-shadow: 0 4px 12px rgba(6,57,112,.18);
             transition: all .15s ease;
         }
         button.btn-primary:hover, .button:hover {
             background: #edd800;
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(6,57,112,.2);
         }
 
-        /* Tickets view */
+        /* Ticket Cards */
         .ticket-filters {
             display: flex;
             gap: .5rem;
@@ -516,9 +496,9 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             background: var(--soft);
             color: var(--muted);
             border-radius: 20px;
-            padding: .35rem .85rem;
+            padding: .38rem .9rem;
             font-size: .78rem;
-            font-weight: 800;
+            font-weight: 850;
             cursor: pointer;
         }
         .filter-btn.active {
@@ -540,7 +520,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             border-left: 5px solid var(--blue-2);
             border-radius: 10px;
             background: #fff;
-            padding: .9rem 1.1rem;
+            padding: .95rem 1.1rem;
             text-decoration: none;
             color: inherit;
             transition: all .15s ease;
@@ -548,28 +528,28 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
         .ticket-item:hover {
             border-color: var(--blue);
             transform: translateX(3px);
-            box-shadow: 0 6px 16px rgba(6,57,112,.08);
+            box-shadow: 0 6px 16px rgba(6,57,112,.1);
         }
         .ticket-main {
             display: grid;
-            gap: .25rem;
+            gap: .28rem;
         }
         .ticket-title {
             font-weight: 850;
             color: var(--blue);
-            font-size: .95rem;
+            font-size: .98rem;
         }
         .ticket-sub {
-            font-size: .8rem;
+            font-size: .82rem;
             color: var(--muted);
             display: flex;
             align-items: center;
-            gap: .6rem;
+            gap: .65rem;
             flex-wrap: wrap;
         }
         .badge {
             display: inline-block;
-            padding: .15rem .5rem;
+            padding: .18rem .55rem;
             border-radius: 4px;
             font-size: .72rem;
             font-weight: 850;
@@ -599,7 +579,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
 </head>
 <body>
     <div class="shell">
-        <!-- Header Nav Bar -->
+        <!-- Header Navigation Bar -->
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegación principal">
@@ -610,7 +590,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
                 <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a href="crear-ticket.php">Crear ticket</a>
                 <a href="seguimiento.php">Seguimiento</a>
-                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>" open>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
                     <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
@@ -652,11 +632,11 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             </div>
         </section>
 
-        <!-- Tabs Navigation -->
-        <nav class="tabs-header" aria-label="Secciones de perfil">
-            <button class="tab-btn active" data-tab="perfil" type="button">👤 Mi Perfil</button>
-            <button class="tab-btn" data-tab="configuracion" type="button">⚙️ Configuración y Seguridad</button>
-            <button class="tab-btn" data-tab="tickets" type="button">📋 Mis Solicitudes (<?php echo count($tickets); ?>)</button>
+        <!-- Shortcut Navigation Links -->
+        <nav class="section-nav" aria-label="Accesos rápidos de perfil">
+            <a href="#seccion-cuenta" class="section-link">👤 Información de Cuenta</a>
+            <a href="#configuracion" class="section-link">⚙️ Configuración y Seguridad</a>
+            <a href="#seccion-solicitudes" class="section-link">📋 Mis Solicitudes (<?php echo count($tickets); ?>)</a>
         </nav>
 
         <?php if ($message): ?>
@@ -673,109 +653,106 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             </div>
         <?php endif; ?>
 
-        <!-- Tab 1: Mi Perfil -->
-        <section id="tab-perfil" class="tab-content active">
-            <div class="two-cols">
-                <article class="card">
-                    <h2>Datos de la Cuenta</h2>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Nombre de Usuario</label>
-                            <span><?php echo htmlspecialchars($user['nombre']); ?></span>
-                        </div>
-                        <div class="info-item">
-                            <label>Correo Electrónico</label>
-                            <span><?php echo htmlspecialchars($user['correo']); ?></span>
-                        </div>
-                        <div class="info-item">
-                            <label>Rol asignado</label>
-                            <span><?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></span>
-                        </div>
-                        <div class="info-item">
-                            <label>Estado de Cuenta</label>
-                            <span style="color:#047857;">● Activa</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Acceso con Google</label>
-                            <span><?php echo !empty($fullUser['google_sub']) ? 'Vinculado ✓' : 'No vinculado'; ?></span>
-                        </div>
-                        <div class="info-item">
-                            <label>Fecha de Registro</label>
-                            <span><?php echo htmlspecialchars(cdaMarketingFormatDate($fullUser['creado_en'] ?? null)); ?></span>
-                        </div>
+        <!-- Section 1: Información de Cuenta -->
+        <section id="seccion-cuenta" class="two-cols">
+            <article class="card">
+                <h2>Datos de la Cuenta</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Nombre de Usuario</label>
+                        <span><?php echo htmlspecialchars($user['nombre']); ?></span>
                     </div>
-                </article>
+                    <div class="info-item">
+                        <label>Correo Electrónico</label>
+                        <span><?php echo htmlspecialchars($user['correo']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Rol asignado</label>
+                        <span><?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Estado de Cuenta</label>
+                        <span style="color:#047857;">● Activa</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Acceso con Google</label>
+                        <span><?php echo !empty($fullUser['google_sub']) ? 'Vinculado ✓' : 'No vinculado'; ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Fecha de Registro</label>
+                        <span><?php echo htmlspecialchars(cdaMarketingFormatDate($fullUser['creado_en'] ?? null)); ?></span>
+                    </div>
+                </div>
+            </article>
 
-                <article class="card">
-                    <h2>Permisos de tu Rol</h2>
-                    <div class="role-box">
-                        <strong>Nivel de Acceso:</strong> <?php echo htmlspecialchars($roleDesc); ?>
-                    </div>
-                    <p style="font-size: .84rem; color: var(--muted); line-height: 1.45;">
-                        Si requieres cambiar tu rol o permisos para coordinar solicitudes de marketing, comunícate con un administrador del sistema o escribe a soporte.
-                    </p>
-                </article>
-            </div>
+            <article class="card">
+                <h2>Permisos del Rol</h2>
+                <div class="role-box">
+                    <strong>Nivel de Acceso:</strong> <?php echo htmlspecialchars($roleDesc); ?>
+                </div>
+                <div style="display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .8rem;">
+                    <a href="crear-ticket.php" class="button" style="min-height: 38px; padding: .5rem .9rem; font-size: .8rem;">+ Nueva Solicitud</a>
+                    <a href="seguimiento.php" class="button" style="min-height: 38px; padding: .5rem .9rem; font-size: .8rem; background: var(--soft); color: var(--blue); border: 1px solid var(--line);">Ver Seguimiento</a>
+                </div>
+            </article>
         </section>
 
-        <!-- Tab 2: Configuración y Seguridad -->
-        <section id="tab-configuracion" class="tab-content">
-            <div class="two-cols">
-                <article class="card">
-                    <h2>Actualizar Nombre y Contraseña</h2>
-                    <form id="configuracion" method="post" action="perfil-marketing.php#configuracion">
-                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                        
-                        <div class="form-group">
-                            <label for="input-nombre">Nombre completo</label>
-                            <input id="input-nombre" name="nombre" value="<?php echo htmlspecialchars($user['nombre']); ?>" required>
-                        </div>
-
-                        <?php if (!empty($fullUser['password_hash'])): ?>
-                            <div class="form-group">
-                                <label for="input-current-password">Contraseña actual</label>
-                                <input id="input-current-password" name="current_password" type="password" autocomplete="current-password" placeholder="Requerida solo si cambias contraseña">
-                                <div class="form-hint">Escribe tu contraseña actual para confirmar cambios de contraseña.</div>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="form-group">
-                            <label for="input-password">Nueva contraseña</label>
-                            <input id="input-password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Dejar en blanco para mantener la actual">
-                            <div class="form-hint">Mínimo 8 caracteres.</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="input-confirm">Confirmar nueva contraseña</label>
-                            <input id="input-confirm" name="password_confirm" type="password" minlength="8" autocomplete="new-password" placeholder="Repite la nueva contraseña">
-                        </div>
-
-                        <button type="submit" class="btn-primary">Guardar perfil</button>
-                    </form>
-                </article>
-
-                <article class="card">
-                    <h2>Seguridad de la Cuenta</h2>
-                    <div style="font-size: .86rem; color: var(--ink); line-height: 1.5; display: grid; gap: 1rem;">
-                        <div style="background: var(--soft); padding: 1rem; border-radius: 8px; border: 1px solid var(--line);">
-                            <strong>🔒 Autenticación Segura</strong>
-                            <p style="color: var(--muted); font-size: .8rem; margin-top: .3rem;">
-                                Si utilizas Google Workspace o tu correo institucional con Google Login, no necesitas configurar contraseña manual.
-                            </p>
-                        </div>
-                        <div style="background: var(--soft); padding: 1rem; border-radius: 8px; border: 1px solid var(--line);">
-                            <strong>🔑 Contraseñas Seguras</strong>
-                            <p style="color: var(--muted); font-size: .8rem; margin-top: .3rem;">
-                                Utiliza combinaciones de letras, números y caracteres especiales. Nunca compartas tus credenciales de acceso con terceros.
-                            </p>
-                        </div>
+        <!-- Section 2: Configuración y Seguridad -->
+        <section class="two-cols">
+            <article class="card">
+                <h2>Editar Perfil y Contraseña</h2>
+                <form id="configuracion" method="post" action="perfil-marketing.php#configuracion">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                    
+                    <div class="form-group">
+                        <label for="input-nombre">Nombre completo</label>
+                        <input id="input-nombre" name="nombre" value="<?php echo htmlspecialchars($user['nombre']); ?>" required>
                     </div>
-                </article>
-            </div>
+
+                    <?php if (!empty($fullUser['password_hash'])): ?>
+                        <div class="form-group">
+                            <label for="input-current-password">Contraseña actual</label>
+                            <input id="input-current-password" name="current_password" type="password" autocomplete="current-password" placeholder="Requerida solo para cambiar contraseña">
+                            <div class="form-hint">Escribe tu contraseña actual para autorizar la actualización de contraseña.</div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="form-group">
+                        <label for="input-password">Nueva contraseña</label>
+                        <input id="input-password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Dejar en blanco para mantener la actual">
+                        <div class="form-hint">Mínimo 8 caracteres.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-confirm">Confirmar nueva contraseña</label>
+                        <input id="input-confirm" name="password_confirm" type="password" minlength="8" autocomplete="new-password" placeholder="Repite la nueva contraseña">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Guardar perfil</button>
+                </form>
+            </article>
+
+            <article class="card">
+                <h2>Seguridad de la Cuenta</h2>
+                <div style="font-size: .88rem; color: var(--ink); line-height: 1.5; display: grid; gap: 1rem;">
+                    <div style="background: var(--soft); padding: 1rem; border-radius: 8px; border: 1px solid var(--line);">
+                        <strong style="color: var(--blue);">🔒 Autenticación Segura</strong>
+                        <p style="color: var(--muted); font-size: .82rem; margin-top: .3rem;">
+                            Si inicias sesión con tu cuenta de Google o correo corporativo, no es necesario asignar contraseña manual.
+                        </p>
+                    </div>
+                    <div style="background: var(--soft); padding: 1rem; border-radius: 8px; border: 1px solid var(--line);">
+                        <strong style="color: var(--blue);">🔑 Buenas Prácticas</strong>
+                        <p style="color: var(--muted); font-size: .82rem; margin-top: .3rem;">
+                            Utiliza una contraseña robusta de al menos 8 caracteres combinando letras y números. Nunca compartas tus accesos.
+                        </p>
+                    </div>
+                </div>
+            </article>
         </section>
 
-        <!-- Tab 3: Mis Solicitudes -->
-        <section id="tab-tickets" class="tab-content">
+        <!-- Section 3: Mis Solicitudes -->
+        <section id="seccion-solicitudes">
             <article class="card">
                 <h2>Solicitudes de Marketing</h2>
 
@@ -822,29 +799,8 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const contents = document.querySelectorAll('.tab-content');
             const filterBtns = document.querySelectorAll('.filter-btn');
             const ticketItems = document.querySelectorAll('.ticket-item');
-
-            function switchTab(tabId) {
-                tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
-                contents.forEach(content => content.classList.toggle('active', content.id === 'tab-' + tabId));
-            }
-
-            tabs.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    switchTab(this.dataset.tab);
-                });
-            });
-
-            // Handle hash navigation (#configuracion, #perfil, #tickets)
-            if (window.location.hash) {
-                const hash = window.location.hash.replace('#', '');
-                if (['perfil', 'configuracion', 'tickets'].includes(hash)) {
-                    switchTab(hash);
-                }
-            }
 
             // Ticket filter logic
             filterBtns.forEach(btn => {
