@@ -99,11 +99,15 @@ VALUES ('Angel Alberto', 'angelalberto077@gmail.com', '$2y$12$EyWnX97s2BYGtdSNO7
 INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
 VALUES
     ('Salducin', 'salducin@centraldealarmas.com.mx', NULL, 'usuario', 1),
-    ('R Villaverde', 'rvillaverde@centraldealarmas.com.mx', NULL, 'manager', 1)
+    ('R Villaverde', 'rvillaverde@centraldealarmas.com.mx', NULL, 'trabajador', 1)
 ON DUPLICATE KEY UPDATE
     nombre = VALUES(nombre),
-    rol = VALUES(rol),
     activo = 1;
+
+UPDATE marketing_usuarios
+SET rol = 'trabajador'
+WHERE correo = 'rvillaverde@centraldealarmas.com.mx'
+AND rol = 'manager';
 
 UPDATE marketing_usuarios
 SET rol = 'usuario'

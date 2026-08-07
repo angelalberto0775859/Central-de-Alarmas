@@ -278,7 +278,15 @@ function cdaMarketingFixedRoleByEmail($email) {
     $email = strtolower(cdaMarketingClean($email));
     $roles = [
         'angelalberto077@gmail.com' => 'admin',
-        'rvillaverde@centraldealarmas.com.mx' => 'manager',
+    ];
+
+    return $roles[$email] ?? null;
+}
+
+function cdaMarketingInitialRoleByEmail($email) {
+    $email = strtolower(cdaMarketingClean($email));
+    $roles = [
+        'rvillaverde@centraldealarmas.com.mx' => 'trabajador',
     ];
 
     return $roles[$email] ?? null;
@@ -295,7 +303,13 @@ function cdaMarketingUserRoleValue($email, $requestedRole = 'usuario') {
 }
 
 function cdaMarketingDefaultUserRole($email) {
-    return cdaMarketingUserRoleValue($email, 'usuario');
+    $fixedRole = cdaMarketingFixedRoleByEmail($email);
+    if ($fixedRole !== null) {
+        return $fixedRole;
+    }
+
+    $initialRole = cdaMarketingInitialRoleByEmail($email);
+    return $initialRole !== null ? $initialRole : 'usuario';
 }
 
 function cdaMarketingProtectedUserEmail($email) {
@@ -336,15 +350,8 @@ function cdaMarketingEnforceFixedUserRoles() {
         $db = cdaDb();
         $db->exec("UPDATE marketing_usuarios SET rol = 'usuario' WHERE rol = 'admin' AND correo <> 'angelalberto077@gmail.com'");
 
-        $roles = [
-            'angelalberto077@gmail.com' => 'admin',
-            'rvillaverde@centraldealarmas.com.mx' => 'manager',
-        ];
-
         $stmt = $db->prepare('UPDATE marketing_usuarios SET rol = ?, activo = 1 WHERE correo = ?');
-        foreach ($roles as $email => $role) {
-            $stmt->execute([$role, $email]);
-        }
+        $stmt->execute(['admin', 'angelalberto077@gmail.com']);
     } catch (Throwable $e) {
         error_log('No fue posible reforzar los roles fijos de marketing: ' . $e->getMessage());
     }

@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $db = cdaDb();
             $db->beginTransaction();
-            $targetStmt = $db->prepare('SELECT id, correo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+            $targetStmt = $db->prepare('SELECT id, nombre, correo FROM marketing_usuarios WHERE id = ? LIMIT 1');
 
             foreach ($rows as $rowId => $row) {
                 $editId = (int) $rowId;
@@ -93,9 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $activo = !empty($row['activo']) ? 1 : 0;
 
                 if (cdaMarketingProtectedUserEmail($existingUser['correo'] ?? '')) {
+                    $nombre = cdaMarketingClean($existingUser['nombre'] ?? '');
                     $correo = strtolower($existingUser['correo']);
                     $rol = cdaMarketingDefaultUserRole($correo);
                     $activo = 1;
+                    $password = '';
                 }
 
                 if (!$nombre || !$correo) {
@@ -385,8 +387,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                             <tr>
                                 <td>
                                     <div class="user-edit">
-                                        <input name="users[<?php echo (int) $item['id']; ?>][nombre]" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre">
-                                        <input name="users[<?php echo (int) $item['id']; ?>][correo]" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo">
+                                        <input name="users[<?php echo (int) $item['id']; ?>][nombre]" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre" <?php echo $isProtected ? 'disabled' : ''; ?>>
+                                        <input name="users[<?php echo (int) $item['id']; ?>][correo]" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo" <?php echo $isProtected ? 'disabled' : ''; ?>>
                                         <select name="users[<?php echo (int) $item['id']; ?>][rol]" aria-label="Rol" <?php echo $isProtected ? 'disabled' : ''; ?>>
                                             <?php if ($fixedItemRole === 'admin'): ?>
                                                 <option value="admin" selected>Administrador</option>
@@ -396,7 +398,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                                             <option value="trabajador" <?php echo $rowRole === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
                                         </select>
                                         <label class="check"><input name="users[<?php echo (int) $item['id']; ?>][activo]" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?> <?php echo $isProtected ? 'disabled' : ''; ?>> Activo</label>
-                                        <input name="users[<?php echo (int) $item['id']; ?>][password]" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña">
+                                        <input name="users[<?php echo (int) $item['id']; ?>][password]" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña" <?php echo $isProtected ? 'disabled' : ''; ?>>
                                     </div>
                                     <?php if ($isProtected): ?><span class="pill">Rol protegido por correo</span><?php endif; ?>
                                 </td>

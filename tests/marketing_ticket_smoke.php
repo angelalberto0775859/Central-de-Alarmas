@@ -61,11 +61,14 @@ assertSameValue(true, cdaMarketingCanManageUsers('admin'), 'admins can manage us
 assertSameValue(false, cdaMarketingCanManageUsers('manager'), 'managers cannot manage users');
 assertSameValue('admin', cdaMarketingFixedRoleByEmail('angelalberto077@gmail.com'), 'angel email is fixed admin');
 assertSameValue(null, cdaMarketingFixedRoleByEmail('salducin@centraldealarmas.com.mx'), 'salducin email is not fixed admin');
-assertSameValue('manager', cdaMarketingFixedRoleByEmail('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde email is fixed manager');
+assertSameValue(null, cdaMarketingFixedRoleByEmail('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde email is editable');
+assertSameValue('trabajador', cdaMarketingInitialRoleByEmail('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde starts as worker');
 assertSameValue('usuario', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'admin'), 'non fixed email cannot become admin');
 assertSameValue('usuario', cdaMarketingUserRoleValue('salducin@centraldealarmas.com.mx', 'admin'), 'salducin cannot become admin');
+assertSameValue('manager', cdaMarketingUserRoleValue('rvillaverde@centraldealarmas.com.mx', 'manager'), 'rvillaverde can be edited by admin');
 assertSameValue('trabajador', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'trabajador'), 'non fixed email can be assigned worker');
 assertSameValue('usuario', cdaMarketingDefaultUserRole('nuevo@centraldealarmas.com.mx'), 'new users default to regular user');
+assertSameValue('trabajador', cdaMarketingDefaultUserRole('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde defaults to worker');
 assertSameValue(false, cdaMarketingProtectedUserEmail('salducin@centraldealarmas.com.mx'), 'salducin email is not protected as admin');
 assertSameValue(false, cdaMarketingProtectedUserEmail('nuevo@centraldealarmas.com.mx'), 'regular email is not protected');
 assertSameValue(true, function_exists('cdaMarketingEnsureUserRoleSchema'), 'role schema repair helper exists');
