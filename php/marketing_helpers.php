@@ -89,6 +89,15 @@ function cdaMarketingFormatDate($date) {
     return $timestamp ? date('d/m/Y', $timestamp) : $date;
 }
 
+function cdaMarketingOptionalDate($date) {
+    $date = cdaMarketingClean($date);
+    if ($date === '') {
+        return null;
+    }
+
+    return preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) ? $date : null;
+}
+
 function cdaMarketingStatusClass($status) {
     $slug = strtolower(str_replace(' ', '-', cdaMarketingClean($status)));
     return preg_replace('/[^a-z0-9-]/', '', $slug);
@@ -223,6 +232,7 @@ function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment =
                 <p><strong>Solicitud:</strong> ' . htmlspecialchars($ticket['actividad'] ?? '') . '</p>
                 <p><strong>Estado anterior:</strong> ' . htmlspecialchars($oldStatusLabel) . '</p>
                 <p><strong>Nuevo estado:</strong> ' . htmlspecialchars($statusLabel) . '</p>
+                <p><strong>Entrega aproximada:</strong> ' . htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)) . '</p>
                 <div style="background:#f4f8fc;border:1px solid #d8e3f0;border-radius:8px;padding:12px;margin-top:12px;">
                     <strong>Comentario del equipo</strong><br>' . $commentHtml . '
                 </div>
@@ -264,6 +274,35 @@ function cdaMarketingRoleClass($role) {
     return in_array($role, ['admin', 'manager', 'trabajador', 'usuario'], true) ? $role : 'usuario';
 }
 
+function cdaMarketingFixedRoleByEmail($email) {
+    $email = strtolower(cdaMarketingClean($email));
+    $roles = [
+        'angelalberto077@gmail.com' => 'admin',
+        'salducin@centraldealarmas.com.mx' => 'admin',
+        'rvillaverde@centraldealarmas.com.mx' => 'manager',
+    ];
+
+    return $roles[$email] ?? null;
+}
+
+function cdaMarketingUserRoleValue($email, $requestedRole = 'usuario') {
+    $fixedRole = cdaMarketingFixedRoleByEmail($email);
+    if ($fixedRole !== null) {
+        return $fixedRole;
+    }
+
+    $requestedRole = cdaMarketingRoleClass($requestedRole);
+    return $requestedRole === 'admin' ? 'usuario' : $requestedRole;
+}
+
+function cdaMarketingDefaultUserRole($email) {
+    return cdaMarketingUserRoleValue($email, 'usuario');
+}
+
+function cdaMarketingProtectedUserEmail($email) {
+    return cdaMarketingFixedRoleByEmail($email) !== null;
+}
+
 function cdaMarketingCanManageUsers($role) {
     return (string) $role === 'admin';
 }
@@ -286,7 +325,7 @@ function cdaMarketingCanViewAllTickets($role) {
 
 function cdaMarketingDefaultRouteForRole($role) {
     if (cdaMarketingCanManageUsers($role) || cdaMarketingCanViewAllTickets($role)) {
-        return 'panel-marketing.php';
+        return 'estadisticas-marketing.php';
     }
 
     if (cdaMarketingCanAccessBoard($role)) {

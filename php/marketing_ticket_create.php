@@ -34,9 +34,9 @@ function cdaMarketingEnsureRequesterUser($name, $email, $password, $currentUser 
 
     $insert = $db->prepare(
         'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-        VALUES (?, ?, ?, \'usuario\', 1)'
+        VALUES (?, ?, ?, ?, 1)'
     );
-    $insert->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
+    $insert->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT), cdaMarketingDefaultUserRole($email)]);
 
     return (int) $db->lastInsertId();
 }

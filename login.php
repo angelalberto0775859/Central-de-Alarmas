@@ -3,7 +3,7 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_config.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
-$returnTo = cdaSafeLocalReturnTo($_GET['return_to'] ?? $_POST['return_to'] ?? 'panel-marketing.php');
+$returnTo = cdaSafeLocalReturnTo($_GET['return_to'] ?? $_POST['return_to'] ?? 'estadisticas-marketing.php');
 
 $currentUser = cdaCurrentUser();
 if ($currentUser) {
@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($formAction === 'register') {
         $mode = 'registro';
+        $rol = $correo ? cdaMarketingDefaultUserRole($correo) : 'usuario';
         if (!$nombre || !$correo || !$password) {
             $error = 'Escribe nombre, correo y contrasena para crear tu acceso.';
         } elseif (strlen($password) < 8) {
@@ -53,13 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = cdaDb()->prepare(
                     'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-                    VALUES (?, ?, ?, \'usuario\', 1)
+                    VALUES (?, ?, ?, ?, 1)
                     ON DUPLICATE KEY UPDATE
                         nombre = VALUES(nombre),
                         password_hash = VALUES(password_hash),
-                        activo = IF(rol = \'admin\', activo, 1)'
+                        rol = VALUES(rol),
+                        activo = 1'
                 );
-                $stmt->execute([$nombre, $correo, password_hash($password, PASSWORD_DEFAULT)]);
+                $stmt->execute([$nombre, $correo, password_hash($password, PASSWORD_DEFAULT), $rol]);
 
                 $userStmt = cdaDb()->prepare('SELECT id, nombre, correo, rol, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
                 $userStmt->execute([$correo]);

@@ -59,6 +59,14 @@ assertSameValue(true, cdaMarketingCanUploadChatFiles('trabajador'), 'workers can
 assertSameValue(false, cdaMarketingCanUploadChatFiles('marketing'), 'old marketing role cannot upload chat files');
 assertSameValue(true, cdaMarketingCanManageUsers('admin'), 'admins can manage users');
 assertSameValue(false, cdaMarketingCanManageUsers('manager'), 'managers cannot manage users');
+assertSameValue('admin', cdaMarketingFixedRoleByEmail('angelalberto077@gmail.com'), 'angel email is fixed admin');
+assertSameValue('admin', cdaMarketingFixedRoleByEmail('salducin@centraldealarmas.com.mx'), 'salducin email is fixed admin');
+assertSameValue('manager', cdaMarketingFixedRoleByEmail('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde email is fixed manager');
+assertSameValue('usuario', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'admin'), 'non fixed email cannot become admin');
+assertSameValue('trabajador', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'trabajador'), 'non fixed email can be assigned worker');
+assertSameValue('usuario', cdaMarketingDefaultUserRole('nuevo@centraldealarmas.com.mx'), 'new users default to regular user');
+assertSameValue(true, cdaMarketingProtectedUserEmail('salducin@centraldealarmas.com.mx'), 'protected admin email is detected');
+assertSameValue(false, cdaMarketingProtectedUserEmail('nuevo@centraldealarmas.com.mx'), 'regular email is not protected');
 assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('marketing'), 'old marketing role cannot manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('trabajador'), 'workers cannot manage tickets');
@@ -67,12 +75,15 @@ assertSameValue(false, cdaMarketingCanAccessBoard('usuario'), 'regular users do 
 assertSameValue('usuario', cdaMarketingRoleClass('marketing'), 'old marketing role normalizes to usuario');
 assertSameValue('perfil-marketing.php', cdaMarketingDefaultRouteForRole('usuario'), 'regular users land on profile');
 assertSameValue('control-marketing.php', cdaMarketingDefaultRouteForRole('trabajador'), 'workers land on board');
-assertSameValue('panel-marketing.php', cdaMarketingDefaultRouteForRole('manager'), 'managers land on ticket panel');
+assertSameValue('estadisticas-marketing.php', cdaMarketingDefaultRouteForRole('manager'), 'managers land on statistics');
 assertSameValue('perfil-marketing.php', cdaMarketingRouteForUser(['rol' => 'usuario'], 'panel-marketing.php'), 'regular users are rerouted away from ticket panel');
 assertSameValue('perfil-marketing.php', cdaMarketingRouteForUser(['rol' => 'usuario'], 'estadisticas-marketing.php'), 'regular users are rerouted away from statistics');
 assertSameValue('estadisticas-marketing.php', cdaMarketingRouteForUser(['rol' => 'manager'], 'estadisticas-marketing.php'), 'managers can access statistics');
 assertSameValue('seguimiento.php?folio=MKT-1#chat', cdaMarketingRouteForUser(['rol' => 'usuario'], 'seguimiento.php?folio=MKT-1#chat'), 'regular users can return to seguimiento with query');
 assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
+assertSameValue('2026-08-20', cdaMarketingOptionalDate('2026-08-20'), 'optional date accepts yyyy-mm-dd');
+assertSameValue(null, cdaMarketingOptionalDate(''), 'optional date accepts blank');
+assertSameValue(null, cdaMarketingOptionalDate('20/08/2026'), 'optional date rejects invalid format');
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');
 assertSameValue('', cdaMarketingAssigneeValue('', ['Angel Admin']), 'empty assignee keeps ticket unassigned');
@@ -84,6 +95,19 @@ $marketingFormHtml = file_get_contents(__DIR__ . '/../crear-ticket.php');
 assertSameValue(true, strpos($marketingFormHtml, 'cdaMarketingAllowedUploadAccept()') !== false, 'authenticated marketing form uses shared accept list');
 assertSameValue(true, strpos($marketingFormHtml, 'Subida de editables y material requerido') !== false, 'authenticated marketing form explains editable uploads');
 assertSameValue(false, strpos($marketingFormHtml, 'accountPassword') !== false, 'authenticated marketing form does not ask for a ticket password');
+
+$panelHtml = file_get_contents(__DIR__ . '/../panel-marketing.php');
+$controlHtml = file_get_contents(__DIR__ . '/../control-marketing.php');
+$usersHtml = file_get_contents(__DIR__ . '/../usuarios-marketing.php');
+$schemaSql = file_get_contents(__DIR__ . '/../db/install_marketing_schema.sql');
+assertSameValue(true, strpos($panelHtml, 'fecha_entrega_estimada') !== false, 'panel can edit estimated delivery date');
+assertSameValue(true, strpos($controlHtml, 'fecha_entrega_estimada') !== false, 'board can edit estimated delivery date');
+assertSameValue(true, strpos($usersHtml, 'Guardar todo') !== false, 'users page has bulk save button');
+assertSameValue(true, strpos($usersHtml, "value=\"bulk_save\"") !== false, 'users page posts bulk save action');
+assertSameValue(true, strpos($usersHtml, 'name="users[') !== false, 'users page submits editable user rows');
+assertSameValue(true, strpos($usersHtml, 'formaction="usuarios-marketing.php?action=delete"') !== false, 'users page keeps delete action per row');
+assertSameValue(true, strpos($usersHtml, 'Rol protegido por correo') !== false, 'users page explains protected roles');
+assertSameValue(true, strpos($schemaSql, 'fecha_entrega_estimada DATE NULL') !== false, 'schema includes estimated delivery date');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',

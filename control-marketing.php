@@ -190,9 +190,9 @@ foreach ($tickets as $ticket) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link" href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                 <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <a class="admin-link active" href="control-marketing.php">Tablero</a>
-                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link" href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
@@ -252,6 +252,7 @@ foreach ($tickets as $ticket) {
                         <span><?php echo htmlspecialchars($ticket['solicitante']); ?> · <?php echo htmlspecialchars($ticket['departamento']); ?></span>
                         <span><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></span>
                         <span>Requerido: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
+                        <span>Entrega aproximada: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)); ?></span>
                         <?php if (!empty($ticket['asignado_a'])): ?><span>Asignado a: <?php echo htmlspecialchars($ticket['asignado_a']); ?></span><?php endif; ?>
                         <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
                             <span class="section-label">Archivos iniciales</span>
@@ -279,6 +280,9 @@ foreach ($tickets as $ticket) {
                                 <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName); ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <label class="section-label">Entrega aproximada
+                            <input name="fecha_entrega_estimada" type="date" value="<?php echo htmlspecialchars($ticket['fecha_entrega_estimada'] ?? ''); ?>">
+                        </label>
                         <textarea name="respuesta_interna" placeholder="Comentario visible en seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                         <button type="submit">Actualizar</button>
                     </form>

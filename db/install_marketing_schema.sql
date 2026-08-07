@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS marketing_tickets (
     publico VARCHAR(180) NULL,
     referencias TEXT NULL,
     fecha_requerida DATE NOT NULL,
+    fecha_entrega_estimada DATE NULL,
     prioridad ENUM('Normal','Alta','Urgente') NOT NULL DEFAULT 'Normal',
     estado VARCHAR(60) NOT NULL DEFAULT 'Recibido',
     comentarios TEXT NULL,
@@ -35,6 +36,7 @@ CREATE TABLE IF NOT EXISTS marketing_tickets (
     actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_folio_correo (folio, correo),
     INDEX idx_estado (estado),
+    INDEX idx_fecha_entrega_estimada (fecha_entrega_estimada),
     INDEX idx_eliminado (eliminado_en),
     INDEX idx_creado (creado_en)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -106,3 +108,17 @@ ON DUPLICATE KEY UPDATE
     password_hash = VALUES(password_hash),
     rol = 'admin',
     activo = 1;
+
+INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
+VALUES
+    ('Salducin', 'salducin@centraldealarmas.com.mx', NULL, 'admin', 1),
+    ('R Villaverde', 'rvillaverde@centraldealarmas.com.mx', NULL, 'manager', 1)
+ON DUPLICATE KEY UPDATE
+    nombre = VALUES(nombre),
+    rol = VALUES(rol),
+    activo = 1;
+
+UPDATE marketing_usuarios
+SET rol = 'usuario'
+WHERE rol = 'admin'
+AND correo NOT IN ('angelalberto077@gmail.com', 'salducin@centraldealarmas.com.mx');

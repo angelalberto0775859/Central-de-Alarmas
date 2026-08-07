@@ -13,7 +13,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     cdaRequirePostCsrf();
-    $action = $_POST['action'] ?? 'save';
+    $action = $_GET['action'] ?? $_POST['action'] ?? 'save';
 
     if ($action === 'delete') {
         $deleteId = (int) ($_POST['user_id'] ?? 0);
@@ -25,12 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 $db = cdaDb();
-                $target = $db->prepare('SELECT id, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+                $target = $db->prepare('SELECT id, correo, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
                 $target->execute([$deleteId]);
                 $targetUser = $target->fetch();
 
                 if (!$targetUser) {
                     $error = 'El usuario no existe.';
+                } elseif (cdaMarketingProtectedUserEmail($targetUser['correo'] ?? '')) {
+                    $error = 'Este usuario tiene rol protegido por correo y no se puede eliminar desde el panel.';
                 } else {
                     if ($targetUser['rol'] === 'admin' && (int) $targetUser['activo'] === 1) {
                         $adminCount = (int) $db->query("SELECT COUNT(*) FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1")->fetchColumn();
@@ -49,13 +51,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'No fue posible eliminar el usuario.';
             }
         }
+    } elseif ($action === 'bulk_save') {
+        $rows = is_array($_POST['users'] ?? null) ? $_POST['users'] : [];
+        $updated = 0;
+
+        try {
+            $db = cdaDb();
+            $db->beginTransaction();
+            $targetStmt = $db->prepare('SELECT id, correo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+
+            foreach ($rows as $rowId => $row) {
+                $editId = (int) $rowId;
+                if ($editId <= 0 || !is_array($row)) {
+                    continue;
+                }
+                $targetStmt->execute([$editId]);
+                $existingUser = $targetStmt->fetch();
+                if (!$existingUser) {
+                    continue;
+                }
+
+                $nombre = cdaMarketingClean($row['nombre'] ?? '');
+                $correo = filter_var(strtolower(cdaMarketingClean($row['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
+                $password = (string) ($row['password'] ?? '');
+                $rol = cdaMarketingUserRoleValue($correo ?: '', $row['rol'] ?? 'usuario');
+                $activo = !empty($row['activo']) ? 1 : 0;
+
+                if (cdaMarketingProtectedUserEmail($existingUser['correo'] ?? '')) {
+                    $correo = strtolower($existingUser['correo']);
+                    $rol = cdaMarketingDefaultUserRole($correo);
+                    $activo = 1;
+                }
+
+                if (!$nombre || !$correo) {
+                    throw new RuntimeException('invalid_user');
+                }
+
+                if ($password !== '' && strlen($password) < 8) {
+                    throw new RuntimeException('weak_password');
+                }
+
+                if (cdaMarketingProtectedUserEmail($correo)) {
+                    $activo = 1;
+                }
+
+                if ($editId === (int) $user['id'] && ($rol !== 'admin' || $activo !== 1)) {
+                    throw new RuntimeException('self_admin');
+                }
+
+                if ($password !== '') {
+                    $stmt = $db->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ?, password_hash = ? WHERE id = ?');
+                    $stmt->execute([$nombre, $correo, $rol, $activo, password_hash($password, PASSWORD_DEFAULT), $editId]);
+                } else {
+                    $stmt = $db->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
+                    $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
+                }
+                $updated++;
+            }
+
+            $db->commit();
+            $message = 'Cambios guardados para ' . $updated . ' usuarios.';
+            $user = cdaCurrentUser();
+        } catch (Throwable $e) {
+            if (isset($db) && $db->inTransaction()) {
+                $db->rollBack();
+            }
+            $error = match ($e->getMessage()) {
+                'weak_password' => 'Las contrasenas nuevas deben tener al menos 8 caracteres.',
+                'self_admin' => 'No puedes quitarte el rol administrador ni desactivar tu propio usuario.',
+                'invalid_user' => 'Todos los usuarios deben tener nombre y correo valido.',
+                default => 'No fue posible guardar todos los usuarios.',
+            };
+        }
     } else {
         $editId = (int) ($_POST['user_id'] ?? 0);
         $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
         $correo = filter_var(strtolower(cdaMarketingClean($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
         $password = (string) ($_POST['password'] ?? '');
-        $rol = in_array($_POST['rol'] ?? '', ['admin', 'usuario', 'manager', 'trabajador'], true) ? $_POST['rol'] : 'usuario';
+        $rol = cdaMarketingUserRoleValue($correo ?: '', $_POST['rol'] ?? 'usuario');
         $activo = !empty($_POST['activo']) ? 1 : 0;
+        if ($correo && cdaMarketingProtectedUserEmail($correo)) {
+            $activo = 1;
+        }
 
         if (!$nombre || !$correo) {
             $error = 'Nombre y correo son obligatorios.';
@@ -66,12 +143,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 if ($editId > 0) {
-                    $target = cdaDb()->prepare('SELECT id, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+                    $target = cdaDb()->prepare('SELECT id, correo, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
                     $target->execute([$editId]);
                     $targetUser = $target->fetch();
 
                     if (!$targetUser) {
                         throw new RuntimeException('missing_user');
+                    }
+
+                    if (cdaMarketingProtectedUserEmail($targetUser['correo'] ?? '')) {
+                        $correo = strtolower($targetUser['correo']);
+                        $rol = cdaMarketingDefaultUserRole($correo);
+                        $activo = 1;
                     }
 
                     if ($targetUser['rol'] === 'admin' && (int) $targetUser['activo'] === 1 && ($rol !== 'admin' || $activo !== 1)) {
@@ -188,10 +271,11 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .danger-button { min-height:auto; padding:.55rem .65rem; background:#fee2e2; color:#991b1b; box-shadow:none; font-size:.72rem; }
         .danger-button:hover { box-shadow:0 10px 20px rgba(185,28,28,.12); }
         .row-action { display:block; }
-        .user-edit { display:grid; grid-template-columns:minmax(130px,1fr) minmax(180px,1.1fr) 132px 96px minmax(140px,.8fr) auto; gap:.45rem; align-items:center; }
+        .user-edit { display:grid; grid-template-columns:minmax(130px,1fr) minmax(180px,1.1fr) 132px 96px minmax(140px,.8fr); gap:.45rem; align-items:center; }
         .user-edit input, .user-edit select { padding:.62rem .68rem; font-size:.78rem; }
         .user-edit .check { justify-content:center; }
-        .user-edit button { min-height:38px; padding:.62rem .72rem; font-size:.72rem; }
+        .bulk-actions { display:flex; justify-content:flex-end; margin-top:.85rem; }
+        .bulk-actions button { min-width:190px; }
         .row-tools { display:flex; gap:.45rem; align-items:center; justify-content:flex-start; }
         .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
         table { width:100%; min-width:980px; border-collapse:separate; border-spacing:0; }
@@ -216,9 +300,9 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
+                <a class="admin-link" href="estadisticas-marketing.php">Estadísticas</a>
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link" href="control-marketing.php">Tablero</a>
-                <a class="admin-link" href="estadisticas-marketing.php">Estadísticas</a>
                 <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
@@ -269,55 +353,57 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <h2>Directorio de accesos</h2>
                     <p class="muted">Revisa estado, metodo de acceso y acciones disponibles.</p>
                 </div>
-                <div class="table-shell">
-                    <table>
-                        <thead><tr><th>Gestionar usuario</th><th>Google</th><th>Creado</th><th>Acciones</th></tr></thead>
-                        <tbody>
-                        <?php foreach ($users as $item): ?>
-                        <tr>
-                            <td>
-                                <form class="user-edit" method="post" action="usuarios-marketing.php">
-                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                                    <input type="hidden" name="action" value="save">
-                                    <input type="hidden" name="user_id" value="<?php echo (int) $item['id']; ?>">
-                                    <input name="nombre" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre">
-                                    <input name="correo" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo">
-                                    <select name="rol" aria-label="Rol">
-                                        <option value="admin" <?php echo $item['rol'] === 'admin' ? 'selected' : ''; ?>>Administrador</option>
-                                        <option value="manager" <?php echo $item['rol'] === 'manager' ? 'selected' : ''; ?>>Manager</option>
-                                        <option value="trabajador" <?php echo $item['rol'] === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
-                                        <option value="usuario" <?php echo $item['rol'] === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
-                                    </select>
-                                    <label class="check"><input name="activo" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?>> Activo</label>
-                                    <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña">
-                                    <button type="submit">Guardar</button>
-                                </form>
-                            </td>
-                            <td>
-                                <?php if (!empty($item['google_sub'])): ?>
-                                    <span class="pill ok-google">Vinculado</span>
-                                <?php else: ?>
-                                    <span class="pill pending-google">Pendiente</span>
-                                <?php endif; ?>
-                            </td>
-                            <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($item['creado_en']))); ?></td>
-                            <td>
-                                <?php if ((int) $item['id'] === (int) $user['id']): ?>
-                                    <span class="muted">Tu usuario</span>
-                                <?php else: ?>
-                                    <form class="row-action" method="post" action="usuarios-marketing.php" onsubmit="return confirm('Eliminar este usuario del panel?');">
-                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="user_id" value="<?php echo (int) $item['id']; ?>">
-                                        <button class="danger-button" type="submit">Eliminar</button>
-                                    </form>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                <form method="post" action="usuarios-marketing.php">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                    <input type="hidden" name="action" value="bulk_save">
+                    <div class="table-shell">
+                        <table>
+                            <thead><tr><th>Gestionar usuario</th><th>Google</th><th>Creado</th><th>Acciones</th></tr></thead>
+                            <tbody>
+                            <?php foreach ($users as $item): ?>
+                            <?php $isProtected = cdaMarketingProtectedUserEmail($item['correo']); ?>
+                            <tr>
+                                <td>
+                                    <div class="user-edit">
+                                        <input name="users[<?php echo (int) $item['id']; ?>][nombre]" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre">
+                                        <input name="users[<?php echo (int) $item['id']; ?>][correo]" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo">
+                                        <select name="users[<?php echo (int) $item['id']; ?>][rol]" aria-label="Rol">
+                                            <option value="admin" <?php echo $item['rol'] === 'admin' ? 'selected' : ''; ?>>Administrador</option>
+                                            <option value="manager" <?php echo $item['rol'] === 'manager' ? 'selected' : ''; ?>>Manager</option>
+                                            <option value="trabajador" <?php echo $item['rol'] === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
+                                            <option value="usuario" <?php echo $item['rol'] === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
+                                        </select>
+                                        <label class="check"><input name="users[<?php echo (int) $item['id']; ?>][activo]" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?> <?php echo $isProtected ? 'disabled' : ''; ?>> Activo</label>
+                                        <input name="users[<?php echo (int) $item['id']; ?>][password]" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña">
+                                    </div>
+                                    <?php if ($isProtected): ?><span class="pill">Rol protegido por correo</span><?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($item['google_sub'])): ?>
+                                        <span class="pill ok-google">Vinculado</span>
+                                    <?php else: ?>
+                                        <span class="pill pending-google">Pendiente</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($item['creado_en']))); ?></td>
+                                <td>
+                                    <?php if ((int) $item['id'] === (int) $user['id']): ?>
+                                        <span class="muted">Tu usuario</span>
+                                    <?php elseif ($isProtected): ?>
+                                        <span class="muted">Protegido</span>
+                                    <?php else: ?>
+                                        <button class="danger-button" type="submit" name="user_id" value="<?php echo (int) $item['id']; ?>" formaction="usuarios-marketing.php?action=delete" formmethod="post" onclick="return confirm('Eliminar este usuario del panel?');">Eliminar</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bulk-actions">
+                        <button type="submit">Guardar todo</button>
+                    </div>
+                </form>
             </article>
         </section>
     </div>

@@ -339,9 +339,9 @@ if ($folio) {
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <?php if ($currentUser): ?>
+                    <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                     <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                     <?php if (cdaMarketingCanAccessBoard($currentUser['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
-                    <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                     <?php if (cdaMarketingCanManageUsers($currentUser['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                     <?php if (cdaMarketingCanManageTrash($currentUser['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                     <a href="crear-ticket.php">Crear ticket</a>
@@ -357,7 +357,7 @@ if ($folio) {
                 <?php else: ?>
                     <a href="crear-ticket.php">Crear ticket</a>
                     <a class="active" href="seguimiento.php">Seguimiento</a>
-                    <a class="primary" href="login.php?return_to=panel-marketing.php">Iniciar sesion</a>
+                    <a class="primary" href="login.php?return_to=estadisticas-marketing.php">Iniciar sesion</a>
                 <?php endif; ?>
             </nav>
         </header>
@@ -429,6 +429,7 @@ if ($folio) {
                     <div><span>Tipo</span><strong><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></strong></div>
                     <div><span>Prioridad</span><strong><?php echo htmlspecialchars($ticket['prioridad']); ?></strong></div>
                     <div><span>Fecha requerida</span><strong><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></strong></div>
+                    <div><span>Entrega aproximada</span><strong><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)); ?></strong></div>
                     <div><span>Solicitante</span><strong><?php echo htmlspecialchars($ticket['solicitante']); ?></strong></div>
                     <div><span>Area</span><strong><?php echo htmlspecialchars($ticket['departamento']); ?></strong></div>
                 </div>

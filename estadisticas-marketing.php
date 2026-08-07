@@ -158,9 +158,9 @@ $statusConic = $conicParts ? implode(', ', $conicParts) : '#e5edf7 0 100%';
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
+                <a class="active" href="estadisticas-marketing.php">Estadísticas</a>
                 <a href="panel-marketing.php">Tickets</a>
                 <a href="control-marketing.php">Tablero</a>
-                <a class="active" href="estadisticas-marketing.php">Estadísticas</a>
                 <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a href="crear-ticket.php">Crear ticket</a>

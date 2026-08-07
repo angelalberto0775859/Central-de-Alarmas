@@ -156,18 +156,19 @@ try {
         if ($displayName === '') {
             $displayName = strstr($correo, '@', true) ?: $correo;
         }
+        $rol = cdaMarketingDefaultUserRole($correo);
 
         $insert = cdaDb()->prepare(
             'INSERT INTO marketing_usuarios (nombre, correo, google_sub, rol, activo)
-            VALUES (?, ?, ?, \'usuario\', 1)'
+            VALUES (?, ?, ?, ?, 1)'
         );
-        $insert->execute([$displayName, $correo, $profile['sub']]);
+        $insert->execute([$displayName, $correo, $profile['sub'], $rol]);
 
         $newUser = [
             'id' => (int) cdaDb()->lastInsertId(),
             'nombre' => $displayName,
             'correo' => $correo,
-            'rol' => 'usuario',
+            'rol' => $rol,
             'activo' => 1,
         ];
         cdaLoginUser($newUser['id']);

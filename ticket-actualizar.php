@@ -18,6 +18,8 @@ cdaRequirePostCsrf();
 $id = (int) ($_POST['id'] ?? 0);
 $estado = cdaMarketingClean($_POST['estado'] ?? '');
 $respuesta = cdaMarketingClean($_POST['respuesta_interna'] ?? '');
+$fechaEntregaRaw = cdaMarketingClean($_POST['fecha_entrega_estimada'] ?? '');
+$fechaEntregaEstimada = cdaMarketingOptionalDate($fechaEntregaRaw);
 $assignableAdmins = cdaMarketingFetchAssignableAdmins();
 $assignableAdminNames = array_map(function ($admin) {
     return (string) ($admin['nombre'] ?? '');
@@ -29,7 +31,7 @@ if (!in_array($returnTo, $allowedReturnTo, true)) {
     $returnTo = 'panel-marketing.php';
 }
 
-if ($id <= 0 || !cdaMarketingStatusAllowed($estado)) {
+if ($id <= 0 || !cdaMarketingStatusAllowed($estado) || ($fechaEntregaRaw !== '' && $fechaEntregaEstimada === null)) {
     header('Location: panel-marketing.php');
     exit;
 }
@@ -37,7 +39,7 @@ if ($id <= 0 || !cdaMarketingStatusAllowed($estado)) {
 $db = cdaDb();
 $db->beginTransaction();
 
-$ticketStmt = $db->prepare('SELECT id, folio, solicitante, correo, actividad, estado FROM marketing_tickets WHERE id = ? AND eliminado_en IS NULL LIMIT 1');
+$ticketStmt = $db->prepare('SELECT id, folio, solicitante, correo, actividad, estado, fecha_entrega_estimada FROM marketing_tickets WHERE id = ? AND eliminado_en IS NULL LIMIT 1');
 $ticketStmt->execute([$id]);
 $ticket = $ticketStmt->fetch();
 if (!$ticket) {
@@ -46,9 +48,10 @@ if (!$ticket) {
     exit;
 }
 $oldStatus = $ticket['estado'];
+$ticket['fecha_entrega_estimada'] = $fechaEntregaEstimada;
 
-$update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ? WHERE id = ? AND eliminado_en IS NULL');
-$update->execute([$estado, $respuesta, $asignado, $id]);
+$update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ?, fecha_entrega_estimada = ? WHERE id = ? AND eliminado_en IS NULL');
+$update->execute([$estado, $respuesta, $asignado, $fechaEntregaEstimada, $id]);
 
 $hist = $db->prepare('INSERT INTO marketing_ticket_historial (ticket_id, usuario_id, estado, comentario) VALUES (?, ?, ?, ?)');
 $hist->execute([$id, $user['id'], $estado, $respuesta ?: 'Actualizacion de estado.']);

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$ticketStmt = cdaDb()->prepare("SELECT folio, actividad, estado, prioridad, fecha_requerida, actualizado_en FROM marketing_tickets WHERE correo = ? AND eliminado_en IS NULL AND estado NOT IN ('Entregado','Cerrado','Rechazado') ORDER BY actualizado_en DESC LIMIT 8");
+$ticketStmt = cdaDb()->prepare("SELECT folio, actividad, estado, prioridad, fecha_requerida, fecha_entrega_estimada, actualizado_en FROM marketing_tickets WHERE correo = ? AND eliminado_en IS NULL AND estado NOT IN ('Entregado','Cerrado','Rechazado') ORDER BY actualizado_en DESC LIMIT 8");
 $ticketStmt->execute([$user['correo']]);
 $tickets = $ticketStmt->fetchAll();
 ?>
@@ -101,9 +101,9 @@ $tickets = $ticketStmt->fetchAll();
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                 <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
-                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a href="crear-ticket.php">Crear ticket</a>
@@ -146,7 +146,7 @@ $tickets = $ticketStmt->fetchAll();
                     <?php foreach ($tickets as $ticket): ?>
                     <a class="ticket" href="seguimiento.php?folio=<?php echo urlencode($ticket['folio']); ?>">
                         <strong><?php echo htmlspecialchars($ticket['folio']); ?> · <?php echo htmlspecialchars($ticket['actividad']); ?></strong>
-                        <p><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?> · <?php echo htmlspecialchars($ticket['prioridad']); ?> · requerido <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></p>
+                        <p><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?> · <?php echo htmlspecialchars($ticket['prioridad']); ?> · requerido <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?> · entrega aprox. <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)); ?></p>
                     </a>
                     <?php endforeach; ?>
                     <?php if (!$tickets): ?><p class="muted">No tienes tickets activos con este usuario.</p><?php endif; ?>
