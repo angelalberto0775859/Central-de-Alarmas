@@ -206,9 +206,10 @@ foreach ($tickets as $ticket) {
                 <a class="admin-link active" href="control-marketing.php">Tablero</a>
                 <a class="admin-link" href="usuarios-marketing.php">Usuarios</a>
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
-                <a class="public-link" href="marketing.html">Crear ticket</a>
+                <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <a class="session-link" href="logout.php">Salir</a>
+                <a class="public-link" href="perfil-marketing.php">Perfil</a>
+                <a class="session-link" href="logout.php">Cerrar sesión</a>
             </nav>
         </header>
         <section class="hero">

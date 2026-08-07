@@ -143,7 +143,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     cdaMarketingJson(false, 'Metodo no permitido.');
 }
 
-$required = ['requester', 'email', 'accountPassword', 'department', 'activity', 'requestType', 'objective', 'neededDate', 'priority'];
+$currentUser = cdaCurrentUser();
+if (!$currentUser) {
+    http_response_code(401);
+    cdaMarketingJson(false, 'Inicia sesion para crear un ticket.');
+}
+
+if (!cdaVerifyCsrfToken($_POST['csrf_token'] ?? '')) {
+    http_response_code(403);
+    cdaMarketingJson(false, 'Solicitud no valida. Recarga la pagina e intenta de nuevo.');
+}
+
+$required = ['department', 'activity', 'requestType', 'objective', 'neededDate', 'priority'];
 $missing = [];
 foreach ($required as $field) {
     if (empty($_POST[$field])) {
@@ -156,20 +167,18 @@ if ($missing) {
     cdaMarketingJson(false, 'Faltan datos obligatorios para crear el ticket.');
 }
 
-$email = filter_var(strtolower(cdaMarketingClean($_POST['email'])), FILTER_VALIDATE_EMAIL);
+$email = filter_var(strtolower(cdaMarketingClean($currentUser['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
 if (!$email) {
     http_response_code(422);
-    cdaMarketingJson(false, 'El correo del solicitante no es valido.');
+    cdaMarketingJson(false, 'El correo de tu perfil no es valido.');
 }
 
-$requester = cdaMarketingClean($_POST['requester']);
+$requester = cdaMarketingClean($currentUser['nombre'] ?? '');
 $department = cdaMarketingOption($_POST['department'] ?? '', cdaMarketingDepartments());
 $audience = cdaMarketingOption($_POST['audience'] ?? '', cdaMarketingAudiences(), '');
-$accountPassword = (string) ($_POST['accountPassword'] ?? '');
-$currentUser = cdaCurrentUser();
-if (strlen($accountPassword) < 8) {
+if ($requester === '') {
     http_response_code(422);
-    cdaMarketingJson(false, 'La contrasena de seguimiento debe tener al menos 8 caracteres.');
+    cdaMarketingJson(false, 'Completa el nombre de tu perfil antes de crear tickets.');
 }
 
 $neededDate = cdaMarketingClean($_POST['neededDate']);
@@ -265,24 +274,11 @@ try {
     $db->beginTransaction();
 
     try {
-        if ($currentUser && $currentUser['rol'] !== 'admin' && strcasecmp($currentUser['correo'], $email) !== 0) {
-            throw new RuntimeException('session_email_mismatch');
-        }
-
-        $requesterUserId = cdaMarketingEnsureRequesterUser($requester, $email, $accountPassword, $currentUser);
+        $requesterUserId = (int) $currentUser['id'];
     } catch (RuntimeException $e) {
         $db->rollBack();
         http_response_code(422);
-        if ($e->getMessage() === 'invalid_password') {
-            cdaMarketingJson(false, 'Ese correo ya existe. Escribe la contrasena correcta para validar tu usuario.');
-        }
-        if ($e->getMessage() === 'google_only_user') {
-            cdaMarketingJson(false, 'Ese correo ya usa Google. Inicia sesion con Google para crear el ticket.');
-        }
-        if ($e->getMessage() === 'session_email_mismatch') {
-            cdaMarketingJson(false, 'El correo del ticket debe coincidir con tu usuario activo.');
-        }
-        cdaMarketingJson(false, 'Ese usuario existe, pero no esta activo. Pide a un administrador que lo reactive.');
+        cdaMarketingJson(false, 'Tu usuario existe, pero no esta activo. Pide a un administrador que lo reactive.');
     }
 
     $today = date('Y-m-d');
@@ -379,8 +375,6 @@ try {
 
     cdaMarketingNotifyAdmins($ticketPayload, $uploadedFileNames);
     cdaMarketingNotifyRequester($ticketPayload, $uploadedFileNames);
-    cdaLoginUser($requesterUserId);
-
     cdaMarketingJson(true, 'Ticket creado correctamente.', [
         'folio' => $folio,
         'seguimiento' => 'seguimiento.php?folio=' . urlencode($folio) . '#chat',

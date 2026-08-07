@@ -57,9 +57,10 @@ assertSameValue(64, strlen(cdaMarketingPasswordResetToken()), 'password reset to
 assertSameValue(64, strlen(cdaMarketingPasswordResetHash('abc123')), 'password reset token hash is sha256 hex');
 assertSameValue(true, strpos(cdaMarketingPasswordResetUrl('abc123'), 'reset-password.php?token=abc123') !== false, 'password reset url includes token');
 
-$marketingFormHtml = file_get_contents(__DIR__ . '/../merketing.html');
-assertSameValue(true, strpos($marketingFormHtml, '.zip,.rar') !== false, 'public marketing form accepts zip and rar');
-assertSameValue(true, strpos($marketingFormHtml, 'Subida de editables y material requerido') !== false, 'public marketing form explains editable uploads');
+$marketingFormHtml = file_get_contents(__DIR__ . '/../crear-ticket.php');
+assertSameValue(true, strpos($marketingFormHtml, '.zip,.rar') !== false, 'authenticated marketing form accepts zip and rar');
+assertSameValue(true, strpos($marketingFormHtml, 'Subida de editables y material requerido') !== false, 'authenticated marketing form explains editable uploads');
+assertSameValue(false, strpos($marketingFormHtml, 'accountPassword') !== false, 'authenticated marketing form does not ask for a ticket password');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',

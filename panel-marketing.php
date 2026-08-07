@@ -186,6 +186,17 @@ if ($statsRow) {
         .story-step span { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-bottom:.45rem; border-radius:50%; background:var(--blue); color:var(--yellow); font-weight:950; font-size:.76rem; }
         .story-step strong { display:block; color:var(--blue); font-size:.82rem; line-height:1.2; }
         .story-step p { margin-top:.22rem; color:var(--muted); font-size:.75rem; line-height:1.35; }
+        .portal-grid { display:grid; grid-template-columns:360px minmax(0,1fr); gap:.85rem; margin-bottom:1rem; }
+        .profile-card, .option-card { border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); }
+        .profile-card h2, .option-card h2 { color:var(--blue); font-size:1rem; margin-bottom:.7rem; }
+        .profile-row { display:grid; gap:.18rem; padding:.58rem 0; border-top:1px solid rgba(6,57,112,.08); }
+        .profile-row span { color:var(--muted); font-size:.7rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
+        .profile-row strong { color:var(--ink); font-size:.9rem; }
+        .option-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.65rem; }
+        .option-link { display:grid; gap:.35rem; min-height:112px; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); padding:.85rem; color:var(--ink); text-decoration:none; background:#fff; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+        .option-link:hover { transform:translateY(-1px); border-color:rgba(6,57,112,.24); box-shadow:0 14px 30px rgba(6,57,112,.1); }
+        .option-link strong { color:var(--blue); font-size:.95rem; }
+        .option-link span { color:var(--muted); font-size:.78rem; line-height:1.4; }
         .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.8rem; margin-bottom:1rem; }
         .stat {
             border:1px solid rgba(255,255,255,.5);
@@ -301,7 +312,7 @@ if ($statsRow) {
         .ticket-file { display:inline-flex; border-radius:6px; padding:.34rem .48rem; background:#fff7cc; color:#7c5800; font-size:.72rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.42rem; font-size:.72rem; background:#fff; }
         @media (max-width:900px) {
-            .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
+            .filters, .hero, .stats, .story-strip, .portal-grid, .option-list { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
             .ticket-row-summary, .ticket-drawer, .ticket-meta-grid { grid-template-columns:1fr; }
             .ticket-pills { justify-content:flex-start; }
@@ -328,9 +339,10 @@ if ($statsRow) {
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? 'active' : ''; ?>" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
-                <a class="public-link" href="marketing.html">Crear ticket</a>
+                <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <a class="session-link" href="logout.php">Salir</a>
+                <a class="public-link" href="perfil-marketing.php">Perfil</a>
+                <a class="session-link" href="logout.php">Cerrar sesión</a>
             </nav>
         </header>
         <section class="hero">
@@ -345,6 +357,22 @@ if ($statsRow) {
             <div class="story-step"><span>2</span><strong>Confirmacion</strong><p>El folio llega al solicitante y avisa a los admins.</p></div>
             <div class="story-step"><span>3</span><strong>Seguimiento</strong><p>El chat mantiene dudas, aprobaciones y acuerdos en el ticket.</p></div>
             <div class="story-step"><span>4</span><strong>Entrega</strong><p>Estado e historial dejan claro que paso y cuando cerro.</p></div>
+        </section>
+        <section class="portal-grid" aria-label="Opciones de sesión">
+            <article class="profile-card">
+                <h2>Perfil del solicitante</h2>
+                <div class="profile-row"><span>Nombre</span><strong><?php echo htmlspecialchars($user['nombre']); ?></strong></div>
+                <div class="profile-row"><span>Correo</span><strong><?php echo htmlspecialchars($user['correo']); ?></strong></div>
+                <div class="profile-row"><span>Rol</span><strong><?php echo htmlspecialchars($user['rol']); ?></strong></div>
+            </article>
+            <article class="option-card">
+                <h2>Opciones principales</h2>
+                <div class="option-list">
+                    <a class="option-link" href="crear-ticket.php"><strong>Crear ticket</strong><span>Genera una nueva solicitud usando tu perfil de sesión.</span></a>
+                    <a class="option-link" href="seguimiento.php"><strong>Seguimiento</strong><span>Consulta un folio y conversa en el chat del ticket.</span></a>
+                    <a class="option-link" href="perfil-marketing.php"><strong>Gestionar perfil</strong><span>Actualiza tu nombre o cambia tu contraseña.</span></a>
+                </div>
+            </article>
         </section>
         <section class="stats" aria-label="Resumen de tickets">
             <div class="stat"><span>Total</span><strong><?php echo $stats['total']; ?></strong></div>

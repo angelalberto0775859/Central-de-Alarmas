@@ -321,8 +321,14 @@ if ($folio) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <a href="marketing.html">Crear ticket</a>
-                <a class="primary" href="login.php">Iniciar sesion</a>
+                <a href="crear-ticket.php">Crear ticket</a>
+                <?php if ($currentUser): ?>
+                    <a href="panel-marketing.php">Mis tickets</a>
+                    <a href="perfil-marketing.php">Perfil</a>
+                    <a class="primary" href="logout.php">Cerrar sesión</a>
+                <?php else: ?>
+                    <a class="primary" href="login.php?return_to=panel-marketing.php">Iniciar sesion</a>
+                <?php endif; ?>
             </nav>
         </header>
 

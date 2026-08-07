@@ -63,6 +63,6 @@ Para habilitar la conversacion entre administradores y usuarios dentro de cada t
 db/marketing_ticket_mensajes.sql
 ```
 
-Al crear un ticket desde `merketing.html`, el formulario pide una contrasena de seguimiento. Con ese correo y contrasena se crea o valida el usuario en `marketing_usuarios`, se inicia sesion automaticamente y se abre `seguimiento.php` con el chat listo para continuar la conversacion.
+El flujo publico inicia en `marketing.html`, donde se explica la gestion de tickets y se envia al usuario a iniciar sesion. Una vez autenticado, `panel-marketing.php` muestra las opciones principales, el perfil y los tickets generados; desde `crear-ticket.php` el formulario toma nombre y correo de la sesion activa, sin pedir contrasena ni datos del solicitante.
 
 Cada ticket nuevo envia correo de confirmacion al solicitante y aviso a los administradores activos.

@@ -3,12 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=merketing.html">
+    <title>Gestión de tickets | Marketing Central de Alarmas</title>
     <meta name="robots" content="noindex, nofollow">
-    <title>Solicitud de Marketing | Central de Alarmas</title>
-    <link rel="canonical" href="https://centraldealarmas.com.mx/merketing.html">
+    <meta name="theme-color" content="#063970">
+    <link rel="icon" type="image/svg+xml" href="/contigo/Img/favicon.svg">
+    <link rel="preload" href="img/cda-logo-f.svg" as="image">
+    <style>
+        :root {
+            --blue:#063970;
+            --blue-2:#0b4f92;
+            --ink:#10213f;
+            --muted:#66758d;
+            --line:rgba(6,57,112,.14);
+            --soft:#f4f8fc;
+            --yellow:#f6eb17;
+            --radius:8px;
+            --shadow:0 24px 70px rgba(0,0,0,.2);
+        }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            min-height:100vh;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+            color:#fff;
+            background:
+                linear-gradient(135deg,rgba(6,18,38,.94),rgba(6,57,112,.9)),
+                url("img/optimized/hero-poster-v2.jpg") center/cover fixed;
+        }
+        .shell { width:min(1180px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; }
+        .brand img { width:146px; display:block; }
+        .nav { display:flex; flex-wrap:wrap; gap:.62rem; justify-content:flex-end; }
+        .nav a, .button {
+            min-height:42px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            border:1px solid rgba(255,255,255,.24);
+            border-radius:var(--radius);
+            padding:.72rem .9rem;
+            color:rgba(255,255,255,.88);
+            text-decoration:none;
+            font-size:.8rem;
+            font-weight:900;
+            letter-spacing:.04em;
+            text-transform:uppercase;
+            background:rgba(255,255,255,.08);
+        }
+        .nav a.primary, .button.primary { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
+        .hero { padding:clamp(3.2rem, 8vw, 7rem) 0 clamp(2rem, 5vw, 4rem); }
+        .hero-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,.44fr); gap:clamp(1.4rem,5vw,4rem); align-items:end; }
+        .eyebrow { color:var(--yellow); font-size:.78rem; font-weight:950; letter-spacing:.13em; text-transform:uppercase; margin-bottom:.85rem; }
+        h1 { max-width:820px; font-size:clamp(2.35rem,6vw,5.2rem); line-height:.97; letter-spacing:0; }
+        .hero p { max-width:720px; margin-top:1.2rem; color:rgba(255,255,255,.78); font-size:clamp(1rem,2vw,1.17rem); line-height:1.72; }
+        .hero-actions { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:1.6rem; }
+        .panel {
+            border:1px solid rgba(255,255,255,.18);
+            border-radius:var(--radius);
+            padding:1.15rem;
+            background:rgba(255,255,255,.1);
+            backdrop-filter:blur(16px);
+            box-shadow:var(--shadow);
+        }
+        .panel h2 { font-size:1rem; margin-bottom:.85rem; }
+        .flow { display:grid; gap:.62rem; }
+        .flow div { display:grid; grid-template-columns:30px 1fr; gap:.65rem; align-items:center; color:rgba(255,255,255,.78); font-size:.86rem; line-height:1.35; }
+        .flow span { width:30px; height:30px; border-radius:50%; display:grid; place-items:center; background:rgba(246,235,23,.16); color:var(--yellow); font-weight:950; }
+        .examples { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.9rem; }
+        .example {
+            min-height:160px;
+            border:1px solid rgba(255,255,255,.24);
+            border-radius:var(--radius);
+            padding:1rem;
+            background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.92));
+            color:var(--ink);
+            box-shadow:0 18px 46px rgba(0,0,0,.14);
+        }
+        .example strong { display:block; color:var(--blue); font-size:1rem; margin-bottom:.35rem; }
+        .example p { color:var(--muted); font-size:.9rem; line-height:1.5; }
+        @media (max-width:860px) { .hero-grid, .examples { grid-template-columns:1fr; } .panel { max-width:620px; } }
+        @media (max-width:620px) { .shell { width:min(100% - 1rem, 1180px); } .topbar { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .button { width:100%; } }
+    </style>
 </head>
 <body>
-    <p>Redirigiendo a <a href="merketing.html">Solicitud de Marketing</a>.</p>
+    <div class="shell">
+        <header class="topbar">
+            <a class="brand" href="index.html" aria-label="Ir al inicio de Central de Alarmas">
+                <img src="img/cda-logo-f.svg" alt="Central de Alarmas">
+            </a>
+            <nav class="nav" aria-label="Navegación">
+                <a href="seguimiento.php">Seguimiento</a>
+                <a class="primary" href="login.php?return_to=panel-marketing.php">Ingresar</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="hero-grid">
+                    <div>
+                        <div class="eyebrow">Portal interno de Marketing</div>
+                        <h1>Gestión de tickets para solicitudes de Marketing</h1>
+                        <p>En esta sección puedes crear solicitudes, consultar avances por folio, conversar con el equipo y revisar tus tickets generados desde una sola sesión. El formulario usa tu perfil activo, así que no tendrás que capturar tus datos cada vez.</p>
+                        <div class="hero-actions">
+                            <a class="button primary" href="login.php?return_to=panel-marketing.php">Iniciar sesión</a>
+                            <a class="button" href="seguimiento.php">Consultar seguimiento</a>
+                        </div>
+                    </div>
+                    <aside class="panel" aria-label="Flujo de tickets">
+                        <h2>Qué ocurre dentro</h2>
+                        <div class="flow">
+                            <div><span>1</span>Entras con tu usuario autorizado.</div>
+                            <div><span>2</span>Creas un ticket con brief, fecha, prioridad y archivos.</div>
+                            <div><span>3</span>Marketing evalúa, responde y actualiza el estado.</div>
+                            <div><span>4</span>Das seguimiento hasta la entrega y cierre.</div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="examples" aria-label="Ejemplos de tickets">
+                <article class="example"><strong>Campañas y redes</strong><p>Posts, historias, reels, banners y copys para servicios, promociones o lanzamientos.</p></article>
+                <article class="example"><strong>Material corporativo</strong><p>Presentaciones, comunicados, firmas, manuales, documentos internos y adaptaciones visuales.</p></article>
+                <article class="example"><strong>Impresos y eventos</strong><p>Flyers, carteles, lonas, señalización, materiales para capacitación o piezas para activaciones.</p></article>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
