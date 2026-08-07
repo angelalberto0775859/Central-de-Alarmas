@@ -327,6 +327,127 @@ function cdaMarketingEnsureTicketSchema() {
     }
 }
 
+function cdaMarketingTicketOptionalColumns() {
+    static $columns = null;
+    if ($columns !== null) {
+        return $columns;
+    }
+
+    cdaMarketingEnsureTicketSchema();
+    $optional = [
+        'fecha_entrega_estimada',
+        'respuesta_interna',
+        'asignado_a',
+        'eliminado_en',
+        'actualizado_en',
+    ];
+
+    $columns = [];
+    foreach ($optional as $column) {
+        $columns[$column] = cdaMarketingColumnExists('marketing_tickets', $column);
+    }
+
+    return $columns;
+}
+
+function cdaMarketingTicketNotDeletedSql(array $columns, $alias = '') {
+    if (empty($columns['eliminado_en'])) {
+        return '1 = 1';
+    }
+
+    $prefix = $alias !== '' ? preg_replace('/[^a-zA-Z0-9_]/', '', $alias) . '.' : '';
+    return $prefix . 'eliminado_en IS NULL';
+}
+
+function cdaMarketingFetchTicketForUpdate($id) {
+    $columns = cdaMarketingTicketOptionalColumns();
+    $select = ['id', 'folio', 'solicitante', 'correo', 'actividad', 'estado'];
+    foreach (['fecha_entrega_estimada', 'asignado_a'] as $column) {
+        if (!empty($columns[$column])) {
+            $select[] = $column;
+        }
+    }
+
+    $stmt = cdaDb()->prepare(
+        'SELECT ' . implode(', ', $select) . ' FROM marketing_tickets WHERE id = ? AND ' . cdaMarketingTicketNotDeletedSql($columns) . ' LIMIT 1'
+    );
+    $stmt->execute([(int) $id]);
+    $ticket = $stmt->fetch();
+
+    return $ticket ?: null;
+}
+
+function cdaMarketingSaveTicketUpdate($id, $status, $comment, $assignee, $estimatedDelivery) {
+    $columns = cdaMarketingTicketOptionalColumns();
+    $sets = ['estado = ?'];
+    $params = [$status];
+
+    if (!empty($columns['respuesta_interna'])) {
+        $sets[] = 'respuesta_interna = ?';
+        $params[] = $comment;
+    }
+    if (!empty($columns['asignado_a'])) {
+        $sets[] = 'asignado_a = ?';
+        $params[] = $assignee;
+    }
+    if (!empty($columns['fecha_entrega_estimada'])) {
+        $sets[] = 'fecha_entrega_estimada = ?';
+        $params[] = $estimatedDelivery;
+    }
+
+    $params[] = (int) $id;
+    $stmt = cdaDb()->prepare(
+        'UPDATE marketing_tickets SET ' . implode(', ', $sets) . ' WHERE id = ? AND ' . cdaMarketingTicketNotDeletedSql($columns)
+    );
+    $stmt->execute($params);
+
+    return $stmt->rowCount();
+}
+
+function cdaMarketingInsertTicketHistorySafe($ticketId, $userId, $status, $comment) {
+    try {
+        cdaMarketingEnsureTicketSchema();
+        if (!cdaMarketingTableExists('marketing_ticket_historial')) {
+            return false;
+        }
+
+        $columns = [
+            'ticket_id' => cdaMarketingColumnExists('marketing_ticket_historial', 'ticket_id'),
+            'usuario_id' => cdaMarketingColumnExists('marketing_ticket_historial', 'usuario_id'),
+            'estado' => cdaMarketingColumnExists('marketing_ticket_historial', 'estado'),
+            'comentario' => cdaMarketingColumnExists('marketing_ticket_historial', 'comentario'),
+        ];
+
+        if (empty($columns['ticket_id']) || empty($columns['estado'])) {
+            return false;
+        }
+
+        $insertColumns = ['ticket_id', 'estado'];
+        $placeholders = ['?', '?'];
+        $params = [(int) $ticketId, $status];
+
+        if (!empty($columns['usuario_id'])) {
+            $insertColumns[] = 'usuario_id';
+            $placeholders[] = '?';
+            $params[] = $userId ? (int) $userId : null;
+        }
+
+        if (!empty($columns['comentario'])) {
+            $insertColumns[] = 'comentario';
+            $placeholders[] = '?';
+            $params[] = $comment;
+        }
+
+        $stmt = cdaDb()->prepare(
+            'INSERT INTO marketing_ticket_historial (' . implode(', ', $insertColumns) . ') VALUES (' . implode(', ', $placeholders) . ')'
+        );
+        return $stmt->execute($params);
+    } catch (Throwable $e) {
+        error_log('No fue posible guardar historial de marketing: ' . $e->getMessage());
+        return false;
+    }
+}
+
 function cdaMarketingStatusClass($status) {
     $slug = strtolower(str_replace(' ', '-', cdaMarketingClean($status)));
     return preg_replace('/[^a-z0-9-]/', '', $slug);

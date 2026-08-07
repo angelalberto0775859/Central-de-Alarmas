@@ -37,34 +37,21 @@ if ($id <= 0 || !cdaMarketingStatusAllowed($estado) || ($fechaEntregaRaw !== '' 
 
 try {
     $db = cdaDb();
-    $db->beginTransaction();
-
-    $ticketStmt = $db->prepare('SELECT id, folio, solicitante, correo, actividad, estado, fecha_entrega_estimada FROM marketing_tickets WHERE id = ? AND eliminado_en IS NULL LIMIT 1');
-    $ticketStmt->execute([$id]);
-    $ticket = $ticketStmt->fetch();
+    $ticket = cdaMarketingFetchTicketForUpdate($id);
     if (!$ticket) {
-        $db->rollBack();
         cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No encontramos ese ticket o ya fue eliminado.', 'error', $ticketFragment);
     }
     $oldStatus = $ticket['estado'];
     $ticket['fecha_entrega_estimada'] = $fechaEntregaEstimada;
     $ticket['asignado_a'] = $asignado;
 
-    $update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ?, fecha_entrega_estimada = ? WHERE id = ? AND eliminado_en IS NULL');
-    $update->execute([$estado, $respuesta, $asignado, $fechaEntregaEstimada, $id]);
-
-    $hist = $db->prepare('INSERT INTO marketing_ticket_historial (ticket_id, usuario_id, estado, comentario) VALUES (?, ?, ?, ?)');
-    $hist->execute([$id, $user['id'], $estado, $respuesta ?: 'Actualizacion de estado.']);
-
-    $db->commit();
+    cdaMarketingSaveTicketUpdate($id, $estado, $respuesta, $asignado, $fechaEntregaEstimada);
+    cdaMarketingInsertTicketHistorySafe($id, $user['id'], $estado, $respuesta ?: 'Actualizacion de estado.');
 
     if ($oldStatus !== $estado) {
         cdaMarketingSendStatusEmail($ticket, $oldStatus, $estado, $respuesta);
     }
 } catch (Throwable $e) {
-    if (isset($db) && $db->inTransaction()) {
-        $db->rollBack();
-    }
     error_log('No fue posible actualizar ticket de marketing: ' . $e->getMessage());
     cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No fue posible guardar los cambios. Si vuelve a pasar, ejecuta db/install_marketing_schema.sql en la base de datos.', 'error', $ticketFragment);
 }
