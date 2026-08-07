@@ -950,9 +950,20 @@ function cdaMarketingFetchAssignableAdmins() {
 
 function cdaMarketingFetchAssignableUsers() {
     try {
-        $stmt = cdaDb()->query("SELECT nombre, correo, rol FROM marketing_usuarios WHERE rol IN ('admin','manager','trabajador') AND activo = 1 ORDER BY nombre ASC, correo ASC");
+        cdaMarketingEnsureUserRoleSchema();
+        cdaMarketingEnsureColumn('marketing_usuarios', 'activo', "ALTER TABLE marketing_usuarios ADD COLUMN activo TINYINT(1) NOT NULL DEFAULT 1");
+
+        $hasActiveColumn = cdaMarketingColumnExists('marketing_usuarios', 'activo');
+        $activeSql = $hasActiveColumn ? 'AND activo = 1' : '';
+        $stmt = cdaDb()->query(
+            "SELECT nombre, correo, rol
+            FROM marketing_usuarios
+            WHERE LOWER(rol) IN ('admin','manager','trabajador') $activeSql
+            ORDER BY nombre ASC, correo ASC"
+        );
         return $stmt->fetchAll();
     } catch (Throwable $e) {
+        error_log('No fue posible consultar asignables de marketing: ' . $e->getMessage());
         return [];
     }
 }

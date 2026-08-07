@@ -23,7 +23,8 @@ $assignableAdmins = cdaMarketingFetchAssignableUsers();
 $assignableAdminNames = array_map(function ($admin) {
     return (string) ($admin['nombre'] ?? '');
 }, $assignableAdmins);
-$asignado = cdaMarketingAssigneeValue($_POST['asignado_a'] ?? '', $assignableAdminNames);
+$asignadoRaw = cdaMarketingClean($_POST['asignado_a'] ?? '');
+$asignado = cdaMarketingAssigneeValue($asignadoRaw, $assignableAdminNames);
 $returnTo = cdaMarketingClean($_POST['return_to'] ?? 'panel-marketing.php');
 $allowedReturnTo = ['panel-marketing.php', 'control-marketing.php'];
 if (!in_array($returnTo, $allowedReturnTo, true)) {
@@ -33,6 +34,10 @@ $ticketFragment = $id > 0 ? 'ticket-' . $id : '';
 
 if ($id <= 0 || !cdaMarketingStatusAllowed($estado) || ($fechaEntregaRaw !== '' && $fechaEntregaEstimada === null)) {
     cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo guardar: revisa que el estado y la fecha sean validos.', 'error', $ticketFragment);
+}
+
+if ($asignadoRaw !== '' && $asignado === '') {
+    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo asignar: el usuario debe estar activo y tener rol admin, manager o trabajador.', 'error', $ticketFragment);
 }
 
 try {

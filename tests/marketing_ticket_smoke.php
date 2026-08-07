@@ -154,9 +154,13 @@ assertSameValue(true, strpos($helpersSource, 'cdaMarketingEnsureTable') !== fals
 assertSameValue(true, strpos($helpersSource, "cdaMarketingEnsureColumn('marketing_ticket_historial', 'usuario_id'") !== false, 'ticket schema repair adds missing history user column');
 assertSameValue(true, strpos($helpersSource, "cdaMarketingTicketInternalRecipientEmails") !== false, 'ticket emails include internal involved recipients');
 assertSameValue(true, strpos($helpersSource, "rol IN ('admin','manager','trabajador')") !== false, 'assignable users are only admins managers and workers');
+assertSameValue(true, strpos($helpersSource, 'LOWER(rol)') !== false, 'assignable user query tolerates role casing');
+assertSameValue(true, strpos($helpersSource, 'No fue posible consultar asignables') !== false, 'assignable user query logs failures');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingSaveTicketUpdate') !== false, 'ticket update helper centralizes resilient saves');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingInsertTicketHistorySafe') !== false, 'ticket history insert does not block ticket saves');
-assertSameValue(true, strpos(file_get_contents(__DIR__ . '/../ticket-actualizar.php'), 'cdaMarketingSaveTicketUpdate') !== false, 'ticket update endpoint uses resilient save helper');
+$ticketUpdateSource = file_get_contents(__DIR__ . '/../ticket-actualizar.php');
+assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingSaveTicketUpdate') !== false, 'ticket update endpoint uses resilient save helper');
+assertSameValue(true, strpos($ticketUpdateSource, 'No se pudo asignar') !== false, 'ticket update endpoint rejects invalid assignment instead of clearing it');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSyncUserTicketEmail') !== false, 'users page updates ticket requester emails when user email changes');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSendPasswordChangedEmail') !== false, 'users page emails users when password changes');
 $fixedRolesSql = file_get_contents(__DIR__ . '/../db/marketing_fixed_user_roles.sql');
