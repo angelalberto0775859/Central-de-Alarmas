@@ -183,6 +183,30 @@ function cdaMarketingTryExec($sql) {
     }
 }
 
+function cdaMarketingEnsureTable($table, $sql) {
+    if (!cdaMarketingTableExists($table)) {
+        return cdaMarketingTryExec($sql);
+    }
+
+    return true;
+}
+
+function cdaMarketingEnsureColumn($table, $column, $sql) {
+    if (!cdaMarketingColumnExists($table, $column)) {
+        return cdaMarketingTryExec($sql);
+    }
+
+    return true;
+}
+
+function cdaMarketingEnsureIndex($table, $index, $sql) {
+    if (!cdaMarketingIndexExists($table, $index)) {
+        return cdaMarketingTryExec($sql);
+    }
+
+    return true;
+}
+
 function cdaMarketingEnsureTicketSchema() {
     static $checked = false;
     if ($checked) return;
@@ -192,29 +216,40 @@ function cdaMarketingEnsureTicketSchema() {
         return;
     }
 
-    $columns = [
-        'fecha_entrega_estimada' => "ALTER TABLE marketing_tickets ADD COLUMN fecha_entrega_estimada DATE NULL",
-        'respuesta_interna' => "ALTER TABLE marketing_tickets ADD COLUMN respuesta_interna TEXT NULL",
-        'asignado_a' => "ALTER TABLE marketing_tickets ADD COLUMN asignado_a VARCHAR(140) NULL",
-        'eliminado_en' => "ALTER TABLE marketing_tickets ADD COLUMN eliminado_en TIMESTAMP NULL",
-        'eliminado_por' => "ALTER TABLE marketing_tickets ADD COLUMN eliminado_por INT NULL",
-        'actualizado_en' => "ALTER TABLE marketing_tickets ADD COLUMN actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-    ];
+    cdaMarketingEnsureColumn('marketing_tickets', 'fecha_entrega_estimada', "ALTER TABLE marketing_tickets ADD COLUMN fecha_entrega_estimada DATE NULL");
+    cdaMarketingEnsureColumn('marketing_tickets', 'respuesta_interna', "ALTER TABLE marketing_tickets ADD COLUMN respuesta_interna TEXT NULL");
+    cdaMarketingEnsureColumn('marketing_tickets', 'asignado_a', "ALTER TABLE marketing_tickets ADD COLUMN asignado_a VARCHAR(140) NULL");
+    cdaMarketingEnsureColumn('marketing_tickets', 'eliminado_en', "ALTER TABLE marketing_tickets ADD COLUMN eliminado_en TIMESTAMP NULL");
+    cdaMarketingEnsureColumn('marketing_tickets', 'eliminado_por', "ALTER TABLE marketing_tickets ADD COLUMN eliminado_por INT UNSIGNED NULL");
+    cdaMarketingEnsureColumn('marketing_tickets', 'actualizado_en', "ALTER TABLE marketing_tickets ADD COLUMN actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+    cdaMarketingEnsureIndex('marketing_tickets', 'idx_fecha_entrega_estimada', 'CREATE INDEX idx_fecha_entrega_estimada ON marketing_tickets (fecha_entrega_estimada)');
+    cdaMarketingEnsureIndex('marketing_tickets', 'idx_eliminado', 'CREATE INDEX idx_eliminado ON marketing_tickets (eliminado_en)');
 
-    foreach ($columns as $column => $sql) {
-        if (!cdaMarketingColumnExists('marketing_tickets', $column)) {
-            cdaMarketingTryExec($sql);
-        }
+    cdaMarketingEnsureTable(
+        'marketing_ticket_archivos',
+        "CREATE TABLE marketing_ticket_archivos (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            ticket_id INT UNSIGNED NOT NULL,
+            nombre_original VARCHAR(255) NOT NULL,
+            ruta VARCHAR(500) NOT NULL,
+            mime VARCHAR(160) NULL,
+            tamano INT UNSIGNED NOT NULL DEFAULT 0,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ticket_id (ticket_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    );
+    if (cdaMarketingTableExists('marketing_ticket_archivos')) {
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'ticket_id', "ALTER TABLE marketing_ticket_archivos ADD COLUMN ticket_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'nombre_original', "ALTER TABLE marketing_ticket_archivos ADD COLUMN nombre_original VARCHAR(255) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'ruta', "ALTER TABLE marketing_ticket_archivos ADD COLUMN ruta VARCHAR(500) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'mime', "ALTER TABLE marketing_ticket_archivos ADD COLUMN mime VARCHAR(160) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'tamano', "ALTER TABLE marketing_ticket_archivos ADD COLUMN tamano INT UNSIGNED NOT NULL DEFAULT 0");
+        cdaMarketingEnsureColumn('marketing_ticket_archivos', 'creado_en', "ALTER TABLE marketing_ticket_archivos ADD COLUMN creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+        cdaMarketingEnsureIndex('marketing_ticket_archivos', 'idx_ticket_id', 'CREATE INDEX idx_ticket_id ON marketing_ticket_archivos (ticket_id)');
     }
 
-    if (!cdaMarketingIndexExists('marketing_tickets', 'idx_fecha_entrega_estimada')) {
-        cdaMarketingTryExec('CREATE INDEX idx_fecha_entrega_estimada ON marketing_tickets (fecha_entrega_estimada)');
-    }
-    if (!cdaMarketingIndexExists('marketing_tickets', 'idx_eliminado')) {
-        cdaMarketingTryExec('CREATE INDEX idx_eliminado ON marketing_tickets (eliminado_en)');
-    }
-
-    cdaMarketingTryExec(
+    cdaMarketingEnsureTable(
+        'marketing_ticket_historial',
         "CREATE TABLE IF NOT EXISTS marketing_ticket_historial (
             id INT AUTO_INCREMENT PRIMARY KEY,
             ticket_id INT NOT NULL,
@@ -225,8 +260,18 @@ function cdaMarketingEnsureTicketSchema() {
             INDEX idx_ticket_historial (ticket_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
     );
+    if (cdaMarketingTableExists('marketing_ticket_historial')) {
+        cdaMarketingEnsureColumn('marketing_ticket_historial', 'ticket_id', "ALTER TABLE marketing_ticket_historial ADD COLUMN ticket_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_historial', 'usuario_id', "ALTER TABLE marketing_ticket_historial ADD COLUMN usuario_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_historial', 'estado', "ALTER TABLE marketing_ticket_historial ADD COLUMN estado VARCHAR(80) NOT NULL DEFAULT 'Recibido'");
+        cdaMarketingEnsureColumn('marketing_ticket_historial', 'comentario', "ALTER TABLE marketing_ticket_historial ADD COLUMN comentario TEXT NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_historial', 'creado_en', "ALTER TABLE marketing_ticket_historial ADD COLUMN creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+        cdaMarketingEnsureIndex('marketing_ticket_historial', 'idx_ticket_historial', 'CREATE INDEX idx_ticket_historial ON marketing_ticket_historial (ticket_id)');
+        cdaMarketingEnsureIndex('marketing_ticket_historial', 'idx_usuario_id', 'CREATE INDEX idx_usuario_id ON marketing_ticket_historial (usuario_id)');
+    }
 
-    cdaMarketingTryExec(
+    cdaMarketingEnsureTable(
+        'marketing_ticket_mensajes',
         "CREATE TABLE IF NOT EXISTS marketing_ticket_mensajes (
             id INT AUTO_INCREMENT PRIMARY KEY,
             ticket_id INT NOT NULL,
@@ -240,8 +285,22 @@ function cdaMarketingEnsureTicketSchema() {
             INDEX idx_creado_mensajes (creado_en)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
     );
+    if (cdaMarketingTableExists('marketing_ticket_mensajes')) {
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'ticket_id', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN ticket_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'usuario_id', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN usuario_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'autor_nombre', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN autor_nombre VARCHAR(140) NOT NULL DEFAULT 'Equipo'");
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'autor_rol', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario'");
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'mensaje', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN mensaje TEXT NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensajes', 'creado_en', "ALTER TABLE marketing_ticket_mensajes ADD COLUMN creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+        cdaMarketingTryExec("UPDATE marketing_ticket_mensajes SET autor_rol = 'admin' WHERE autor_rol = 'marketing'");
+        cdaMarketingTryExec("ALTER TABLE marketing_ticket_mensajes MODIFY autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario'");
+        cdaMarketingEnsureIndex('marketing_ticket_mensajes', 'idx_ticket_id', 'CREATE INDEX idx_ticket_id ON marketing_ticket_mensajes (ticket_id)');
+        cdaMarketingEnsureIndex('marketing_ticket_mensajes', 'idx_usuario_id', 'CREATE INDEX idx_usuario_id ON marketing_ticket_mensajes (usuario_id)');
+        cdaMarketingEnsureIndex('marketing_ticket_mensajes', 'idx_creado', 'CREATE INDEX idx_creado ON marketing_ticket_mensajes (creado_en)');
+    }
 
-    cdaMarketingTryExec(
+    cdaMarketingEnsureTable(
+        'marketing_ticket_mensaje_archivos',
         "CREATE TABLE IF NOT EXISTS marketing_ticket_mensaje_archivos (
             id INT AUTO_INCREMENT PRIMARY KEY,
             mensaje_id INT NOT NULL,
@@ -255,6 +314,17 @@ function cdaMarketingEnsureTicketSchema() {
             INDEX idx_ticket_mensaje_archivos (ticket_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
     );
+    if (cdaMarketingTableExists('marketing_ticket_mensaje_archivos')) {
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'mensaje_id', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN mensaje_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'ticket_id', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN ticket_id INT UNSIGNED NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'nombre_original', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN nombre_original VARCHAR(255) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'ruta', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN ruta VARCHAR(500) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'mime', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN mime VARCHAR(160) NULL");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'tamano', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN tamano INT UNSIGNED NOT NULL DEFAULT 0");
+        cdaMarketingEnsureColumn('marketing_ticket_mensaje_archivos', 'creado_en', "ALTER TABLE marketing_ticket_mensaje_archivos ADD COLUMN creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+        cdaMarketingEnsureIndex('marketing_ticket_mensaje_archivos', 'idx_mensaje_id', 'CREATE INDEX idx_mensaje_id ON marketing_ticket_mensaje_archivos (mensaje_id)');
+        cdaMarketingEnsureIndex('marketing_ticket_mensaje_archivos', 'idx_ticket_id', 'CREATE INDEX idx_ticket_id ON marketing_ticket_mensaje_archivos (ticket_id)');
+    }
 }
 
 function cdaMarketingStatusClass($status) {
@@ -366,8 +436,64 @@ function cdaMarketingTicketUrl($folio) {
     return rtrim(CDA_SITE_URL, '/') . '/seguimiento.php?folio=' . urlencode((string) $folio) . '#chat';
 }
 
+function cdaMarketingMailHeaders($replyTo = 'no-reply@centraldealarmas.com.mx') {
+    $replyTo = filter_var($replyTo, FILTER_VALIDATE_EMAIL) ?: 'no-reply@centraldealarmas.com.mx';
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "Reply-To: " . $replyTo . "\r\n";
+
+    return $headers;
+}
+
+function cdaMarketingUniqueEmails(array $emails) {
+    $unique = [];
+    foreach ($emails as $email) {
+        $email = filter_var(strtolower(cdaMarketingClean($email)), FILTER_VALIDATE_EMAIL);
+        if ($email) {
+            $unique[$email] = $email;
+        }
+    }
+
+    return array_values($unique);
+}
+
+function cdaMarketingTicketInternalRecipientEmails($ticket = []) {
+    try {
+        $stmt = cdaDb()->query("SELECT nombre, correo, rol FROM marketing_usuarios WHERE rol IN ('admin','manager') AND activo = 1");
+        $rows = $stmt->fetchAll();
+    } catch (Throwable $e) {
+        $rows = [];
+    }
+
+    $assignedName = cdaMarketingClean($ticket['asignado_a'] ?? '');
+    if ($assignedName !== '') {
+        try {
+            $assignedStmt = cdaDb()->prepare("SELECT nombre, correo, rol FROM marketing_usuarios WHERE nombre = ? AND rol IN ('admin','manager','trabajador') AND activo = 1");
+            $assignedStmt->execute([$assignedName]);
+            $rows = array_merge($rows, $assignedStmt->fetchAll());
+        } catch (Throwable $e) {
+            error_log('No fue posible consultar involucrados del ticket: ' . $e->getMessage());
+        }
+    }
+
+    return cdaMarketingUniqueEmails(array_map(function ($row) {
+        return $row['correo'] ?? '';
+    }, $rows));
+}
+
+function cdaMarketingSendHtmlMailToMany(array $recipients, $subject, $message, $headers) {
+    $sent = false;
+    foreach (cdaMarketingUniqueEmails($recipients) as $email) {
+        $sent = mail($email, $subject, $message, $headers) || $sent;
+    }
+
+    return $sent;
+}
+
 function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment = '') {
-    if (empty($ticket['correo']) || !filter_var($ticket['correo'], FILTER_VALIDATE_EMAIL) || !cdaMarketingStatusSendsEmail($newStatus)) {
+    if (!cdaMarketingStatusSendsEmail($newStatus)) {
         return false;
     }
 
@@ -401,12 +527,12 @@ function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment =
     </body>
     </html>';
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
+    $recipients = cdaMarketingUniqueEmails(array_merge(
+        [$ticket['correo'] ?? ''],
+        cdaMarketingTicketInternalRecipientEmails($ticket)
+    ));
 
-    return mail($ticket['correo'], $subject, $message, $headers);
+    return cdaMarketingSendHtmlMailToMany($recipients, $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingChatFileExtensions() {
@@ -473,6 +599,24 @@ function cdaMarketingDefaultUserRole($email) {
 
 function cdaMarketingProtectedUserEmail($email) {
     return cdaMarketingFixedRoleByEmail($email) !== null;
+}
+
+function cdaMarketingSyncUserTicketEmail($oldEmail, $newEmail) {
+    $oldEmail = filter_var(strtolower(cdaMarketingClean($oldEmail)), FILTER_VALIDATE_EMAIL);
+    $newEmail = filter_var(strtolower(cdaMarketingClean($newEmail)), FILTER_VALIDATE_EMAIL);
+    if (!$oldEmail || !$newEmail || $oldEmail === $newEmail) {
+        return 0;
+    }
+
+    try {
+        cdaMarketingEnsureTicketSchema();
+        $stmt = cdaDb()->prepare('UPDATE marketing_tickets SET correo = ? WHERE correo = ?');
+        $stmt->execute([$newEmail, $oldEmail]);
+        return $stmt->rowCount();
+    } catch (Throwable $e) {
+        error_log('No fue posible sincronizar correo de tickets de marketing: ' . $e->getMessage());
+        throw $e;
+    }
 }
 
 function cdaMarketingEnsureUserRoleSchema() {
@@ -642,12 +786,7 @@ function cdaMarketingSendPasswordResetEmail($user, $token) {
     </body>
     </html>';
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
-
-    return mail($email, $subject, $message, $headers);
+    return mail($email, $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingFetchAssignableAdmins() {
@@ -834,19 +973,11 @@ function cdaMarketingSendChatEmail($ticket, $authorName, $messageText, array $fi
     </body>
     </html>';
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
-
-    return mail($ticket['correo'], $subject, $message, $headers);
+    return mail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingSendChatAdminEmail($ticket, $authorName, $messageText, array $files = []) {
-    $stmt = cdaDb()->query("SELECT correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1");
-    $admins = array_filter(array_map(function ($row) {
-        return filter_var($row['correo'] ?? '', FILTER_VALIDATE_EMAIL);
-    }, $stmt->fetchAll()));
+    $admins = cdaMarketingTicketInternalRecipientEmails($ticket);
 
     if (!$admins) {
         return false;
@@ -882,16 +1013,7 @@ function cdaMarketingSendChatAdminEmail($ticket, $authorName, $messageText, arra
     </body>
     </html>';
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
-
-    foreach ($admins as $adminEmail) {
-        mail($adminEmail, $subject, $message, $headers);
-    }
-
-    return true;
+    return cdaMarketingSendHtmlMailToMany($admins, $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingFetchTicketMessages(array $ticketIds) {

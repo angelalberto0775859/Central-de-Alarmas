@@ -87,10 +87,7 @@ function cdaMarketingTicketEmailTemplate($heading, $ticket, $files, $intro, $pri
 }
 
 function cdaMarketingNotifyAdmins($ticket, $files) {
-    $stmt = cdaDb()->query("SELECT correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1");
-    $admins = array_filter(array_map(function ($row) {
-        return filter_var($row['correo'] ?? '', FILTER_VALIDATE_EMAIL);
-    }, $stmt->fetchAll()));
+    $admins = cdaMarketingTicketInternalRecipientEmails($ticket);
 
     if (!$admins) {
         return;
@@ -108,14 +105,7 @@ function cdaMarketingNotifyAdmins($ticket, $files) {
         'Abrir panel interno'
     );
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: " . $ticket['correo'] . "\r\n";
-
-    foreach ($admins as $adminEmail) {
-        mail($adminEmail, $subject, $message, $headers);
-    }
+    cdaMarketingSendHtmlMailToMany($admins, $subject, $message, cdaMarketingMailHeaders($ticket['correo']));
 }
 
 function cdaMarketingNotifyRequester($ticket, $files) {
@@ -130,12 +120,7 @@ function cdaMarketingNotifyRequester($ticket, $files) {
         'Abrir seguimiento y chat'
     );
 
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
-    $headers .= "Reply-To: no-reply@centraldealarmas.com.mx\r\n";
-
-    mail($ticket['correo'], $subject, $message, $headers);
+    mail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -290,6 +275,8 @@ if ($documentFiles) {
 }
 
 try {
+    cdaMarketingEnsureTicketSchema();
+
     $db = cdaDb();
     $db->beginTransaction();
 

@@ -73,6 +73,9 @@ assertSameValue(false, cdaMarketingProtectedUserEmail('salducin@centraldealarmas
 assertSameValue(false, cdaMarketingProtectedUserEmail('nuevo@centraldealarmas.com.mx'), 'regular email is not protected');
 assertSameValue(true, function_exists('cdaMarketingEnsureUserRoleSchema'), 'role schema repair helper exists');
 assertSameValue(true, function_exists('cdaMarketingEnforceFixedUserRoles'), 'fixed role enforcement helper exists');
+assertSameValue(true, function_exists('cdaMarketingTicketInternalRecipientEmails'), 'ticket internal recipient helper exists');
+assertSameValue(true, function_exists('cdaMarketingMailHeaders'), 'shared mail header helper exists');
+assertSameValue(true, function_exists('cdaMarketingSyncUserTicketEmail'), 'user email ticket sync helper exists');
 assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('marketing'), 'old marketing role cannot manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('trabajador'), 'workers cannot manage tickets');
@@ -127,6 +130,12 @@ assertSameValue(true, strpos($usersHtml, '$fixedItemRole === \'admin\'') !== fal
 assertSameValue(true, strpos($usersHtml, 'formaction="usuarios-marketing.php?action=delete"') !== false, 'users page keeps delete action per row');
 assertSameValue(true, strpos($usersHtml, 'Rol protegido por correo') !== false, 'users page explains protected roles');
 assertSameValue(true, strpos($schemaSql, 'fecha_entrega_estimada DATE NULL') !== false, 'schema includes estimated delivery date');
+assertSameValue(true, strpos($schemaSql, 'CREATE TABLE IF NOT EXISTS marketing_ticket_archivos') !== false, 'install schema creates ticket attachment table idempotently');
+$helpersSource = file_get_contents(__DIR__ . '/../php/marketing_helpers.php');
+assertSameValue(true, strpos($helpersSource, 'cdaMarketingEnsureTable') !== false && strpos($helpersSource, 'marketing_ticket_archivos') !== false, 'ticket schema repair creates attachment table');
+assertSameValue(true, strpos($helpersSource, "cdaMarketingEnsureColumn('marketing_ticket_historial', 'usuario_id'") !== false, 'ticket schema repair adds missing history user column');
+assertSameValue(true, strpos($helpersSource, "cdaMarketingTicketInternalRecipientEmails") !== false, 'ticket emails include internal involved recipients');
+assertSameValue(true, strpos($usersHtml, 'cdaMarketingSyncUserTicketEmail') !== false, 'users page updates ticket requester emails when user email changes');
 $fixedRolesSql = file_get_contents(__DIR__ . '/../db/marketing_fixed_user_roles.sql');
 assertSameValue(true, strpos($fixedRolesSql, "ENUM('admin','usuario','manager','trabajador')") !== false, 'fixed roles migration updates user role enum');
 

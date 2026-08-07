@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             $db = cdaDb();
+            cdaMarketingEnsureTicketSchema();
             $db->beginTransaction();
             $targetStmt = $db->prepare('SELECT id, nombre, correo FROM marketing_usuarios WHERE id = ? LIMIT 1');
 
@@ -123,6 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $db->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
                     $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
                 }
+                cdaMarketingSyncUserTicketEmail($existingUser['correo'] ?? '', $correo);
                 $updated++;
             }
 
@@ -188,6 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt = cdaDb()->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
                         $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
                     }
+                    cdaMarketingSyncUserTicketEmail($targetUser['correo'] ?? '', $correo);
 
                     $message = 'Usuario actualizado correctamente.';
                     $user = cdaCurrentUser();

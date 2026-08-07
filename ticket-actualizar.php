@@ -48,6 +48,7 @@ try {
     }
     $oldStatus = $ticket['estado'];
     $ticket['fecha_entrega_estimada'] = $fechaEntregaEstimada;
+    $ticket['asignado_a'] = $asignado;
 
     $update = $db->prepare('UPDATE marketing_tickets SET estado = ?, respuesta_interna = ?, asignado_a = ?, fecha_entrega_estimada = ? WHERE id = ? AND eliminado_en IS NULL');
     $update->execute([$estado, $respuesta, $asignado, $fechaEntregaEstimada, $id]);
