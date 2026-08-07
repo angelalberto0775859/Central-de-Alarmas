@@ -37,7 +37,7 @@ if ($id <= 0 || !cdaMarketingStatusAllowed($estado) || ($fechaEntregaRaw !== '' 
 }
 
 if ($asignadoRaw !== '' && $asignado === '') {
-    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo asignar: el usuario debe estar activo y tener rol admin, manager o trabajador.', 'error', $ticketFragment);
+    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo asignar: el usuario debe estar activo y tener rol manager o trabajador.', 'error', $ticketFragment);
 }
 
 try {

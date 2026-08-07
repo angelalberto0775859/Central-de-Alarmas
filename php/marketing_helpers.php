@@ -958,7 +958,7 @@ function cdaMarketingFetchAssignableUsers() {
         $stmt = cdaDb()->query(
             "SELECT nombre, correo, rol
             FROM marketing_usuarios
-            WHERE LOWER(rol) IN ('admin','manager','trabajador') $activeSql
+            WHERE LOWER(rol) IN ('manager','trabajador') $activeSql
             ORDER BY nombre ASC, correo ASC"
         );
         return $stmt->fetchAll();

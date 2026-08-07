@@ -288,6 +288,9 @@ foreach ($tickets as $ticket) {
                         </select>
                         <select name="asignado_a" aria-label="Asignar ticket">
                             <option value="">Sin asignar</option>
+                            <?php if (!$assignableUsers): ?>
+                                <option value="" disabled>No hay managers o trabajadores activos</option>
+                            <?php endif; ?>
                             <?php foreach ($assignableUsers as $assignableUser): ?>
                                 <?php $adminName = (string) ($assignableUser['nombre'] ?? ''); ?>
                                 <?php $roleLabel = cdaMarketingRoleLabel($assignableUser['rol'] ?? 'usuario'); ?>
