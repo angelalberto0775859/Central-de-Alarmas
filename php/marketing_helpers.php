@@ -157,7 +157,19 @@ function cdaMarketingStatusSendsEmail($status) {
 }
 
 function cdaMarketingTicketFileExtensions() {
-    return ['pdf','doc','docx','docm','ppt','pptx','pptm','xls','xlsx','xlsm','csv','jpg','jpeg','png','webp','mp4','mov','zip','rar','svg','ai','psd'];
+    return [
+        'pdf','txt','rtf','md','csv','json','xml',
+        'doc','docx','docm','odt','pages',
+        'ppt','pptx','pptm','odp','key',
+        'xls','xlsx','xlsm','ods','numbers',
+        'jpg','jpeg','png','webp','gif','bmp','tif','tiff','heic','heif','ico','svg',
+        'mp4','mov','m4v','avi','mkv','webm',
+        'mp3','wav','m4a','aac','ogg','flac',
+        'zip','rar','7z','tar','gz',
+        'ai','psd','eps','indd','indt','xd','fig','sketch','cdr',
+        'otf','ttf','woff','woff2',
+        'glb','gltf','obj','fbx','stl',
+    ];
 }
 
 function cdaMarketingAllowedUploadAccept() {

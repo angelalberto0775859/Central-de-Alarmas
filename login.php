@@ -317,6 +317,27 @@ $googleReady = cdaGoogleOAuthReady();
         .access-tab.active { background:#fff; box-shadow:0 8px 18px rgba(6,57,112,.1); }
         form { display:grid; gap:.85rem; }
         label { display:grid; gap:.42rem; font-size:.78rem; font-weight:900; color:var(--ink); }
+        .password-field { position:relative; }
+        .password-field input { padding-right:3rem; }
+        .password-toggle {
+            position:absolute;
+            right:.45rem;
+            top:50%;
+            transform:translateY(-50%);
+            width:2.25rem;
+            height:2.25rem;
+            border:0;
+            border-radius:6px;
+            display:grid;
+            place-items:center;
+            color:var(--blue);
+            background:transparent;
+            cursor:pointer;
+            box-shadow:none;
+        }
+        .password-toggle:hover { background:var(--soft); }
+        .password-toggle:focus-visible { outline:3px solid rgba(6,57,112,.16); outline-offset:2px; }
+        .password-toggle svg { width:1.08rem; height:1.08rem; stroke:currentColor; stroke-width:2.2; fill:none; }
         input {
             width:100%;
             border:1px solid var(--line-dark);
@@ -349,6 +370,19 @@ $googleReady = cdaGoogleOAuthReady();
             align-items:center;
             box-shadow:0 14px 28px rgba(6,57,112,.16);
         }
+        button.password-toggle {
+            min-height:0;
+            width:2.25rem;
+            height:2.25rem;
+            padding:0;
+            background:transparent;
+            color:var(--blue);
+            letter-spacing:0;
+            text-transform:none;
+            box-shadow:none;
+            display:grid;
+        }
+        button.password-toggle:hover { background:var(--soft); }
         .button.google {
             margin-top:.75rem;
             background:#fff;
@@ -378,90 +412,15 @@ $googleReady = cdaGoogleOAuthReady();
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
         .note { color:#7c5800; background:#fff8cf; border:1px solid #f5df76; }
         .success { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
-        .landing-info {
-            display:grid;
-            gap:1rem;
-            padding:0 0 2.8rem;
-        }
-        .info-band {
-            display:grid;
-            grid-template-columns:minmax(0,.78fr) minmax(320px,1fr);
-            gap:1rem;
-            align-items:start;
-            border:1px solid rgba(255,255,255,.16);
-            border-radius:var(--radius);
-            padding:1.15rem;
-            background:rgba(255,255,255,.08);
-            color:#fff;
-        }
-        .info-band h2 {
-            font-size:clamp(1.45rem,3vw,2.25rem);
-            line-height:1.05;
-            letter-spacing:0;
-        }
-        .info-band p {
-            margin-top:.65rem;
-            color:rgba(255,255,255,.76);
-            line-height:1.65;
-        }
-        .info-grid {
-            display:grid;
-            grid-template-columns:repeat(3,minmax(0,1fr));
-            gap:.85rem;
-        }
-        .info-card {
-            border:1px solid rgba(255,255,255,.22);
-            border-radius:var(--radius);
-            padding:1rem;
-            background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.92));
-            color:var(--ink);
-            min-height:150px;
-        }
-        .info-card strong {
-            display:block;
-            color:var(--blue);
-            font-size:1rem;
-            margin-bottom:.4rem;
-        }
-        .info-card span {
-            display:inline-flex;
-            margin-bottom:.55rem;
-            color:var(--yellow);
-            background:var(--blue);
-            border-radius:999px;
-            padding:.28rem .5rem;
-            font-size:.72rem;
-            font-weight:950;
-        }
-        .info-card p {
-            color:var(--muted);
-            font-size:.88rem;
-            line-height:1.5;
-        }
-        .role-strip {
-            display:grid;
-            grid-template-columns:repeat(4,minmax(0,1fr));
-            gap:.75rem;
-        }
-        .role-card {
-            border:1px solid rgba(255,255,255,.2);
-            border-radius:var(--radius);
-            padding:.9rem;
-            background:rgba(255,255,255,.08);
-            color:rgba(255,255,255,.78);
-        }
-        .role-card strong { display:block; color:#fff; margin-bottom:.3rem; }
-        .role-card p { font-size:.82rem; line-height:1.45; }
         @media (max-width:860px) {
-            .login-grid, .info-band { grid-template-columns:1fr; align-items:start; }
+            .login-grid { grid-template-columns:1fr; align-items:start; }
             .intro { padding-top:1.2rem; }
-            .info-grid, .role-strip { grid-template-columns:1fr 1fr; }
         }
         @media (max-width:620px) {
             .shell { width:min(100% - 1rem, 1120px); }
             .topbar { align-items:flex-start; flex-direction:column; }
             .nav { justify-content:flex-start; }
-            .status-strip, .links, .info-grid, .role-strip { grid-template-columns:1fr; }
+            .status-strip, .links { grid-template-columns:1fr; }
             .card-head { flex-direction:column; }
         }
         @media (prefers-reduced-motion:reduce) {
@@ -516,7 +475,14 @@ $googleReady = cdaGoogleOAuthReady();
                         <label>Nombre <input name="nombre" autocomplete="name" required placeholder="Tu nombre"></label>
                     <?php endif; ?>
                     <label>Correo <input name="correo" type="email" autocomplete="email" required placeholder="usuario@centraldealarmas.com.mx"></label>
-                    <label>Contraseña <input name="password" type="password" autocomplete="<?php echo $mode === 'registro' ? 'new-password' : 'current-password'; ?>" minlength="<?php echo $mode === 'registro' ? '8' : '1'; ?>" required placeholder="<?php echo $mode === 'registro' ? 'Minimo 8 caracteres' : 'Tu contrasena'; ?>"></label>
+                    <label>Contraseña
+                        <span class="password-field">
+                            <input id="passwordInput" name="password" type="password" autocomplete="<?php echo $mode === 'registro' ? 'new-password' : 'current-password'; ?>" minlength="<?php echo $mode === 'registro' ? '8' : '1'; ?>" required placeholder="<?php echo $mode === 'registro' ? 'Minimo 8 caracteres' : 'Tu contrasena'; ?>">
+                            <button class="password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false" data-password-toggle>
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </span>
+                    </label>
                     <button type="submit"><?php echo $mode === 'registro' ? 'Crear y entrar' : 'Entrar al panel'; ?></button>
                 </form>
                 <?php if ($googleReady): ?>
@@ -532,30 +498,21 @@ $googleReady = cdaGoogleOAuthReady();
             </article>
         </main>
 
-        <section class="landing-info" aria-label="Información del portal de tickets">
-            <article class="info-band">
-                <div>
-                    <div class="eyebrow">Para qué sirve esta sección</div>
-                    <h2>Un solo lugar para pedir, revisar y cerrar solicitudes.</h2>
-                </div>
-                <p>El portal ordena las solicitudes de Marketing por folio, fecha requerida, prioridad y estado. Así cada persona puede crear un ticket desde su sesión, consultar avances, adjuntar materiales y mantener la conversación del proyecto dentro del mismo historial.</p>
-            </article>
-
-            <div class="info-grid" aria-label="Pasos para generar tickets">
-                <article class="info-card"><span>Paso 1</span><strong>Inicia sesión</strong><p>Entra con tu correo o Google. Tu nombre y correo se toman del perfil activo para evitar capturar datos repetidos.</p></article>
-                <article class="info-card"><span>Paso 2</span><strong>Crea el ticket</strong><p>Describe la actividad, el objetivo, la fecha requerida, prioridad, público y adjunta editables o referencias.</p></article>
-                <article class="info-card"><span>Paso 3</span><strong>Da seguimiento</strong><p>Consulta el folio, responde dudas en el chat y revisa si el ticket fue aprobado, programado, entregado o cerrado.</p></article>
-            </div>
-
-            <div class="role-strip" aria-label="Accesos por rol">
-                <article class="role-card"><strong>Usuario</strong><p>Crear ticket, seguimiento y perfil con sus tickets activos.</p></article>
-                <article class="role-card"><strong>Trabajador</strong><p>Ver tablero, crear tickets, consultar seguimiento y perfil.</p></article>
-                <article class="role-card"><strong>Manager</strong><p>Gestionar estados, aprobaciones y asignaciones sin administrar usuarios.</p></article>
-                <article class="role-card"><strong>Admin</strong><p>Control total del flujo, usuarios, tablero, basurero y tickets.</p></article>
-            </div>
-        </section>
     </div>
     <script>
+        (function () {
+            var toggle = document.querySelector('[data-password-toggle]');
+            var input = document.getElementById('passwordInput');
+            if (!toggle || !input) return;
+
+            toggle.addEventListener('click', function () {
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+                toggle.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            });
+        }());
+
         (function () {
             var layer = document.querySelector('.ambient-points');
             if (!layer) return;

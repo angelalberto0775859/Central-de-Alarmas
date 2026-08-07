@@ -39,23 +39,76 @@ foreach ($tickets as $ticket) {
     }
 }
 
-$stats = [
-    'total' => count($tickets),
-    'urgent' => 0,
-    'waiting' => 0,
-    'dueSoon' => 0,
-];
 $statusStats = array_fill_keys(cdaMarketingStatuses(), 0);
+$typeStats = [];
+$userStats = [];
+$monthNames = ['01' => 'Ene', '02' => 'Feb', '03' => 'Mar', '04' => 'Abr', '05' => 'May', '06' => 'Jun', '07' => 'Jul', '08' => 'Ago', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dic'];
+$completedByMonth = [];
+$completedStatuses = ['Entregado', 'Cerrado'];
 $today = new DateTimeImmutable('today');
+
+for ($i = 5; $i >= 0; $i--) {
+    $month = $today->modify('-' . $i . ' months');
+    $key = $month->format('Y-m');
+    $completedByMonth[$key] = [
+        'label' => $monthNames[$month->format('m')] . ' ' . $month->format('y'),
+        'value' => 0,
+    ];
+}
+
 foreach ($tickets as $ticket) {
-    if ($ticket['prioridad'] === 'Urgente') $stats['urgent']++;
-    if ($ticket['estado'] === 'Pendiente de informacion') $stats['waiting']++;
     if (isset($statusStats[$ticket['estado']])) $statusStats[$ticket['estado']]++;
-    $due = DateTimeImmutable::createFromFormat('Y-m-d', $ticket['fecha_requerida']);
-    if ($due && $due <= $today->modify('+3 days') && !in_array($ticket['estado'], ['Entregado','Cerrado','Rechazado'], true)) {
-        $stats['dueSoon']++;
+
+    $type = cdaMarketingClean($ticket['tipo_solicitud'] ?? 'Sin tipo') ?: 'Sin tipo';
+    $typeStats[$type] = ($typeStats[$type] ?? 0) + 1;
+
+    $requester = cdaMarketingClean($ticket['solicitante'] ?? '') ?: cdaMarketingClean($ticket['correo'] ?? 'Usuario sin nombre') ?: 'Usuario sin nombre';
+    $userStats[$requester] = ($userStats[$requester] ?? 0) + 1;
+
+    if (in_array($ticket['estado'], $completedStatuses, true)) {
+        $updated = new DateTimeImmutable($ticket['actualizado_en'] ?? $ticket['creado_en']);
+        $monthKey = $updated->format('Y-m');
+        if (isset($completedByMonth[$monthKey])) {
+            $completedByMonth[$monthKey]['value']++;
+        }
     }
 }
+
+arsort($typeStats);
+arsort($userStats);
+$topTypes = array_slice($typeStats, 0, 6, true);
+$topUsers = array_slice($userStats, 0, 6, true);
+$maxType = max(array_values($topTypes) ?: [1]);
+$maxUser = max(array_values($topUsers) ?: [1]);
+$maxCompleted = max(array_column($completedByMonth, 'value') ?: [1]);
+$ticketTotal = count($tickets);
+$completedTotal = array_sum(array_column($completedByMonth, 'value'));
+$activeTotal = max(0, $ticketTotal - ($statusStats['Entregado'] ?? 0) - ($statusStats['Cerrado'] ?? 0) - ($statusStats['Rechazado'] ?? 0));
+$statusColors = [
+    'Recibido' => '#0d62ad',
+    'En evaluacion' => '#38bdf8',
+    'Pendiente de informacion' => '#f59e0b',
+    'Aprobado' => '#22c55e',
+    'Programado' => '#84cc16',
+    'En diseno' => '#6366f1',
+    'En revision' => '#8b5cf6',
+    'Ajustes solicitados' => '#ec4899',
+    'Entregado' => '#047857',
+    'Cerrado' => '#0f766e',
+    'Rechazado' => '#b91c1c',
+];
+$conicParts = [];
+$cursor = 0;
+foreach (cdaMarketingStatuses() as $status) {
+    $count = (int) ($statusStats[$status] ?? 0);
+    if ($ticketTotal <= 0 || $count <= 0) {
+        continue;
+    }
+    $next = $cursor + ($count / $ticketTotal * 100);
+    $conicParts[] = ($statusColors[$status] ?? '#0d62ad') . ' ' . round($cursor, 2) . '% ' . round($next, 2) . '%';
+    $cursor = $next;
+}
+$statusConic = $conicParts ? implode(', ', $conicParts) : '#e5edf7 0 100%';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -136,22 +189,34 @@ foreach ($tickets as $ticket) {
         .story-step span { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-bottom:.45rem; border-radius:50%; background:var(--blue); color:var(--yellow); font-weight:950; font-size:.76rem; }
         .story-step strong { display:block; color:var(--blue); font-size:.82rem; line-height:1.2; }
         .story-step p { margin-top:.22rem; color:var(--muted); font-size:.75rem; line-height:1.35; }
-        .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.85rem; margin-bottom:1rem; }
-        .stat { border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); position:relative; overflow:hidden; }
-        .stat::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:linear-gradient(90deg,var(--yellow),var(--blue-3)); }
-        .stat span { display:block; color:var(--muted); font-size:.72rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
-        .stat strong { display:block; color:var(--blue); font-size:2.15rem; line-height:1; margin-top:.25rem; }
-        .state-dashboard { margin-bottom:1rem; border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); }
-        .state-dashboard-head { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin-bottom:.85rem; }
-        .state-dashboard h2 { color:var(--blue); font-size:1.08rem; }
-        .state-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.65rem; }
-        .state-card { display:grid; gap:.28rem; min-height:74px; border:1px solid rgba(6,57,112,.1); border-left:5px solid var(--blue-2); border-radius:var(--radius); padding:.72rem; background:#fff; }
-        .state-card.tone-green { border-left-color:var(--green); }
-        .state-card.tone-red { border-left-color:var(--red); }
-        .state-card.tone-amber { border-left-color:#f59e0b; }
-        .state-card.tone-purple { border-left-color:#6d28d9; }
-        .state-card span { color:var(--muted); font-size:.72rem; font-weight:850; line-height:1.25; }
-        .state-card strong { color:var(--blue); font-size:1.6rem; line-height:1; }
+        .analytics { margin-bottom:1rem; border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); }
+        .analytics-head { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin-bottom:1rem; }
+        .analytics h2 { color:var(--blue); font-size:1.12rem; }
+        .analytics-grid { display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:.9rem; align-items:stretch; }
+        .analysis-card { border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); padding:.9rem; background:#fff; min-height:260px; }
+        .analysis-card.wide { grid-column:span 2; }
+        .analysis-card h3 { color:var(--blue); font-size:.9rem; margin-bottom:.72rem; }
+        .kpi-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.55rem; margin-bottom:.85rem; }
+        .kpi-mini { border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); padding:.68rem; background:#fbfdff; }
+        .kpi-mini span { display:block; color:var(--muted); font-size:.68rem; font-weight:850; line-height:1.25; }
+        .kpi-mini strong { display:block; color:var(--blue); font-size:1.45rem; line-height:1; margin-top:.25rem; font-variant-numeric:tabular-nums; }
+        .pie-layout { display:grid; grid-template-columns:150px minmax(0,1fr); gap:1rem; align-items:center; }
+        .pie-chart { width:150px; aspect-ratio:1; border-radius:50%; background:conic-gradient(var(--segments)); box-shadow:inset 0 0 0 22px #fff, 0 14px 28px rgba(6,57,112,.12); }
+        .legend { display:grid; gap:.42rem; max-height:190px; overflow:auto; padding-right:.2rem; }
+        .legend-row { display:grid; grid-template-columns:.65rem minmax(0,1fr) auto; gap:.45rem; align-items:center; color:var(--muted); font-size:.76rem; }
+        .legend-dot { width:.65rem; height:.65rem; border-radius:50%; background:var(--dot); }
+        .legend-row strong { color:var(--ink); font-variant-numeric:tabular-nums; }
+        .bars { display:grid; gap:.65rem; }
+        .bar-row { display:grid; gap:.28rem; }
+        .bar-meta { display:flex; justify-content:space-between; gap:.75rem; color:var(--muted); font-size:.76rem; line-height:1.25; }
+        .bar-meta strong { color:var(--ink); font-variant-numeric:tabular-nums; }
+        .bar-track { height:.66rem; border-radius:999px; overflow:hidden; background:#e8f0f8; }
+        .bar-fill { display:block; width:var(--value); height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue-2),var(--yellow)); min-width:2px; }
+        .month-bars { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.55rem; align-items:end; min-height:170px; padding-top:.5rem; }
+        .month-bar { display:grid; grid-template-rows:1fr auto auto; gap:.35rem; height:170px; text-align:center; color:var(--muted); font-size:.7rem; }
+        .month-fill { align-self:end; justify-self:center; width:100%; max-width:34px; height:var(--value); min-height:2px; border-radius:7px 7px 3px 3px; background:linear-gradient(180deg,var(--yellow),var(--blue-2)); }
+        .month-bar strong { color:var(--blue); font-size:.88rem; font-variant-numeric:tabular-nums; }
+        .empty-chart { border:1px dashed rgba(6,57,112,.18); border-radius:var(--radius); padding:.8rem; color:var(--muted); background:#fbfdff; font-size:.82rem; line-height:1.45; }
         .board { display:grid; grid-template-columns:repeat(4,minmax(290px,1fr)); gap:.9rem; align-items:start; overflow-x:auto; padding:.15rem .1rem .45rem; }
         .lane { border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:rgba(255,255,255,.86); min-height:560px; padding:.75rem; box-shadow:var(--shadow); backdrop-filter:blur(10px); }
         .lane-head { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-bottom:.75rem; padding:.8rem; border-radius:var(--radius); background:linear-gradient(135deg,var(--blue),var(--blue-2)); color:#fff; box-shadow:0 14px 30px rgba(6,57,112,.18); }
@@ -212,8 +277,9 @@ foreach ($tickets as $ticket) {
         .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
         .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
-        @media (max-width:920px) { .topbar, .hero, .state-dashboard-head { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } .state-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-        @media (max-width:620px) { .stats, .story-strip, .state-grid { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
+        @media (max-width:1100px) { .analytics-grid { grid-template-columns:1fr 1fr; } .analysis-card.wide { grid-column:span 2; } }
+        @media (max-width:920px) { .topbar, .hero, .analytics-head { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } .analytics-grid { grid-template-columns:1fr; } .analysis-card.wide { grid-column:auto; } }
+        @media (max-width:620px) { .story-strip, .kpi-row, .pie-layout { grid-template-columns:1fr; } .month-bars { grid-template-columns:repeat(3,minmax(0,1fr)); } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -252,27 +318,77 @@ foreach ($tickets as $ticket) {
             <div class="story-step"><span>3</span><strong>Chat con contexto</strong><p>Las dudas y aprobaciones se guardan directo en el folio.</p></div>
             <div class="story-step"><span>4</span><strong>Cierre trazable</strong><p>La entrega queda documentada con historial y comentarios.</p></div>
         </section>
-        <section class="stats" aria-label="Resumen admin">
-            <div class="stat"><span>En tablero</span><strong><?php echo $stats['total']; ?></strong></div>
-            <div class="stat"><span>Urgentes</span><strong><?php echo $stats['urgent']; ?></strong></div>
-            <div class="stat"><span>Por vencer</span><strong><?php echo $stats['dueSoon']; ?></strong></div>
-            <div class="stat"><span>Esperando info</span><strong><?php echo $stats['waiting']; ?></strong></div>
-        </section>
         <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?>
-        <section class="state-dashboard" aria-label="Estadisticas por estado de tickets">
-            <div class="state-dashboard-head">
+        <section class="analytics" aria-label="Analisis de tickets">
+            <div class="analytics-head">
                 <div>
-                    <h2>Estadisticas por estado</h2>
-                    <p class="muted">Vista rapida para medir carga, avance, bloqueos y cierres del flujo.</p>
+                    <h2>Analisis de solicitudes</h2>
+                    <p class="muted">Lectura ejecutiva de estados, cierres, temas con mayor demanda y usuarios con mas tickets.</p>
                 </div>
             </div>
-            <div class="state-grid">
-                <?php foreach (cdaMarketingStatuses() as $status): ?>
-                    <div class="state-card tone-<?php echo htmlspecialchars(cdaMarketingStatusTone($status)); ?>">
-                        <span><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></span>
-                        <strong><?php echo (int) $statusStats[$status]; ?></strong>
+            <div class="kpi-row">
+                <div class="kpi-mini"><span>Total analizado</span><strong><?php echo $ticketTotal; ?></strong></div>
+                <div class="kpi-mini"><span>Tickets activos</span><strong><?php echo $activeTotal; ?></strong></div>
+                <div class="kpi-mini"><span>Terminados recientes</span><strong><?php echo $completedTotal; ?></strong></div>
+            </div>
+            <div class="analytics-grid">
+                <article class="analysis-card">
+                    <h3>Estados de tickets</h3>
+                    <div class="pie-layout">
+                        <div class="pie-chart" style="--segments:<?php echo htmlspecialchars($statusConic); ?>" aria-hidden="true"></div>
+                        <div class="legend">
+                            <?php foreach (cdaMarketingStatuses() as $status): ?>
+                                <?php $count = (int) ($statusStats[$status] ?? 0); ?>
+                                <?php if ($count <= 0) continue; ?>
+                                <div class="legend-row">
+                                    <span class="legend-dot" style="--dot:<?php echo htmlspecialchars($statusColors[$status] ?? '#0d62ad'); ?>"></span>
+                                    <span><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></span>
+                                    <strong><?php echo $count; ?></strong>
+                                </div>
+                            <?php endforeach; ?>
+                            <?php if ($ticketTotal === 0): ?><p class="empty-chart">Aun no hay tickets para graficar estados.</p><?php endif; ?>
+                        </div>
                     </div>
-                <?php endforeach; ?>
+                </article>
+                <article class="analysis-card">
+                    <h3>Tickets terminados</h3>
+                    <div class="month-bars" aria-label="Tickets terminados por mes">
+                        <?php foreach ($completedByMonth as $month): ?>
+                            <?php $height = $maxCompleted > 0 ? max(2, round(((int) $month['value'] / $maxCompleted) * 100)) : 2; ?>
+                            <div class="month-bar">
+                                <span class="month-fill" style="--value:<?php echo $height; ?>%"></span>
+                                <strong><?php echo (int) $month['value']; ?></strong>
+                                <span><?php echo htmlspecialchars($month['label']); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </article>
+                <article class="analysis-card">
+                    <h3>Temas mas solicitados</h3>
+                    <div class="bars">
+                        <?php foreach ($topTypes as $label => $count): ?>
+                            <?php $width = $maxType > 0 ? round(((int) $count / $maxType) * 100) : 0; ?>
+                            <div class="bar-row">
+                                <div class="bar-meta"><span><?php echo htmlspecialchars($label); ?></span><strong><?php echo (int) $count; ?></strong></div>
+                                <div class="bar-track"><span class="bar-fill" style="--value:<?php echo $width; ?>%"></span></div>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if (!$topTypes): ?><p class="empty-chart">Aun no hay temas registrados.</p><?php endif; ?>
+                    </div>
+                </article>
+                <article class="analysis-card wide">
+                    <h3>Usuarios que generan mas tickets</h3>
+                    <div class="bars">
+                        <?php foreach ($topUsers as $label => $count): ?>
+                            <?php $width = $maxUser > 0 ? round(((int) $count / $maxUser) * 100) : 0; ?>
+                            <div class="bar-row">
+                                <div class="bar-meta"><span><?php echo htmlspecialchars($label); ?></span><strong><?php echo (int) $count; ?></strong></div>
+                                <div class="bar-track"><span class="bar-fill" style="--value:<?php echo $width; ?>%"></span></div>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if (!$topUsers): ?><p class="empty-chart">Aun no hay usuarios con tickets registrados.</p><?php endif; ?>
+                    </div>
+                </article>
             </div>
         </section>
         <?php endif; ?>

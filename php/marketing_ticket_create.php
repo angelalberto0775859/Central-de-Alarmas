@@ -188,22 +188,32 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $neededDate)) {
 }
 
 $allowedFileExtensions = cdaMarketingTicketFileExtensions();
-$allowedMimePrefixes = ['image/', 'video/'];
+$allowedMimePrefixes = ['image/', 'video/', 'audio/', 'text/'];
 $allowedMimeTypes = [
     'application/pdf',
+    'application/rtf',
+    'application/json',
+    'application/xml',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.ms-word.document.macroEnabled.12',
+    'application/vnd.oasis.opendocument.text',
     'application/vnd.ms-powerpoint',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+    'application/vnd.oasis.opendocument.presentation',
     'application/vnd.ms-excel',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.ms-excel.sheet.macroEnabled.12',
+    'application/vnd.oasis.opendocument.spreadsheet',
     'text/csv',
     'application/csv',
     'application/zip',
     'application/x-zip-compressed',
+    'application/x-7z-compressed',
+    'application/x-tar',
+    'application/gzip',
+    'application/x-gzip',
     'application/vnd.rar',
     'application/x-rar',
     'application/x-rar-compressed',
@@ -216,6 +226,16 @@ $allowedMimeTypes = [
     'image/vnd.adobe.photoshop',
     'image/svg+xml',
     'text/xml',
+    'font/otf',
+    'font/ttf',
+    'font/woff',
+    'font/woff2',
+    'application/font-woff',
+    'application/vnd.ms-fontobject',
+    'model/gltf-binary',
+    'model/gltf+json',
+    'model/obj',
+    'model/stl',
 ];
 $maxFiles = 5;
 $maxFileSize = 25 * 1024 * 1024;

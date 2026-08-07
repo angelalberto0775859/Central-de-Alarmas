@@ -969,7 +969,7 @@ $user = cdaRequireLogin();
                                 <div class="field full">
                                     <label for="documents">Documentos y archivos</label>
                                     <label class="file-drop" for="documents">
-                                        <input id="documents" name="documents[]" type="file" multiple accept=".pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.csv,.jpg,.jpeg,.png,.webp,.mp4,.mov,.zip,.rar,.svg,.ai,.psd">
+                                        <input id="documents" name="documents[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>">
                                         <span class="file-copy">
                                             <span>
                                                 <strong>Subida de editables y material requerido</strong>

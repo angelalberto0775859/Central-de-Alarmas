@@ -33,10 +33,16 @@ assertSameValue(true, in_array('rar', cdaMarketingTicketFileExtensions(), true),
 assertSameValue(true, in_array('svg', cdaMarketingTicketFileExtensions(), true), 'initial files allow svg');
 assertSameValue(true, in_array('ai', cdaMarketingTicketFileExtensions(), true), 'initial files allow ai');
 assertSameValue(true, in_array('psd', cdaMarketingTicketFileExtensions(), true), 'initial files allow psd');
+assertSameValue(true, in_array('indd', cdaMarketingTicketFileExtensions(), true), 'initial files allow indesign');
+assertSameValue(true, in_array('fig', cdaMarketingTicketFileExtensions(), true), 'initial files allow figma exports');
 assertSameValue(true, in_array('docm', cdaMarketingTicketFileExtensions(), true), 'initial files allow macro word');
 assertSameValue(true, in_array('pptm', cdaMarketingTicketFileExtensions(), true), 'initial files allow macro powerpoint');
 assertSameValue(true, in_array('xlsm', cdaMarketingTicketFileExtensions(), true), 'initial files allow macro excel');
 assertSameValue(true, in_array('csv', cdaMarketingTicketFileExtensions(), true), 'initial files allow csv');
+assertSameValue(true, in_array('mp3', cdaMarketingTicketFileExtensions(), true), 'initial files allow audio');
+assertSameValue(true, in_array('heic', cdaMarketingTicketFileExtensions(), true), 'initial files allow phone photos');
+assertSameValue(true, in_array('7z', cdaMarketingTicketFileExtensions(), true), 'initial files allow 7z archives');
+assertSameValue(true, in_array('glb', cdaMarketingTicketFileExtensions(), true), 'initial files allow 3d assets');
 assertSameValue(true, in_array('pdf', cdaMarketingChatFileExtensions(), true), 'chat files allow pdf');
 assertSameValue(true, in_array('zip', cdaMarketingChatFileExtensions(), true), 'chat files allow zip');
 assertSameValue(true, in_array('rar', cdaMarketingChatFileExtensions(), true), 'chat files allow rar');
@@ -45,6 +51,7 @@ assertSameValue(true, in_array('ai', cdaMarketingChatFileExtensions(), true), 'c
 assertSameValue(true, in_array('psd', cdaMarketingChatFileExtensions(), true), 'chat files allow psd');
 assertSameValue(false, in_array('exe', cdaMarketingChatFileExtensions(), true), 'chat files reject executables');
 assertSameValue(true, strpos(cdaMarketingAllowedUploadAccept(), '.rar') !== false, 'file input accept includes rar');
+assertSameValue(true, strpos(cdaMarketingAllowedUploadAccept(), '.indd') !== false, 'file input accept includes indd');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('admin'), 'admins can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('manager'), 'managers can upload chat files');
@@ -72,7 +79,7 @@ assertSameValue(64, strlen(cdaMarketingPasswordResetHash('abc123')), 'password r
 assertSameValue(true, strpos(cdaMarketingPasswordResetUrl('abc123'), 'reset-password.php?token=abc123') !== false, 'password reset url includes token');
 
 $marketingFormHtml = file_get_contents(__DIR__ . '/../crear-ticket.php');
-assertSameValue(true, strpos($marketingFormHtml, '.zip,.rar') !== false, 'authenticated marketing form accepts zip and rar');
+assertSameValue(true, strpos($marketingFormHtml, 'cdaMarketingAllowedUploadAccept()') !== false, 'authenticated marketing form uses shared accept list');
 assertSameValue(true, strpos($marketingFormHtml, 'Subida de editables y material requerido') !== false, 'authenticated marketing form explains editable uploads');
 assertSameValue(false, strpos($marketingFormHtml, 'accountPassword') !== false, 'authenticated marketing form does not ask for a ticket password');
 
