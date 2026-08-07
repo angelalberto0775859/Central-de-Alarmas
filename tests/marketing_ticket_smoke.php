@@ -105,9 +105,16 @@ assertSameValue(false, strpos($marketingFormHtml, 'accountPassword') !== false, 
 $panelHtml = file_get_contents(__DIR__ . '/../panel-marketing.php');
 $controlHtml = file_get_contents(__DIR__ . '/../control-marketing.php');
 $usersHtml = file_get_contents(__DIR__ . '/../usuarios-marketing.php');
+$profileHtml = file_get_contents(__DIR__ . '/../perfil-marketing.php');
 $schemaSql = file_get_contents(__DIR__ . '/../db/install_marketing_schema.sql');
 assertSameValue(true, strpos($panelHtml, 'fecha_entrega_estimada') !== false, 'panel can edit estimated delivery date');
 assertSameValue(true, strpos($controlHtml, 'fecha_entrega_estimada') !== false, 'board can edit estimated delivery date');
+assertSameValue(true, strpos($profileHtml, 'function cdaProfileInitials') !== false, 'profile has local initials helper');
+assertSameValue(false, strpos($profileHtml, 'mb_substr') !== false, 'profile does not require mbstring initials');
+assertSameValue(true, strpos($profileHtml, 'function cdaProfileTicketColumns') !== false, 'profile guards optional ticket columns');
+assertSameValue(true, strpos($profileHtml, 'SHOW COLUMNS FROM marketing_tickets LIKE') !== false, 'profile checks estimated delivery column before selecting it');
+assertSameValue(true, strpos($profileHtml, 'Filtro inicial de solicitudes') !== false, 'profile settings include default ticket filter');
+assertSameValue(true, strpos($profileHtml, 'cdaMarketingProfileSettings') !== false, 'profile settings persist locally');
 assertSameValue(true, strpos($usersHtml, 'Guardar todo') !== false, 'users page has bulk save button');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingEnsureUserRoleSchema()') !== false, 'users page repairs role schema before saving');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingEnforceFixedUserRoles()') !== false, 'users page enforces fixed roles before listing users');

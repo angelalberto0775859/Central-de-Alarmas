@@ -6,6 +6,48 @@ $user = cdaRequireLogin();
 $message = '';
 $error = '';
 
+function cdaProfileInitials($name) {
+    $initials = '';
+    foreach (preg_split('/\s+/', trim((string) $name)) as $word) {
+        if ($word !== '') {
+            $initials .= strtoupper(substr($word, 0, 1));
+        }
+    }
+
+    return substr($initials, 0, 2) ?: 'U';
+}
+
+function cdaProfileTicketColumns() {
+    static $columns = null;
+    if ($columns !== null) {
+        return $columns;
+    }
+
+    $columns = [
+        'id',
+        'folio',
+        'actividad',
+        'departamento',
+        'tipo_solicitud',
+        'estado',
+        'prioridad',
+        'fecha_requerida',
+        'creado_en',
+        'actualizado_en',
+    ];
+
+    try {
+        $stmt = cdaDb()->query("SHOW COLUMNS FROM marketing_tickets LIKE 'fecha_entrega_estimada'");
+        if ($stmt && $stmt->fetch()) {
+            $columns[] = 'fecha_entrega_estimada';
+        }
+    } catch (Throwable $e) {
+        // En hosting sin permisos de SHOW, dejamos la vista operable con las columnas base.
+    }
+
+    return $columns;
+}
+
 $dbUserStmt = cdaDb()->prepare('SELECT id, nombre, correo, password_hash, google_sub, rol, activo, creado_en FROM marketing_usuarios WHERE id = ? LIMIT 1');
 $dbUserStmt->execute([$user['id']]);
 $fullUser = $dbUserStmt->fetch() ?: $user;
@@ -64,8 +106,9 @@ $statsStmt->execute([$user['correo']]);
 $stats = $statsStmt->fetch() ?: ['total' => 0, 'activas' => 0, 'finalizadas' => 0, 'urgentes' => 0];
 
 // User Tickets List
+$ticketColumns = implode(', ', cdaProfileTicketColumns());
 $ticketStmt = cdaDb()->prepare("
-    SELECT id, folio, actividad, departamento, tipo_solicitud, estado, prioridad, fecha_requerida, fecha_entrega_estimada, creado_en, actualizado_en
+    SELECT $ticketColumns
     FROM marketing_tickets
     WHERE correo = ? AND eliminado_en IS NULL
     ORDER BY actualizado_en DESC
@@ -84,13 +127,7 @@ $roleDescriptions = [
 $roleDesc = $roleDescriptions[$user['rol']] ?? $roleDescriptions['usuario'];
 
 // Generate User Initials
-$initials = '';
-foreach (explode(' ', trim($user['nombre'])) as $w) {
-    if ($w !== '') {
-        $initials .= mb_substr($w, 0, 1);
-    }
-}
-$initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
+$initials = cdaProfileInitials($user['nombre']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -427,6 +464,22 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
         }
         .ok { color: #047857; background: #d1fae5; border: 1px solid #a7f3d0; }
         .error { color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca; }
+        body[data-visible-confirmations="true"] .ok,
+        body[data-visible-confirmations="true"] .error {
+            box-shadow: 0 10px 24px rgba(15,23,42,.16);
+        }
+        body[data-reduced-motion="true"] *,
+        body[data-reduced-motion="true"] *::before,
+        body[data-reduced-motion="true"] *::after {
+            transition-duration: 0s !important;
+            animation-duration: 0s !important;
+            scroll-behavior: auto !important;
+        }
+        body[data-reduced-motion="true"] .ticket-item:hover,
+        body[data-reduced-motion="true"] button.btn-primary:hover,
+        body[data-reduced-motion="true"] .button:hover {
+            transform: none;
+        }
 
         /* Forms */
         .form-group {
@@ -439,7 +492,8 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             color: var(--ink);
             margin-bottom: .38rem;
         }
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             border: 1px solid rgba(6,57,112,.25);
             border-radius: 8px;
@@ -450,7 +504,8 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             outline: none;
             transition: all .15s ease;
         }
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: var(--blue-2);
             box-shadow: 0 0 0 4px rgba(6,57,112,.12);
         }
@@ -458,6 +513,88 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             font-size: .75rem;
             color: var(--muted);
             margin-top: .3rem;
+        }
+        .settings-list {
+            display: grid;
+            gap: .75rem;
+        }
+        .setting-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: .85rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--soft);
+            padding: .8rem .9rem;
+        }
+        .setting-row strong {
+            display: block;
+            color: var(--ink);
+            font-size: .86rem;
+            margin-bottom: .18rem;
+        }
+        .setting-row span {
+            display: block;
+            color: var(--muted);
+            font-size: .76rem;
+            line-height: 1.35;
+        }
+        .setting-row select {
+            min-width: 160px;
+            border: 1px solid rgba(6,57,112,.25);
+            border-radius: 8px;
+            padding: .65rem .75rem;
+            color: var(--ink);
+            background: #fff;
+            font: inherit;
+            font-size: .82rem;
+            font-weight: 750;
+        }
+        .switch {
+            position: relative;
+            display: inline-flex;
+            width: 46px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .switch input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .switch span {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            background: #cbd5e1;
+            transition: background .15s ease;
+        }
+        .switch span::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 3px;
+            left: 3px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(15,23,42,.22);
+            transition: transform .15s ease;
+        }
+        .switch input:checked + span {
+            background: var(--blue-2);
+        }
+        .switch input:checked + span::after {
+            transform: translateX(20px);
+        }
+        .settings-status {
+            margin-top: .85rem;
+            min-height: 20px;
+            color: var(--green);
+            font-size: .78rem;
+            font-weight: 800;
         }
 
         button.btn-primary, .button {
@@ -574,6 +711,8 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             .profile-dropdown { left: 0; right: auto; }
             .hero-banner { flex-direction: column; align-items: flex-start; }
             .ticket-item { flex-direction: column; align-items: flex-start; }
+            .setting-row { grid-template-columns: 1fr; }
+            .setting-row select { width: 100%; }
         }
     </style>
 </head>
@@ -733,7 +872,7 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             </article>
 
             <article class="card">
-                <h2>Seguridad de la Cuenta</h2>
+                <h2>Seguridad y Preferencias</h2>
                 <div style="font-size: .88rem; color: var(--ink); line-height: 1.5; display: grid; gap: 1rem;">
                     <div style="background: var(--soft); padding: 1rem; border-radius: 8px; border: 1px solid var(--line);">
                         <strong style="color: var(--blue);">🔒 Autenticación Segura</strong>
@@ -747,6 +886,50 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
                             Utiliza una contraseña robusta de al menos 8 caracteres combinando letras y números. Nunca compartas tus accesos.
                         </p>
                     </div>
+                    <div class="settings-list" aria-label="Preferencias de perfil">
+                        <label class="setting-row" for="setting-default-filter">
+                            <span>
+                                <strong>Filtro inicial de solicitudes</strong>
+                                <span>Elige qué lista se muestra primero al abrir tu perfil.</span>
+                            </span>
+                            <select id="setting-default-filter" data-profile-setting="defaultFilter">
+                                <option value="all">Todas</option>
+                                <option value="active">Activas</option>
+                                <option value="done">Entregadas</option>
+                            </select>
+                        </label>
+                        <label class="setting-row" for="setting-profile-menu">
+                            <span>
+                                <strong>Menú de perfil cerrado</strong>
+                                <span>Mantiene el menú superior cerrado al cargar la página.</span>
+                            </span>
+                            <span class="switch">
+                                <input id="setting-profile-menu" type="checkbox" data-profile-setting="closeProfileMenu" checked>
+                                <span aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <label class="setting-row" for="setting-confirmations">
+                            <span>
+                                <strong>Confirmaciones visibles</strong>
+                                <span>Resalta mensajes de éxito y avisos importantes después de guardar.</span>
+                            </span>
+                            <span class="switch">
+                                <input id="setting-confirmations" type="checkbox" data-profile-setting="visibleConfirmations" checked>
+                                <span aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <label class="setting-row" for="setting-reduced-motion">
+                            <span>
+                                <strong>Reducir movimiento</strong>
+                                <span>Desactiva animaciones pequeñas en botones y tarjetas.</span>
+                            </span>
+                            <span class="switch">
+                                <input id="setting-reduced-motion" type="checkbox" data-profile-setting="reducedMotion">
+                                <span aria-hidden="true"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="settings-status" id="settingsStatus" role="status" aria-live="polite"></div>
                 </div>
             </article>
         </section>
@@ -802,7 +985,61 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
             const filterBtns = document.querySelectorAll('.filter-btn');
             const ticketItems = document.querySelectorAll('.ticket-item');
 
-            // Ticket filter logic
+            const profileSettingsKey = 'cdaMarketingProfileSettings';
+            const profileMenu = document.querySelector('.profile-menu');
+            const settingsStatus = document.getElementById('settingsStatus');
+            const settingInputs = document.querySelectorAll('[data-profile-setting]');
+            const defaultSettings = {
+                defaultFilter: 'all',
+                closeProfileMenu: true,
+                visibleConfirmations: true,
+                reducedMotion: false
+            };
+            let settings = { ...defaultSettings };
+
+            try {
+                settings = {
+                    ...defaultSettings,
+                    ...JSON.parse(localStorage.getItem(profileSettingsKey) || '{}')
+                };
+            } catch (error) {
+                settings = { ...defaultSettings };
+            }
+
+            function clickFilter(filter) {
+                const target = document.querySelector(`.filter-btn[data-filter="${filter}"]`) || document.querySelector('.filter-btn[data-filter="all"]');
+                target?.click();
+            }
+
+            function applyProfileSettings(showSavedStatus = false) {
+                if (profileMenu && settings.closeProfileMenu) {
+                    profileMenu.removeAttribute('open');
+                }
+
+                document.body.dataset.visibleConfirmations = settings.visibleConfirmations ? 'true' : 'false';
+                document.body.dataset.reducedMotion = settings.reducedMotion ? 'true' : 'false';
+                clickFilter(settings.defaultFilter);
+
+                if (showSavedStatus && settingsStatus) {
+                    settingsStatus.textContent = 'Preferencias guardadas en este navegador.';
+                    window.clearTimeout(settingsStatus.dataset.timerId);
+                    settingsStatus.dataset.timerId = window.setTimeout(() => {
+                        settingsStatus.textContent = '';
+                    }, 2200);
+                }
+            }
+
+            function syncSettingInputs() {
+                settingInputs.forEach((input) => {
+                    const key = input.dataset.profileSetting;
+                    if (input.type === 'checkbox') {
+                        input.checked = Boolean(settings[key]);
+                    } else {
+                        input.value = settings[key] || defaultSettings[key];
+                    }
+                });
+            }
+
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     filterBtns.forEach(b => b.classList.remove('active'));
@@ -820,8 +1057,19 @@ $initials = strtoupper(mb_substr($initials, 0, 2)) ?: 'U';
                     });
                 });
             });
+
+            settingInputs.forEach((input) => {
+                input.addEventListener('change', () => {
+                    const key = input.dataset.profileSetting;
+                    settings[key] = input.type === 'checkbox' ? input.checked : input.value;
+                    localStorage.setItem(profileSettingsKey, JSON.stringify(settings));
+                    applyProfileSettings(true);
+                });
+            });
+
+            syncSettingInputs();
+            applyProfileSettings(false);
         });
     </script>
 </body>
 </html>
-
