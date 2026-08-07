@@ -950,7 +950,7 @@ function cdaMarketingFetchAssignableAdmins() {
 
 function cdaMarketingFetchAssignableUsers() {
     try {
-        $stmt = cdaDb()->query("SELECT nombre, correo, rol FROM marketing_usuarios WHERE activo = 1 ORDER BY nombre ASC, correo ASC");
+        $stmt = cdaDb()->query("SELECT nombre, correo, rol FROM marketing_usuarios WHERE rol IN ('admin','manager','trabajador') AND activo = 1 ORDER BY nombre ASC, correo ASC");
         return $stmt->fetchAll();
     } catch (Throwable $e) {
         return [];
