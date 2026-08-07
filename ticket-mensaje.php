@@ -3,10 +3,10 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+cdaMarketingEnsureTicketSchema();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: panel-marketing.php');
-    exit;
+    cdaMarketingRedirect('panel-marketing.php');
 }
 
 cdaRequirePostCsrf();
@@ -21,8 +21,7 @@ if (!in_array($returnTo, $allowedReturnTo, true)) {
 }
 
 if ($ticketId <= 0 || ($mensaje === '' && !$hasFiles)) {
-    header('Location: ' . $returnTo);
-    exit;
+    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'Escribe un mensaje o adjunta al menos un archivo.', 'error');
 }
 
 try {
@@ -32,14 +31,12 @@ try {
     $ticketRow = $ticket->fetch();
 
     if (!$ticketRow) {
-        header('Location: ' . $returnTo);
-        exit;
+        cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No encontramos ese ticket o ya fue eliminado.', 'error');
     }
 
     $canChat = cdaMarketingCanManageTickets($user['rol']) || strcasecmp($user['correo'], $ticketRow['correo']) === 0;
     if (!$canChat) {
-        header('Location: ' . $returnTo);
-        exit;
+        cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No tienes permisos para escribir en este ticket.', 'error', 'ticket-' . $ticketId);
     }
 
     $db->beginTransaction();
@@ -71,8 +68,10 @@ try {
     if (isset($db) && $db->inTransaction()) {
         $db->rollBack();
     }
+    error_log('No fue posible guardar mensaje de marketing: ' . $e->getMessage());
     $_SESSION['cda_marketing_error'] = 'No fue posible enviar el mensaje o guardar los archivos. Revisa que exista la tabla de archivos del chat y que la carpeta uploads/marketing tenga permisos de escritura.';
+    header('Location: ' . $returnTo . '#ticket-' . $ticketId);
+    exit;
 }
 
-header('Location: ' . $returnTo . '#ticket-' . $ticketId);
-exit;
+cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'Mensaje enviado correctamente.', 'success', 'ticket-' . $ticketId);

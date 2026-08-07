@@ -2,6 +2,8 @@
 require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
+cdaMarketingEnsureTicketSchema();
+
 $folio = cdaMarketingClean($_GET['folio'] ?? $_POST['folio'] ?? '');
 $ticket = null;
 $historial = [];
@@ -76,6 +78,7 @@ if ($folio) {
                         if (isset($db) && $db->inTransaction()) {
                             $db->rollBack();
                         }
+                        error_log('No fue posible guardar chat de seguimiento: ' . $e->getMessage());
                         $chatError = 'No fue posible enviar el mensaje. Revisa que la tabla de chat este instalada.';
                     }
                 }
@@ -95,6 +98,7 @@ if ($folio) {
             $error = 'No encontramos un ticket con ese folio.';
         }
     } catch (Throwable $e) {
+        error_log('No fue posible consultar seguimiento de marketing: ' . $e->getMessage());
         $error = 'No fue posible consultar el seguimiento en este momento.';
     }
 }

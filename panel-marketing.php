@@ -3,6 +3,7 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+cdaMarketingEnsureTicketSchema();
 if (!cdaMarketingCanViewAllTickets($user['rol'])) {
     header('Location: ' . cdaMarketingDefaultRouteForRole($user['rol']));
     exit;
@@ -44,7 +45,9 @@ $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
 $assignableAdmins = cdaMarketingFetchAssignableAdmins();
 $flashError = $_SESSION['cda_marketing_error'] ?? '';
+$flashSuccess = $_SESSION['cda_marketing_success'] ?? '';
 unset($_SESSION['cda_marketing_error']);
+unset($_SESSION['cda_marketing_success']);
 
 $stats = [
     'total' => 0,
@@ -281,7 +284,9 @@ if ($statsRow) {
         .inline-form button:hover, .filters button:hover { transform:translateY(-1px); box-shadow:0 14px 28px rgba(6,57,112,.14); }
         .danger-button { background:#fee2e2 !important; color:#991b1b !important; box-shadow:none !important; }
         .restore-button { background:#d1fae5 !important; color:#047857 !important; box-shadow:none !important; }
-        .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
+        .alert-error, .alert-success { margin-bottom:1rem; border-radius:var(--radius); padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
+        .alert-error { border:1px solid #fecaca; background:#fee2e2; color:#991b1b; }
+        .alert-success { border:1px solid #a7f3d0; background:#d1fae5; color:#047857; }
         .ticket-actions { display:grid; gap:.5rem; margin-top:.6rem; }
         .muted { color:var(--muted); }
         .empty-state { padding:2rem; text-align:center; color:var(--muted); }
@@ -362,6 +367,9 @@ if ($statsRow) {
         <?php if ($flashError): ?>
             <div class="alert-error"><?php echo htmlspecialchars($flashError); ?></div>
         <?php endif; ?>
+        <?php if ($flashSuccess): ?>
+            <div class="alert-success"><?php echo htmlspecialchars($flashSuccess); ?></div>
+        <?php endif; ?>
         <section class="card">
             <div class="card-head">
                 <div>
@@ -423,6 +431,7 @@ if ($statsRow) {
                             <form class="inline-form" method="post" action="ticket-actualizar.php">
                                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                                 <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
+                                <input type="hidden" name="return_to" value="panel-marketing.php">
                                 <select name="estado" required>
                                     <?php foreach (cdaMarketingStatuses() as $status): ?>
                                         <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $ticket['estado'] === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></option>

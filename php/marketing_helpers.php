@@ -98,6 +98,165 @@ function cdaMarketingOptionalDate($date) {
     return preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) ? $date : null;
 }
 
+function cdaMarketingRedirect($returnTo, $fallback = 'panel-marketing.php', $message = '', $messageType = 'error', $fragment = '') {
+    $target = function_exists('cdaSafeLocalReturnTo')
+        ? cdaSafeLocalReturnTo($returnTo, $fallback)
+        : ($returnTo ?: $fallback);
+
+    if ($message !== '' && session_status() === PHP_SESSION_ACTIVE) {
+        $_SESSION[$messageType === 'success' ? 'cda_marketing_success' : 'cda_marketing_error'] = $message;
+    }
+
+    if ($fragment !== '') {
+        $target = preg_replace('/#.*$/', '', $target) . '#' . ltrim($fragment, '#');
+    }
+
+    header('Location: ' . $target);
+    exit;
+}
+
+function cdaMarketingTableExists($table) {
+    static $cache = [];
+    $table = cdaMarketingClean($table);
+    if ($table === '') return false;
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) return false;
+    if (array_key_exists($table, $cache)) return $cache[$table];
+
+    try {
+        $stmt = cdaDb()->prepare('SHOW TABLES LIKE ?');
+        $stmt->execute([$table]);
+        $cache[$table] = (bool) $stmt->fetchColumn();
+    } catch (Throwable $e) {
+        $cache[$table] = false;
+    }
+
+    return $cache[$table];
+}
+
+function cdaMarketingColumnExists($table, $column) {
+    static $cache = [];
+    $table = cdaMarketingClean($table);
+    $column = cdaMarketingClean($column);
+    $key = $table . '.' . $column;
+    if ($table === '' || $column === '') return false;
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $table) || !preg_match('/^[a-zA-Z0-9_]+$/', $column)) return false;
+    if (array_key_exists($key, $cache)) return $cache[$key];
+
+    try {
+        $stmt = cdaDb()->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
+        $stmt->execute([$column]);
+        $cache[$key] = (bool) $stmt->fetch();
+    } catch (Throwable $e) {
+        $cache[$key] = false;
+    }
+
+    return $cache[$key];
+}
+
+function cdaMarketingIndexExists($table, $index) {
+    static $cache = [];
+    $table = cdaMarketingClean($table);
+    $index = cdaMarketingClean($index);
+    $key = $table . '.' . $index;
+    if ($table === '' || $index === '') return false;
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $table) || !preg_match('/^[a-zA-Z0-9_]+$/', $index)) return false;
+    if (array_key_exists($key, $cache)) return $cache[$key];
+
+    try {
+        $stmt = cdaDb()->prepare("SHOW INDEX FROM `$table` WHERE Key_name = ?");
+        $stmt->execute([$index]);
+        $cache[$key] = (bool) $stmt->fetch();
+    } catch (Throwable $e) {
+        $cache[$key] = false;
+    }
+
+    return $cache[$key];
+}
+
+function cdaMarketingTryExec($sql) {
+    try {
+        cdaDb()->exec($sql);
+        return true;
+    } catch (Throwable $e) {
+        error_log('Marketing schema repair skipped: ' . $e->getMessage());
+        return false;
+    }
+}
+
+function cdaMarketingEnsureTicketSchema() {
+    static $checked = false;
+    if ($checked) return;
+    $checked = true;
+
+    if (!cdaMarketingTableExists('marketing_tickets')) {
+        return;
+    }
+
+    $columns = [
+        'fecha_entrega_estimada' => "ALTER TABLE marketing_tickets ADD COLUMN fecha_entrega_estimada DATE NULL",
+        'respuesta_interna' => "ALTER TABLE marketing_tickets ADD COLUMN respuesta_interna TEXT NULL",
+        'asignado_a' => "ALTER TABLE marketing_tickets ADD COLUMN asignado_a VARCHAR(140) NULL",
+        'eliminado_en' => "ALTER TABLE marketing_tickets ADD COLUMN eliminado_en TIMESTAMP NULL",
+        'eliminado_por' => "ALTER TABLE marketing_tickets ADD COLUMN eliminado_por INT NULL",
+        'actualizado_en' => "ALTER TABLE marketing_tickets ADD COLUMN actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+    ];
+
+    foreach ($columns as $column => $sql) {
+        if (!cdaMarketingColumnExists('marketing_tickets', $column)) {
+            cdaMarketingTryExec($sql);
+        }
+    }
+
+    if (!cdaMarketingIndexExists('marketing_tickets', 'idx_fecha_entrega_estimada')) {
+        cdaMarketingTryExec('CREATE INDEX idx_fecha_entrega_estimada ON marketing_tickets (fecha_entrega_estimada)');
+    }
+    if (!cdaMarketingIndexExists('marketing_tickets', 'idx_eliminado')) {
+        cdaMarketingTryExec('CREATE INDEX idx_eliminado ON marketing_tickets (eliminado_en)');
+    }
+
+    cdaMarketingTryExec(
+        "CREATE TABLE IF NOT EXISTS marketing_ticket_historial (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ticket_id INT NOT NULL,
+            usuario_id INT NULL,
+            estado VARCHAR(80) NOT NULL,
+            comentario TEXT NULL,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ticket_historial (ticket_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    );
+
+    cdaMarketingTryExec(
+        "CREATE TABLE IF NOT EXISTS marketing_ticket_mensajes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ticket_id INT NOT NULL,
+            usuario_id INT NULL,
+            autor_nombre VARCHAR(140) NOT NULL,
+            autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
+            mensaje TEXT NOT NULL,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ticket_mensajes (ticket_id),
+            INDEX idx_usuario_mensajes (usuario_id),
+            INDEX idx_creado_mensajes (creado_en)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    );
+
+    cdaMarketingTryExec(
+        "CREATE TABLE IF NOT EXISTS marketing_ticket_mensaje_archivos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            mensaje_id INT NOT NULL,
+            ticket_id INT NOT NULL,
+            nombre_original VARCHAR(255) NOT NULL,
+            ruta VARCHAR(500) NOT NULL,
+            mime VARCHAR(160) NULL,
+            tamano INT NULL,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_mensaje_archivos (mensaje_id),
+            INDEX idx_ticket_mensaje_archivos (ticket_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+    );
+}
+
 function cdaMarketingStatusClass($status) {
     $slug = strtolower(str_replace(' ', '-', cdaMarketingClean($status)));
     return preg_replace('/[^a-z0-9-]/', '', $slug);

@@ -3,6 +3,7 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+cdaMarketingEnsureTicketSchema();
 if (!cdaMarketingCanAccessBoard($user['rol'])) {
     header('Location: perfil-marketing.php');
     exit;
@@ -22,7 +23,9 @@ $ticketMessages = cdaMarketingFetchTicketMessages(array_column($tickets, 'id'));
 $ticketFiles = cdaMarketingFetchTicketFiles(array_column($tickets, 'id'));
 $assignableAdmins = cdaMarketingFetchAssignableAdmins();
 $flashError = $_SESSION['cda_marketing_error'] ?? '';
+$flashSuccess = $_SESSION['cda_marketing_success'] ?? '';
 unset($_SESSION['cda_marketing_error']);
+unset($_SESSION['cda_marketing_success']);
 $laneTickets = array_fill_keys(array_keys($lanes), []);
 
 foreach ($tickets as $ticket) {
@@ -178,7 +181,9 @@ foreach ($tickets as $ticket) {
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
         .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
-        .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
+        .alert-error, .alert-success { margin-bottom:1rem; border-radius:var(--radius); padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
+        .alert-error { border:1px solid #fecaca; background:#fee2e2; color:#991b1b; }
+        .alert-success { border:1px solid #a7f3d0; background:#d1fae5; color:#047857; }
         @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:620px) { .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
@@ -222,6 +227,9 @@ foreach ($tickets as $ticket) {
         </section>
         <?php if ($flashError): ?>
             <div class="alert-error"><?php echo htmlspecialchars($flashError); ?></div>
+        <?php endif; ?>
+        <?php if ($flashSuccess): ?>
+            <div class="alert-success"><?php echo htmlspecialchars($flashSuccess); ?></div>
         <?php endif; ?>
         <main class="board" aria-label="Tablero de tickets">
             <?php foreach ($laneTickets as $laneName => $items): ?>

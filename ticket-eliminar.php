@@ -3,14 +3,13 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+cdaMarketingEnsureTicketSchema();
 if ($user['rol'] !== 'admin') {
-    header('Location: panel-marketing.php');
-    exit;
+    cdaMarketingRedirect('panel-marketing.php', 'panel-marketing.php', 'No tienes permisos para modificar el basurero.');
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: panel-marketing.php');
-    exit;
+    cdaMarketingRedirect('panel-marketing.php');
 }
 
 cdaRequirePostCsrf();
@@ -24,8 +23,7 @@ if (!in_array($returnTo, $allowedReturnTo, true)) {
 }
 
 if ($id <= 0 || !in_array($action, ['trash', 'restore', 'purge'], true)) {
-    header('Location: ' . $returnTo);
-    exit;
+    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo procesar la accion solicitada.');
 }
 
 try {
@@ -60,7 +58,13 @@ try {
     if (isset($db) && $db->inTransaction()) {
         $db->rollBack();
     }
+    error_log('No fue posible modificar basurero de tickets: ' . $e->getMessage());
+    cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No fue posible modificar este ticket. Revisa el esquema de base de datos si vuelve a pasar.');
 }
 
-header('Location: ' . $returnTo);
-exit;
+$successMessage = match ($action) {
+    'restore' => 'Ticket restaurado correctamente.',
+    'purge' => 'Ticket borrado definitivamente.',
+    default => 'Ticket enviado al basurero.',
+};
+cdaMarketingRedirect($returnTo, 'panel-marketing.php', $successMessage, 'success');
