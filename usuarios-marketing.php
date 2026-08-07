@@ -3,7 +3,22 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+$fixedRole = cdaMarketingFixedRoleByEmail($user['correo'] ?? '');
+if ($fixedRole === 'admin' && $user['rol'] !== 'admin') {
+    cdaMarketingEnsureUserRoleSchema();
+    cdaMarketingEnforceFixedUserRoles();
+    $user = cdaCurrentUser();
+}
+
 if ($user['rol'] !== 'admin') {
+    header('Location: panel-marketing.php');
+    exit;
+}
+
+cdaMarketingEnsureUserRoleSchema();
+cdaMarketingEnforceFixedUserRoles();
+$user = cdaCurrentUser();
+if (!$user || $user['rol'] !== 'admin') {
     header('Location: panel-marketing.php');
     exit;
 }
@@ -120,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'weak_password' => 'Las contrasenas nuevas deben tener al menos 8 caracteres.',
                 'self_admin' => 'No puedes quitarte el rol administrador ni desactivar tu propio usuario.',
                 'invalid_user' => 'Todos los usuarios deben tener nombre y correo valido.',
-                default => 'No fue posible guardar todos los usuarios.',
+                default => 'No fue posible guardar todos los usuarios. Si cambiaste roles, revisa que la base tenga los roles manager y trabajador instalados.',
             };
         }
     } else {
@@ -187,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (Throwable $e) {
                 $error = $e->getMessage() === 'last_admin'
                     ? 'No puedes quitar al ultimo administrador activo.'
-                    : 'No fue posible guardar el usuario.';
+                    : 'No fue posible guardar el usuario. Si cambiaste roles, revisa que la base tenga los roles manager y trabajador instalados.';
             }
         }
     }
@@ -274,7 +289,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .user-edit { display:grid; grid-template-columns:minmax(130px,1fr) minmax(180px,1.1fr) 132px 96px minmax(140px,.8fr); gap:.45rem; align-items:center; }
         .user-edit input, .user-edit select { padding:.62rem .68rem; font-size:.78rem; }
         .user-edit .check { justify-content:center; }
-        .bulk-actions { display:flex; justify-content:flex-end; margin-top:.85rem; }
+        .bulk-actions { position:sticky; bottom:1rem; z-index:3; display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:.85rem; padding:.8rem; border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:rgba(255,255,255,.96); box-shadow:0 14px 34px rgba(6,57,112,.14); }
+        .bulk-actions span { color:var(--muted); font-size:.82rem; font-weight:750; }
         .bulk-actions button { min-width:190px; }
         .row-tools { display:flex; gap:.45rem; align-items:center; justify-content:flex-start; }
         .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
@@ -290,7 +306,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ok, .error { margin-bottom:.8rem; border-radius:var(--radius); padding:.75rem; font-weight:750; }
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
-        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } .user-edit { grid-template-columns:1fr; } .user-edit .check { justify-content:flex-start; } }
+        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } .user-edit { grid-template-columns:1fr; } .user-edit .check { justify-content:flex-start; } .bulk-actions { position:static; align-items:stretch; flex-direction:column; } .bulk-actions button { width:100%; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -328,8 +344,6 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <h2>Crear o actualizar acceso</h2>
                     <p class="muted">Los usuarios también se registran al crear tickets o entrar con Google.</p>
                 </div>
-                <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
-                <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="usuarios-marketing.php">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                     <input type="hidden" name="action" value="save">
@@ -353,6 +367,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <h2>Directorio de accesos</h2>
                     <p class="muted">Revisa estado, metodo de acceso y acciones disponibles.</p>
                 </div>
+                <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
+                <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form method="post" action="usuarios-marketing.php">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                     <input type="hidden" name="action" value="bulk_save">
@@ -401,6 +417,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                         </table>
                     </div>
                     <div class="bulk-actions">
+                        <span>Guarda los cambios de rol, estado y contraseña del directorio completo.</span>
                         <button type="submit">Guardar todo</button>
                     </div>
                 </form>

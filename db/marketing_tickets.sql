@@ -98,7 +98,7 @@ VALUES ('Angel Alberto', 'angelalberto077@gmail.com', '$2y$12$EyWnX97s2BYGtdSNO7
 
 INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
 VALUES
-    ('Salducin', 'salducin@centraldealarmas.com.mx', NULL, 'admin', 1),
+    ('Salducin', 'salducin@centraldealarmas.com.mx', NULL, 'usuario', 1),
     ('R Villaverde', 'rvillaverde@centraldealarmas.com.mx', NULL, 'manager', 1)
 ON DUPLICATE KEY UPDATE
     nombre = VALUES(nombre),
@@ -108,4 +108,4 @@ ON DUPLICATE KEY UPDATE
 UPDATE marketing_usuarios
 SET rol = 'usuario'
 WHERE rol = 'admin'
-AND correo NOT IN ('angelalberto077@gmail.com', 'salducin@centraldealarmas.com.mx');
+AND correo <> 'angelalberto077@gmail.com';

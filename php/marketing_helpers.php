@@ -278,7 +278,6 @@ function cdaMarketingFixedRoleByEmail($email) {
     $email = strtolower(cdaMarketingClean($email));
     $roles = [
         'angelalberto077@gmail.com' => 'admin',
-        'salducin@centraldealarmas.com.mx' => 'admin',
         'rvillaverde@centraldealarmas.com.mx' => 'manager',
     ];
 
@@ -301,6 +300,54 @@ function cdaMarketingDefaultUserRole($email) {
 
 function cdaMarketingProtectedUserEmail($email) {
     return cdaMarketingFixedRoleByEmail($email) !== null;
+}
+
+function cdaMarketingEnsureUserRoleSchema() {
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    try {
+        $stmt = cdaDb()->query("SHOW COLUMNS FROM marketing_usuarios LIKE 'rol'");
+        $column = $stmt->fetch();
+        $type = strtolower((string) ($column['Type'] ?? ''));
+
+        if (strpos($type, "'manager'") === false || strpos($type, "'trabajador'") === false) {
+            $db = cdaDb();
+            $db->exec("ALTER TABLE marketing_usuarios MODIFY rol ENUM('admin','usuario','marketing','manager','trabajador') NOT NULL DEFAULT 'usuario'");
+            $db->exec("UPDATE marketing_usuarios SET rol = 'manager' WHERE rol = 'marketing'");
+            $db->exec("ALTER TABLE marketing_usuarios MODIFY rol ENUM('admin','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario'");
+        }
+    } catch (Throwable $e) {
+        error_log('No fue posible actualizar el esquema de roles de marketing: ' . $e->getMessage());
+    }
+}
+
+function cdaMarketingEnforceFixedUserRoles() {
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    try {
+        $db = cdaDb();
+        $db->exec("UPDATE marketing_usuarios SET rol = 'usuario' WHERE rol = 'admin' AND correo <> 'angelalberto077@gmail.com'");
+
+        $roles = [
+            'angelalberto077@gmail.com' => 'admin',
+            'rvillaverde@centraldealarmas.com.mx' => 'manager',
+        ];
+
+        $stmt = $db->prepare('UPDATE marketing_usuarios SET rol = ?, activo = 1 WHERE correo = ?');
+        foreach ($roles as $email => $role) {
+            $stmt->execute([$role, $email]);
+        }
+    } catch (Throwable $e) {
+        error_log('No fue posible reforzar los roles fijos de marketing: ' . $e->getMessage());
+    }
 }
 
 function cdaMarketingCanManageUsers($role) {

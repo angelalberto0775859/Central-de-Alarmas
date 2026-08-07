@@ -60,13 +60,16 @@ assertSameValue(false, cdaMarketingCanUploadChatFiles('marketing'), 'old marketi
 assertSameValue(true, cdaMarketingCanManageUsers('admin'), 'admins can manage users');
 assertSameValue(false, cdaMarketingCanManageUsers('manager'), 'managers cannot manage users');
 assertSameValue('admin', cdaMarketingFixedRoleByEmail('angelalberto077@gmail.com'), 'angel email is fixed admin');
-assertSameValue('admin', cdaMarketingFixedRoleByEmail('salducin@centraldealarmas.com.mx'), 'salducin email is fixed admin');
+assertSameValue(null, cdaMarketingFixedRoleByEmail('salducin@centraldealarmas.com.mx'), 'salducin email is not fixed admin');
 assertSameValue('manager', cdaMarketingFixedRoleByEmail('rvillaverde@centraldealarmas.com.mx'), 'rvillaverde email is fixed manager');
 assertSameValue('usuario', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'admin'), 'non fixed email cannot become admin');
+assertSameValue('usuario', cdaMarketingUserRoleValue('salducin@centraldealarmas.com.mx', 'admin'), 'salducin cannot become admin');
 assertSameValue('trabajador', cdaMarketingUserRoleValue('persona@centraldealarmas.com.mx', 'trabajador'), 'non fixed email can be assigned worker');
 assertSameValue('usuario', cdaMarketingDefaultUserRole('nuevo@centraldealarmas.com.mx'), 'new users default to regular user');
-assertSameValue(true, cdaMarketingProtectedUserEmail('salducin@centraldealarmas.com.mx'), 'protected admin email is detected');
+assertSameValue(false, cdaMarketingProtectedUserEmail('salducin@centraldealarmas.com.mx'), 'salducin email is not protected as admin');
 assertSameValue(false, cdaMarketingProtectedUserEmail('nuevo@centraldealarmas.com.mx'), 'regular email is not protected');
+assertSameValue(true, function_exists('cdaMarketingEnsureUserRoleSchema'), 'role schema repair helper exists');
+assertSameValue(true, function_exists('cdaMarketingEnforceFixedUserRoles'), 'fixed role enforcement helper exists');
 assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('marketing'), 'old marketing role cannot manage tickets');
 assertSameValue(false, cdaMarketingCanManageTickets('trabajador'), 'workers cannot manage tickets');
@@ -103,11 +106,16 @@ $schemaSql = file_get_contents(__DIR__ . '/../db/install_marketing_schema.sql');
 assertSameValue(true, strpos($panelHtml, 'fecha_entrega_estimada') !== false, 'panel can edit estimated delivery date');
 assertSameValue(true, strpos($controlHtml, 'fecha_entrega_estimada') !== false, 'board can edit estimated delivery date');
 assertSameValue(true, strpos($usersHtml, 'Guardar todo') !== false, 'users page has bulk save button');
+assertSameValue(true, strpos($usersHtml, 'cdaMarketingEnsureUserRoleSchema()') !== false, 'users page repairs role schema before saving');
+assertSameValue(true, strpos($usersHtml, 'cdaMarketingEnforceFixedUserRoles()') !== false, 'users page enforces fixed roles before listing users');
+assertSameValue(true, strpos($usersHtml, 'Guarda los cambios de rol') !== false, 'users page explains the bottom save button');
 assertSameValue(true, strpos($usersHtml, "value=\"bulk_save\"") !== false, 'users page posts bulk save action');
 assertSameValue(true, strpos($usersHtml, 'name="users[') !== false, 'users page submits editable user rows');
 assertSameValue(true, strpos($usersHtml, 'formaction="usuarios-marketing.php?action=delete"') !== false, 'users page keeps delete action per row');
 assertSameValue(true, strpos($usersHtml, 'Rol protegido por correo') !== false, 'users page explains protected roles');
 assertSameValue(true, strpos($schemaSql, 'fecha_entrega_estimada DATE NULL') !== false, 'schema includes estimated delivery date');
+$fixedRolesSql = file_get_contents(__DIR__ . '/../db/marketing_fixed_user_roles.sql');
+assertSameValue(true, strpos($fixedRolesSql, "ENUM('admin','usuario','manager','trabajador')") !== false, 'fixed roles migration updates user role enum');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',
