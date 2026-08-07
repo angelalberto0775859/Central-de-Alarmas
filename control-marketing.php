@@ -3,10 +3,11 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
-if ($user['rol'] !== 'admin') {
-    header('Location: panel-marketing.php');
+if (!cdaMarketingCanAccessBoard($user['rol'])) {
+    header('Location: perfil-marketing.php');
     exit;
 }
+$canManageTickets = cdaMarketingCanManageTickets($user['rol']);
 
 $lanes = [
     'Entrada' => ['Recibido', 'En evaluacion', 'Pendiente de informacion'],
@@ -113,6 +114,11 @@ foreach ($tickets as $ticket) {
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -205,14 +211,14 @@ foreach ($tickets as $ticket) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <a class="admin-link" href="panel-marketing.php">Tickets</a>
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <a class="admin-link active" href="control-marketing.php">Tablero</a>
-                <a class="admin-link" href="usuarios-marketing.php">Usuarios</a>
-                <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
+                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <details class="profile-menu">
-                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · Admin</summary>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
                         <a href="perfil-marketing.php#configuracion">Configuración</a>
@@ -282,6 +288,7 @@ foreach ($tickets as $ticket) {
                             </div>
                         <?php endif; ?>
                     </div>
+                    <?php if ($canManageTickets): ?>
                     <form class="quick-form" method="post" action="ticket-actualizar.php">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                         <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
@@ -301,6 +308,8 @@ foreach ($tickets as $ticket) {
                         <textarea name="respuesta_interna" placeholder="Comentario visible en seguimiento"><?php echo htmlspecialchars($ticket['respuesta_interna'] ?? ''); ?></textarea>
                         <button type="submit">Actualizar</button>
                     </form>
+                    <?php endif; ?>
+                    <?php if (cdaMarketingCanManageTrash($user['rol'])): ?>
                     <form class="quick-form" method="post" action="ticket-eliminar.php" onsubmit="return confirm('Enviar este ticket al basurero?');">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                         <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
@@ -308,6 +317,7 @@ foreach ($tickets as $ticket) {
                         <input type="hidden" name="return_to" value="control-marketing.php">
                         <button class="danger-button" type="submit">Enviar al basurero</button>
                     </form>
+                    <?php endif; ?>
                     <section class="ticket-chat" aria-label="Chat del ticket <?php echo htmlspecialchars($ticket['folio']); ?>">
                         <h4>Chat del ticket</h4>
                         <p class="chat-note">Usa este hilo para pedir informacion, confirmar avances o dejar acuerdos visibles para el solicitante.</p>
@@ -330,6 +340,7 @@ foreach ($tickets as $ticket) {
                             <?php endforeach; ?>
                             <?php if (empty($ticketMessages[(int) $ticket['id']])): ?><p class="muted">Aun no hay mensajes; el primer comentario abrira el seguimiento de este folio.</p><?php endif; ?>
                         </div>
+                        <?php if ($canManageTickets): ?>
                         <form class="chat-form" method="post" action="ticket-mensaje.php" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                             <input type="hidden" name="ticket_id" value="<?php echo (int) $ticket['id']; ?>">
@@ -338,6 +349,7 @@ foreach ($tickets as $ticket) {
                             <input class="file-input" name="archivos[]" type="file" multiple accept="<?php echo htmlspecialchars(cdaMarketingAllowedUploadAccept()); ?>">
                             <button type="submit">Enviar</button>
                         </form>
+                        <?php endif; ?>
                     </section>
                     </div>
                 </details>

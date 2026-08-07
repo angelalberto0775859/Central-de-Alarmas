@@ -200,6 +200,11 @@ $user = cdaRequireLogin();
             background: rgba(255,255,255,0.16);
             border-color: rgba(255,255,255,0.36);
         }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
 
         .profile-dropdown {
             position: absolute;
@@ -834,11 +839,12 @@ $user = cdaRequireLogin();
                 <span class="internal-tag"><span class="availability-dot" aria-hidden="true"></span>Área interna · Marketing</span>
             </div>
             <div class="top-actions">
-                <a class="top-link" href="panel-marketing.php">Mis tickets</a>
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="top-link" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <a class="top-link" href="seguimiento.php">Seguimiento</a>
-                <?php if ($user['rol'] === 'admin'): ?><a class="top-link" href="control-marketing.php">Tablero</a><?php endif; ?>
-                <details class="profile-menu">
-                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a class="top-link" href="control-marketing.php">Tablero</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="top-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
                         <a href="perfil-marketing.php#configuracion">Configuración</a>

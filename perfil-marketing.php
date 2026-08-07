@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$ticketStmt = cdaDb()->prepare('SELECT folio, actividad, estado, prioridad, fecha_requerida, actualizado_en FROM marketing_tickets WHERE correo = ? AND eliminado_en IS NULL ORDER BY actualizado_en DESC LIMIT 8');
+$ticketStmt = cdaDb()->prepare("SELECT folio, actividad, estado, prioridad, fecha_requerida, actualizado_en FROM marketing_tickets WHERE correo = ? AND eliminado_en IS NULL AND estado NOT IN ('Entregado','Cerrado','Rechazado') ORDER BY actualizado_en DESC LIMIT 8");
 $ticketStmt->execute([$user['correo']]);
 $tickets = $ticketStmt->fetchAll();
 ?>
@@ -65,6 +65,11 @@ $tickets = $ticketStmt->fetchAll();
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -97,12 +102,13 @@ $tickets = $ticketStmt->fetchAll();
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <a href="panel-marketing.php">Mis tickets</a>
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <a href="crear-ticket.php">Crear ticket</a>
                 <a href="seguimiento.php">Seguimiento</a>
-                <?php if ($user['rol'] === 'admin'): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
-                <details class="profile-menu">
-                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
                         <a href="perfil-marketing.php#configuracion">Configuración</a>
@@ -134,7 +140,7 @@ $tickets = $ticketStmt->fetchAll();
                 </form>
             </article>
             <article class="card">
-                <h2>Últimos tickets generados</h2>
+                <h2>Tickets activos</h2>
                 <div class="tickets">
                     <?php foreach ($tickets as $ticket): ?>
                     <a class="ticket" href="seguimiento.php?folio=<?php echo urlencode($ticket['folio']); ?>">
@@ -142,7 +148,7 @@ $tickets = $ticketStmt->fetchAll();
                         <p><?php echo htmlspecialchars(cdaMarketingStatusLabel($ticket['estado'])); ?> · <?php echo htmlspecialchars($ticket['prioridad']); ?> · requerido <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></p>
                     </a>
                     <?php endforeach; ?>
-                    <?php if (!$tickets): ?><p class="muted">Aun no has generado tickets con este usuario.</p><?php endif; ?>
+                    <?php if (!$tickets): ?><p class="muted">No tienes tickets activos con este usuario.</p><?php endif; ?>
                 </div>
             </article>
         </section>

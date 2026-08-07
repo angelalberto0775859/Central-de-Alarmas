@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../php/auth.php';
 require_once __DIR__ . '/../php/marketing_helpers.php';
 
 function assertSameValue($expected, $actual, $label) {
@@ -49,6 +50,17 @@ assertSameValue(true, cdaMarketingCanUploadChatFiles('marketing'), 'marketing us
 assertSameValue(true, cdaMarketingCanUploadChatFiles('usuario'), 'requesters can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('manager'), 'managers can upload chat files');
 assertSameValue(true, cdaMarketingCanUploadChatFiles('trabajador'), 'workers can upload chat files');
+assertSameValue(true, cdaMarketingCanManageUsers('admin'), 'admins can manage users');
+assertSameValue(false, cdaMarketingCanManageUsers('manager'), 'managers cannot manage users');
+assertSameValue(true, cdaMarketingCanManageTickets('manager'), 'managers can manage tickets');
+assertSameValue(false, cdaMarketingCanManageTickets('trabajador'), 'workers cannot manage tickets');
+assertSameValue(true, cdaMarketingCanAccessBoard('trabajador'), 'workers can access board');
+assertSameValue(false, cdaMarketingCanAccessBoard('usuario'), 'regular users do not access board');
+assertSameValue('perfil-marketing.php', cdaMarketingDefaultRouteForRole('usuario'), 'regular users land on profile');
+assertSameValue('control-marketing.php', cdaMarketingDefaultRouteForRole('trabajador'), 'workers land on board');
+assertSameValue('panel-marketing.php', cdaMarketingDefaultRouteForRole('manager'), 'managers land on ticket panel');
+assertSameValue('perfil-marketing.php', cdaMarketingRouteForUser(['rol' => 'usuario'], 'panel-marketing.php'), 'regular users are rerouted away from ticket panel');
+assertSameValue('seguimiento.php?folio=MKT-1#chat', cdaMarketingRouteForUser(['rol' => 'usuario'], 'seguimiento.php?folio=MKT-1#chat'), 'regular users can return to seguimiento with query');
 assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');
 assertSameValue('', cdaMarketingAssigneeValue('Persona externa', ['Angel Admin', 'Maria Admin']), 'unknown assignee is rejected');

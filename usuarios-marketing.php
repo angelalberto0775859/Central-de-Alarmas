@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } else {
+        $editId = (int) ($_POST['user_id'] ?? 0);
         $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
         $correo = filter_var(strtolower(cdaMarketingClean($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
         $password = (string) ($_POST['password'] ?? '');
@@ -60,20 +61,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Nombre y correo son obligatorios.';
         } elseif ($password !== '' && strlen($password) < 8) {
             $error = 'La contrasena debe tener al menos 8 caracteres.';
-        } elseif (strcasecmp($correo, $user['correo']) === 0 && ($rol !== 'admin' || $activo !== 1)) {
+        } elseif ($editId === (int) $user['id'] && ($rol !== 'admin' || $activo !== 1)) {
             $error = 'No puedes quitarte el rol administrador ni desactivar tu propio usuario.';
         } else {
             try {
-                $hash = $password !== '' ? password_hash($password, PASSWORD_DEFAULT) : null;
-                $stmt = cdaDb()->prepare(
-                    'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
-                    VALUES (?, ?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), rol = VALUES(rol), activo = VALUES(activo), password_hash = COALESCE(VALUES(password_hash), password_hash)'
-                );
-                $stmt->execute([$nombre, $correo, $hash, $rol, $activo]);
-                $message = 'Usuario guardado correctamente.';
+                if ($editId > 0) {
+                    $target = cdaDb()->prepare('SELECT id, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
+                    $target->execute([$editId]);
+                    $targetUser = $target->fetch();
+
+                    if (!$targetUser) {
+                        throw new RuntimeException('missing_user');
+                    }
+
+                    if ($targetUser['rol'] === 'admin' && (int) $targetUser['activo'] === 1 && ($rol !== 'admin' || $activo !== 1)) {
+                        $adminCount = (int) cdaDb()->query("SELECT COUNT(*) FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1")->fetchColumn();
+                        if ($adminCount <= 1) {
+                            throw new RuntimeException('last_admin');
+                        }
+                    }
+
+                    if ($password !== '') {
+                        $stmt = cdaDb()->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ?, password_hash = ? WHERE id = ?');
+                        $stmt->execute([$nombre, $correo, $rol, $activo, password_hash($password, PASSWORD_DEFAULT), $editId]);
+                    } else {
+                        $stmt = cdaDb()->prepare('UPDATE marketing_usuarios SET nombre = ?, correo = ?, rol = ?, activo = ? WHERE id = ?');
+                        $stmt->execute([$nombre, $correo, $rol, $activo, $editId]);
+                    }
+
+                    $message = 'Usuario actualizado correctamente.';
+                    $user = cdaCurrentUser();
+                } else {
+                    $hash = $password !== '' ? password_hash($password, PASSWORD_DEFAULT) : null;
+                    $stmt = cdaDb()->prepare(
+                        'INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
+                        VALUES (?, ?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), rol = VALUES(rol), activo = VALUES(activo), password_hash = COALESCE(VALUES(password_hash), password_hash)'
+                    );
+                    $stmt->execute([$nombre, $correo, $hash, $rol, $activo]);
+                    $message = 'Usuario guardado correctamente.';
+                }
             } catch (Throwable $e) {
-                $error = 'No fue posible guardar el usuario.';
+                $error = $e->getMessage() === 'last_admin'
+                    ? 'No puedes quitar al ultimo administrador activo.'
+                    : 'No fue posible guardar el usuario.';
             }
         }
     }
@@ -127,6 +158,11 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -153,8 +189,13 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .danger-button { min-height:auto; padding:.55rem .65rem; background:#fee2e2; color:#991b1b; box-shadow:none; font-size:.72rem; }
         .danger-button:hover { box-shadow:0 10px 20px rgba(185,28,28,.12); }
         .row-action { display:block; }
+        .user-edit { display:grid; grid-template-columns:minmax(130px,1fr) minmax(180px,1.1fr) 132px 96px minmax(140px,.8fr) auto; gap:.45rem; align-items:center; }
+        .user-edit input, .user-edit select { padding:.62rem .68rem; font-size:.78rem; }
+        .user-edit .check { justify-content:center; }
+        .user-edit button { min-height:38px; padding:.62rem .72rem; font-size:.72rem; }
+        .row-tools { display:flex; gap:.45rem; align-items:center; justify-content:flex-start; }
         .table-shell { overflow:auto; border:1px solid rgba(6,57,112,.08); border-radius:var(--radius); background:#fff; }
-        table { width:100%; min-width:760px; border-collapse:separate; border-spacing:0; }
+        table { width:100%; min-width:980px; border-collapse:separate; border-spacing:0; }
         th, td { padding:.78rem; border-bottom:1px solid var(--line); text-align:left; font-size:.9rem; }
         th { color:var(--blue); font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; background:#f3f8fd; }
         th:first-child { border-radius:var(--radius) 0 0 var(--radius); }
@@ -166,7 +207,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ok, .error { margin-bottom:.8rem; border-radius:var(--radius); padding:.75rem; font-weight:750; }
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
-        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
+        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } .user-edit { grid-template-columns:1fr; } .user-edit .check { justify-content:flex-start; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -182,8 +223,8 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <details class="profile-menu">
-                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · Admin</summary>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
                         <a href="perfil-marketing.php#configuracion">Configuración</a>
@@ -214,10 +255,10 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                     <label>Rol
                         <select name="rol">
                             <option value="admin">Administrador</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="usuario">Usuario</option>
                             <option value="manager">Manager</option>
                             <option value="trabajador">Trabajador</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="usuario">Usuario</option>
                         </select>
                     </label>
                     <label class="check"><input name="activo" type="checkbox" value="1" checked> Usuario activo</label>
@@ -231,13 +272,29 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                 </div>
                 <div class="table-shell">
                     <table>
-                        <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Google</th><th>Estado</th><th>Facultad admin</th></tr></thead>
+                        <thead><tr><th>Gestionar usuario</th><th>Google</th><th>Creado</th><th>Acciones</th></tr></thead>
                         <tbody>
                         <?php foreach ($users as $item): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($item['nombre']); ?></td>
-                            <td><?php echo htmlspecialchars($item['correo']); ?></td>
-                            <td><span class="pill"><?php echo htmlspecialchars($item['rol']); ?></span></td>
+                            <td>
+                                <form class="user-edit" method="post" action="usuarios-marketing.php">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
+                                    <input type="hidden" name="action" value="save">
+                                    <input type="hidden" name="user_id" value="<?php echo (int) $item['id']; ?>">
+                                    <input name="nombre" value="<?php echo htmlspecialchars($item['nombre']); ?>" required aria-label="Nombre">
+                                    <input name="correo" type="email" value="<?php echo htmlspecialchars($item['correo']); ?>" required aria-label="Correo">
+                                    <select name="rol" aria-label="Rol">
+                                        <option value="admin" <?php echo $item['rol'] === 'admin' ? 'selected' : ''; ?>>Administrador</option>
+                                        <option value="manager" <?php echo $item['rol'] === 'manager' ? 'selected' : ''; ?>>Manager</option>
+                                        <option value="trabajador" <?php echo $item['rol'] === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
+                                        <option value="marketing" <?php echo $item['rol'] === 'marketing' ? 'selected' : ''; ?>>Marketing</option>
+                                        <option value="usuario" <?php echo $item['rol'] === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
+                                    </select>
+                                    <label class="check"><input name="activo" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?>> Activo</label>
+                                    <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Nueva contraseña">
+                                    <button type="submit">Guardar</button>
+                                </form>
+                            </td>
                             <td>
                                 <?php if (!empty($item['google_sub'])): ?>
                                     <span class="pill ok-google">Vinculado</span>
@@ -245,7 +302,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                                     <span class="pill pending-google">Pendiente</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo (int) $item['activo'] === 1 ? 'Activo' : 'Inactivo'; ?></td>
+                            <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($item['creado_en']))); ?></td>
                             <td>
                                 <?php if ((int) $item['id'] === (int) $user['id']): ?>
                                     <span class="muted">Tu usuario</span>

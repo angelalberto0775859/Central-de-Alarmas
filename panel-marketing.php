@@ -3,13 +3,18 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+if (!cdaMarketingCanViewAllTickets($user['rol'])) {
+    header('Location: ' . cdaMarketingDefaultRouteForRole($user['rol']));
+    exit;
+}
+$canManageTickets = cdaMarketingCanManageTickets($user['rol']);
 $estado = cdaMarketingClean($_GET['estado'] ?? '');
 $query = cdaMarketingClean($_GET['q'] ?? '');
-$trashMode = $user['rol'] === 'admin' && ($_GET['papelera'] ?? '') === '1';
+$trashMode = cdaMarketingCanManageTrash($user['rol']) && ($_GET['papelera'] ?? '') === '1';
 $params = [];
 $where = [];
 
-if ($user['rol'] !== 'admin') {
+if (!cdaMarketingCanViewAllTickets($user['rol'])) {
     $where[] = 'correo = ?';
     $params[] = $user['correo'];
 }
@@ -49,7 +54,7 @@ $stats = [
 ];
 $statsParams = [];
 $statsWhere = 'WHERE eliminado_en IS NULL';
-if ($user['rol'] !== 'admin') {
+if (!cdaMarketingCanViewAllTickets($user['rol'])) {
     $statsWhere .= ' AND correo = ?';
     $statsParams[] = $user['correo'];
 }
@@ -148,6 +153,11 @@ if ($statsRow) {
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -314,15 +324,14 @@ if ($statsRow) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? '' : 'active'; ?>" href="panel-marketing.php">Tickets</a><?php endif; ?>
-                <?php if ($user['rol'] !== 'admin'): ?><a class="active" href="panel-marketing.php">Tickets</a><?php endif; ?>
-                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
-                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
-                <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? 'active' : ''; ?>" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link <?php echo $trashMode ? '' : 'active'; ?>" href="panel-marketing.php">Tickets</a><?php endif; ?>
+                <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a class="admin-link <?php echo $trashMode ? 'active' : ''; ?>" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <details class="profile-menu">
-                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
                         <a href="perfil-marketing.php">Mi perfil</a>
                         <a href="perfil-marketing.php#configuracion">Configuración</a>
@@ -333,7 +342,7 @@ if ($statsRow) {
         </header>
         <section class="hero">
             <div>
-                <div class="eyebrow"><?php echo $trashMode ? 'Basurero admin' : ($user['rol'] === 'admin' ? 'Vista general' : 'Mis solicitudes'); ?></div>
+                <div class="eyebrow"><?php echo $trashMode ? 'Basurero admin' : (cdaMarketingCanViewAllTickets($user['rol']) ? 'Vista general' : 'Mis solicitudes'); ?></div>
                 <h1><?php echo $trashMode ? 'Tickets en basurero' : 'Tickets de Marketing'; ?></h1>
                 <p class="muted"><?php echo $trashMode ? 'Restaura solicitudes enviadas al basurero o borralas definitivamente cuando ya no se necesiten.' : 'Cada solicitud vive por folio: registro validado, estado visible, conversacion del ticket y cierre con historial.'; ?></p>
             </div>
@@ -409,7 +418,7 @@ if ($statsRow) {
                                     </div>
                                 </div>
                             <?php endif; ?>
-                            <?php if (!$trashMode): ?>
+                            <?php if (!$trashMode && $canManageTickets): ?>
                             <form class="inline-form" method="post" action="ticket-actualizar.php">
                                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                                 <input type="hidden" name="id" value="<?php echo (int) $ticket['id']; ?>">
@@ -429,7 +438,7 @@ if ($statsRow) {
                                 <button type="submit">Guardar cambios</button>
                             </form>
                             <?php endif; ?>
-                            <?php if ($user['rol'] === 'admin'): ?>
+                            <?php if (cdaMarketingCanManageTrash($user['rol'])): ?>
                             <div class="ticket-actions">
                                 <?php if ($trashMode): ?>
                                 <form class="inline-form" method="post" action="ticket-eliminar.php">

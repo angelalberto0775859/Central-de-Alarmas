@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_config.php';
+require_once __DIR__ . '/php/marketing_helpers.php';
 
 function cdaGoogleLoginFail($reason = 'google') {
     header('Location: login.php?error=' . urlencode($reason));
@@ -146,7 +147,7 @@ try {
         cdaGoogleLoginFail('google_email');
     }
 
-    $stmt = cdaDb()->prepare('SELECT id, google_sub, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
+    $stmt = cdaDb()->prepare('SELECT id, nombre, correo, rol, google_sub, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
     $stmt->execute([$correo]);
     $user = $stmt->fetch();
 
@@ -162,8 +163,15 @@ try {
         );
         $insert->execute([$displayName, $correo, $profile['sub']]);
 
-        cdaLoginUser(cdaDb()->lastInsertId());
-        header('Location: ' . $returnTo);
+        $newUser = [
+            'id' => (int) cdaDb()->lastInsertId(),
+            'nombre' => $displayName,
+            'correo' => $correo,
+            'rol' => 'usuario',
+            'activo' => 1,
+        ];
+        cdaLoginUser($newUser['id']);
+        header('Location: ' . cdaMarketingRouteForUser($newUser, $returnTo));
         exit;
     }
 
@@ -181,7 +189,7 @@ try {
     }
 
     cdaLoginUser($user['id']);
-    header('Location: ' . $returnTo);
+    header('Location: ' . cdaMarketingRouteForUser($user, $returnTo));
     exit;
 } catch (PDOException $e) {
     error_log('CDA Google login database error: ' . $e->getMessage());

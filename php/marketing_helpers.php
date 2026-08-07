@@ -236,6 +236,75 @@ function cdaMarketingCanUploadChatFiles($role) {
     return in_array((string) $role, ['admin', 'marketing', 'usuario', 'manager', 'trabajador'], true);
 }
 
+function cdaMarketingRoleLabel($role) {
+    $labels = [
+        'admin' => 'Admin',
+        'manager' => 'Manager',
+        'trabajador' => 'Trabajador',
+        'marketing' => 'Marketing',
+        'usuario' => 'Usuario',
+    ];
+
+    return $labels[(string) $role] ?? 'Usuario';
+}
+
+function cdaMarketingRoleClass($role) {
+    $role = strtolower(cdaMarketingClean($role));
+    return in_array($role, ['admin', 'manager', 'trabajador', 'marketing', 'usuario'], true) ? $role : 'usuario';
+}
+
+function cdaMarketingCanManageUsers($role) {
+    return (string) $role === 'admin';
+}
+
+function cdaMarketingCanManageTrash($role) {
+    return (string) $role === 'admin';
+}
+
+function cdaMarketingCanManageTickets($role) {
+    return in_array((string) $role, ['admin', 'manager', 'marketing'], true);
+}
+
+function cdaMarketingCanAccessBoard($role) {
+    return in_array((string) $role, ['admin', 'manager', 'marketing', 'trabajador'], true);
+}
+
+function cdaMarketingCanViewAllTickets($role) {
+    return in_array((string) $role, ['admin', 'manager', 'marketing'], true);
+}
+
+function cdaMarketingDefaultRouteForRole($role) {
+    if (cdaMarketingCanManageUsers($role) || cdaMarketingCanViewAllTickets($role)) {
+        return 'panel-marketing.php';
+    }
+
+    if (cdaMarketingCanAccessBoard($role)) {
+        return 'control-marketing.php';
+    }
+
+    return 'perfil-marketing.php';
+}
+
+function cdaMarketingRouteForUser($user, $requested = '') {
+    $role = (string) ($user['rol'] ?? 'usuario');
+    $requested = cdaSafeLocalReturnTo($requested ?: cdaMarketingDefaultRouteForRole($role), cdaMarketingDefaultRouteForRole($role));
+    $requestedPath = parse_url($requested, PHP_URL_PATH) ?: $requested;
+
+    if ($requestedPath === 'usuarios-marketing.php' && !cdaMarketingCanManageUsers($role)) {
+        return cdaMarketingDefaultRouteForRole($role);
+    }
+
+    if ($requestedPath === 'control-marketing.php' && !cdaMarketingCanAccessBoard($role)) {
+        return cdaMarketingDefaultRouteForRole($role);
+    }
+
+    if ($requestedPath === 'panel-marketing.php' && !cdaMarketingCanViewAllTickets($role)) {
+        return cdaMarketingDefaultRouteForRole($role);
+    }
+
+    return $requested;
+}
+
 function cdaMarketingNormalizeUploadName($name) {
     $safe = preg_replace('/[^a-zA-Z0-9._-]/', '-', basename((string) $name));
     return trim($safe, '.-') ?: 'archivo';
@@ -316,7 +385,7 @@ function cdaMarketingSendPasswordResetEmail($user, $token) {
 
 function cdaMarketingFetchAssignableAdmins() {
     try {
-        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol = 'admin' AND activo = 1 ORDER BY nombre ASC");
+        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol IN ('admin','manager','marketing','trabajador') AND activo = 1 ORDER BY nombre ASC");
         return $stmt->fetchAll();
     } catch (Throwable $e) {
         return [];

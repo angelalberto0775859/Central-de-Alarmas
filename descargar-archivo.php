@@ -39,7 +39,7 @@ if (!$file || !empty($file['eliminado_en'])) {
     exit('Archivo no encontrado.');
 }
 
-$canDownload = $user['rol'] === 'admin' || strcasecmp($user['correo'], $file['correo']) === 0;
+$canDownload = cdaMarketingCanAccessBoard($user['rol']) || strcasecmp($user['correo'], $file['correo']) === 0;
 if (!$canDownload) {
     http_response_code(403);
     exit('No tienes permiso para descargar este archivo.');

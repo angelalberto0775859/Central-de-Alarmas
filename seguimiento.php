@@ -35,7 +35,7 @@ if ($folio) {
                 cdaRequirePostCsrf();
                 $mensajeChat = cdaMarketingClean($_POST['mensaje'] ?? '');
                 $hasChatFiles = $currentUser && cdaMarketingCanUploadChatFiles($currentUser['rol']) && !empty($_FILES['archivos']['name']) && is_array($_FILES['archivos']['name']) && count(array_filter($_FILES['archivos']['name'])) > 0;
-                $canChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0);
+                $canChat = $currentUser && (cdaMarketingCanManageTickets($currentUser['rol']) || strcasecmp($currentUser['correo'], $ticket['correo']) === 0);
 
                 if (!$currentUser) {
                     $chatError = 'Inicia sesion con el usuario del ticket para enviar mensajes.';
@@ -52,7 +52,7 @@ if ($folio) {
                             'INSERT INTO marketing_ticket_mensajes (ticket_id, usuario_id, autor_nombre, autor_rol, mensaje)
                             VALUES (?, ?, ?, ?, ?)'
                         );
-                        $authorRole = $currentUser['rol'] === 'admin' ? 'admin' : 'usuario';
+                        $authorRole = cdaMarketingCanManageTickets($currentUser['rol']) ? 'admin' : 'usuario';
                         $messageText = $mensajeChat !== '' ? $mensajeChat : 'Archivo enviado para este ticket.';
                         $insert->execute([$ticket['id'], $currentUser['id'], $currentUser['nombre'], $authorRole, $messageText]);
                         $messageId = (int) $db->lastInsertId();
@@ -65,7 +65,7 @@ if ($folio) {
                         $touch->execute([$ticket['id']]);
 
                         $db->commit();
-                        if ($currentUser['rol'] === 'admin') {
+                        if (cdaMarketingCanManageTickets($currentUser['rol'])) {
                             cdaMarketingSendChatEmail($ticket, $currentUser['nombre'], $messageText, $savedFiles);
                         } else {
                             cdaMarketingSendChatAdminEmail($ticket, $currentUser['nombre'], $messageText, $savedFiles);
@@ -168,6 +168,11 @@ if ($folio) {
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.36); }
+        .profile-menu.role-usuario summary { border-color:rgba(246,235,23,.82); box-shadow:0 0 0 1px rgba(246,235,23,.18); }
+        .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
+        .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
+        .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
+        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; border-radius:6px; padding:.55rem .65rem; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); }
@@ -333,10 +338,10 @@ if ($folio) {
             <nav class="nav" aria-label="Navegacion">
                 <a href="crear-ticket.php">Crear ticket</a>
                 <?php if ($currentUser): ?>
-                    <a href="panel-marketing.php">Mis tickets</a>
-                    <?php if ($currentUser['rol'] === 'admin'): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
-                    <details class="profile-menu">
-                        <summary><?php echo htmlspecialchars($currentUser['nombre']); ?><?php echo $currentUser['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                    <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
+                    <?php if (cdaMarketingCanAccessBoard($currentUser['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                    <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($currentUser['rol'])); ?>">
+                        <summary><?php echo htmlspecialchars($currentUser['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($currentUser['rol'])); ?></summary>
                         <div class="profile-dropdown">
                             <a href="perfil-marketing.php">Mi perfil</a>
                             <a href="perfil-marketing.php#configuracion">Configuración</a>
@@ -445,7 +450,7 @@ if ($folio) {
                         <?php if (!$mensajes): ?><p class="muted">Aun no hay mensajes. Cuando el equipo necesite una aclaracion, aparecera aqui junto al folio.</p><?php endif; ?>
                     </div>
                     <?php if ($chatError): ?><div class="error"><?php echo htmlspecialchars($chatError); ?></div><?php endif; ?>
-                    <?php $canUseChat = $currentUser && ($currentUser['rol'] === 'admin' || strcasecmp($currentUser['correo'], $ticket['correo']) === 0); ?>
+                    <?php $canUseChat = $currentUser && (cdaMarketingCanManageTickets($currentUser['rol']) || strcasecmp($currentUser['correo'], $ticket['correo']) === 0); ?>
                     <?php if ($canUseChat): ?>
                         <form class="chat-form" method="post" action="seguimiento.php#chat" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">

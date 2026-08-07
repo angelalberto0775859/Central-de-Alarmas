@@ -36,7 +36,7 @@ try {
         exit;
     }
 
-    $canChat = $user['rol'] === 'admin' || strcasecmp($user['correo'], $ticketRow['correo']) === 0;
+    $canChat = cdaMarketingCanManageTickets($user['rol']) || strcasecmp($user['correo'], $ticketRow['correo']) === 0;
     if (!$canChat) {
         header('Location: ' . $returnTo);
         exit;
@@ -48,7 +48,7 @@ try {
         'INSERT INTO marketing_ticket_mensajes (ticket_id, usuario_id, autor_nombre, autor_rol, mensaje)
         VALUES (?, ?, ?, ?, ?)'
     );
-    $authorRole = $user['rol'] === 'admin' ? 'admin' : 'usuario';
+    $authorRole = cdaMarketingCanManageTickets($user['rol']) ? 'admin' : 'usuario';
     $messageText = $mensaje !== '' ? $mensaje : 'Archivo enviado para este ticket.';
     $insert->execute([$ticketId, $user['id'], $user['nombre'], $authorRole, $messageText]);
     $messageId = (int) $db->lastInsertId();
@@ -62,7 +62,7 @@ try {
 
     $db->commit();
 
-    if ($user['rol'] === 'admin') {
+    if (cdaMarketingCanManageTickets($user['rol'])) {
         cdaMarketingSendChatEmail($ticketRow, $user['nombre'], $messageText, $savedFiles);
     } else {
         cdaMarketingSendChatAdminEmail($ticketRow, $user['nombre'], $messageText, $savedFiles);

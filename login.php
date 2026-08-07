@@ -5,8 +5,9 @@ require_once __DIR__ . '/php/marketing_helpers.php';
 
 $returnTo = cdaSafeLocalReturnTo($_GET['return_to'] ?? $_POST['return_to'] ?? 'panel-marketing.php');
 
-if (cdaCurrentUser()) {
-    header('Location: ' . $returnTo);
+$currentUser = cdaCurrentUser();
+if ($currentUser) {
+    header('Location: ' . cdaMarketingRouteForUser($currentUser, $returnTo));
     exit;
 }
 
@@ -60,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 $stmt->execute([$nombre, $correo, password_hash($password, PASSWORD_DEFAULT)]);
 
-                $userStmt = cdaDb()->prepare('SELECT id, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
+                $userStmt = cdaDb()->prepare('SELECT id, nombre, correo, rol, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
                 $userStmt->execute([$correo]);
                 $createdUser = $userStmt->fetch();
 
                 if ($createdUser && (int) $createdUser['activo'] === 1) {
                     cdaLoginUser($createdUser['id']);
-                    header('Location: ' . $returnTo);
+                    header('Location: ' . cdaMarketingRouteForUser($createdUser, $returnTo));
                     exit;
                 }
 
@@ -81,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Escribe correo y contraseña.';
     } else {
         try {
-            $stmt = cdaDb()->prepare('SELECT id, password_hash, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
+            $stmt = cdaDb()->prepare('SELECT id, nombre, correo, rol, password_hash, activo FROM marketing_usuarios WHERE correo = ? LIMIT 1');
             $stmt->execute([$correo]);
             $user = $stmt->fetch();
 
             if ($user && (int) $user['activo'] === 1 && $user['password_hash'] && password_verify($password, $user['password_hash'])) {
                 cdaLoginUser($user['id']);
-                header('Location: ' . $returnTo);
+                header('Location: ' . cdaMarketingRouteForUser($user, $returnTo));
                 exit;
             }
 
@@ -377,15 +378,90 @@ $googleReady = cdaGoogleOAuthReady();
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
         .note { color:#7c5800; background:#fff8cf; border:1px solid #f5df76; }
         .success { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
+        .landing-info {
+            display:grid;
+            gap:1rem;
+            padding:0 0 2.8rem;
+        }
+        .info-band {
+            display:grid;
+            grid-template-columns:minmax(0,.78fr) minmax(320px,1fr);
+            gap:1rem;
+            align-items:start;
+            border:1px solid rgba(255,255,255,.16);
+            border-radius:var(--radius);
+            padding:1.15rem;
+            background:rgba(255,255,255,.08);
+            color:#fff;
+        }
+        .info-band h2 {
+            font-size:clamp(1.45rem,3vw,2.25rem);
+            line-height:1.05;
+            letter-spacing:0;
+        }
+        .info-band p {
+            margin-top:.65rem;
+            color:rgba(255,255,255,.76);
+            line-height:1.65;
+        }
+        .info-grid {
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:.85rem;
+        }
+        .info-card {
+            border:1px solid rgba(255,255,255,.22);
+            border-radius:var(--radius);
+            padding:1rem;
+            background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.92));
+            color:var(--ink);
+            min-height:150px;
+        }
+        .info-card strong {
+            display:block;
+            color:var(--blue);
+            font-size:1rem;
+            margin-bottom:.4rem;
+        }
+        .info-card span {
+            display:inline-flex;
+            margin-bottom:.55rem;
+            color:var(--yellow);
+            background:var(--blue);
+            border-radius:999px;
+            padding:.28rem .5rem;
+            font-size:.72rem;
+            font-weight:950;
+        }
+        .info-card p {
+            color:var(--muted);
+            font-size:.88rem;
+            line-height:1.5;
+        }
+        .role-strip {
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:.75rem;
+        }
+        .role-card {
+            border:1px solid rgba(255,255,255,.2);
+            border-radius:var(--radius);
+            padding:.9rem;
+            background:rgba(255,255,255,.08);
+            color:rgba(255,255,255,.78);
+        }
+        .role-card strong { display:block; color:#fff; margin-bottom:.3rem; }
+        .role-card p { font-size:.82rem; line-height:1.45; }
         @media (max-width:860px) {
-            .login-grid { grid-template-columns:1fr; align-items:start; }
+            .login-grid, .info-band { grid-template-columns:1fr; align-items:start; }
             .intro { padding-top:1.2rem; }
+            .info-grid, .role-strip { grid-template-columns:1fr 1fr; }
         }
         @media (max-width:620px) {
             .shell { width:min(100% - 1rem, 1120px); }
             .topbar { align-items:flex-start; flex-direction:column; }
             .nav { justify-content:flex-start; }
-            .status-strip, .links { grid-template-columns:1fr; }
+            .status-strip, .links, .info-grid, .role-strip { grid-template-columns:1fr; }
             .card-head { flex-direction:column; }
         }
         @media (prefers-reduced-motion:reduce) {
@@ -455,6 +531,29 @@ $googleReady = cdaGoogleOAuthReady();
                 </div>
             </article>
         </main>
+
+        <section class="landing-info" aria-label="Información del portal de tickets">
+            <article class="info-band">
+                <div>
+                    <div class="eyebrow">Para qué sirve esta sección</div>
+                    <h2>Un solo lugar para pedir, revisar y cerrar solicitudes.</h2>
+                </div>
+                <p>El portal ordena las solicitudes de Marketing por folio, fecha requerida, prioridad y estado. Así cada persona puede crear un ticket desde su sesión, consultar avances, adjuntar materiales y mantener la conversación del proyecto dentro del mismo historial.</p>
+            </article>
+
+            <div class="info-grid" aria-label="Pasos para generar tickets">
+                <article class="info-card"><span>Paso 1</span><strong>Inicia sesión</strong><p>Entra con tu correo o Google. Tu nombre y correo se toman del perfil activo para evitar capturar datos repetidos.</p></article>
+                <article class="info-card"><span>Paso 2</span><strong>Crea el ticket</strong><p>Describe la actividad, el objetivo, la fecha requerida, prioridad, público y adjunta editables o referencias.</p></article>
+                <article class="info-card"><span>Paso 3</span><strong>Da seguimiento</strong><p>Consulta el folio, responde dudas en el chat y revisa si el ticket fue aprobado, programado, entregado o cerrado.</p></article>
+            </div>
+
+            <div class="role-strip" aria-label="Accesos por rol">
+                <article class="role-card"><strong>Usuario</strong><p>Crear ticket, seguimiento y perfil con sus tickets activos.</p></article>
+                <article class="role-card"><strong>Trabajador</strong><p>Ver tablero, crear tickets, consultar seguimiento y perfil.</p></article>
+                <article class="role-card"><strong>Manager</strong><p>Gestionar estados, aprobaciones y asignaciones sin administrar usuarios.</p></article>
+                <article class="role-card"><strong>Admin</strong><p>Control total del flujo, usuarios, tablero, basurero y tickets.</p></article>
+            </div>
+        </section>
     </div>
     <script>
         (function () {
