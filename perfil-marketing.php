@@ -55,7 +55,7 @@ $tickets = $ticketStmt->fetchAll();
         body { min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:var(--ink); background:linear-gradient(135deg,#061226,#063970 58%,#031025); }
         .shell { width:min(1120px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; }
         .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; margin-bottom:1rem; color:#fff; }
-        .topbar img { width:140px; display:block; }
+        .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
         .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
         .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.86); text-decoration:none; border:1px solid rgba(255,255,255,.2); border-radius:8px; padding:.62rem .78rem; background:rgba(255,255,255,.08); font-size:.8rem; font-weight:850; }
         .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
@@ -69,7 +69,6 @@ $tickets = $ticketStmt->fetchAll();
         .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
         .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
         .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
-        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -103,10 +102,11 @@ $tickets = $ticketStmt->fetchAll();
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
                 <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
-                <a href="crear-ticket.php">Crear ticket</a>
-                <a href="seguimiento.php">Seguimiento</a>
                 <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
+                <a href="crear-ticket.php">Crear ticket</a>
+                <a href="seguimiento.php">Seguimiento</a>
                 <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
                     <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">

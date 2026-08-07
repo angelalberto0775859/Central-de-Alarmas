@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS marketing_usuarios (
     google_sub VARCHAR(160) NULL,
     reset_token_hash VARCHAR(64) NULL,
     reset_token_expira DATETIME NULL,
-    rol ENUM('admin','marketing','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario',
+    rol ENUM('admin','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario',
     activo TINYINT(1) NOT NULL DEFAULT 1,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_reset_token_hash (reset_token_hash)
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS marketing_ticket_mensajes (
     ticket_id INT UNSIGNED NOT NULL,
     usuario_id INT UNSIGNED NULL,
     autor_nombre VARCHAR(140) NOT NULL,
-    autor_rol ENUM('admin','marketing','usuario') NOT NULL DEFAULT 'marketing',
+    autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
     mensaje TEXT NOT NULL,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_ticket_id (ticket_id),

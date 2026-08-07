@@ -95,52 +95,21 @@ $user = cdaRequireLogin();
             color: inherit;
         }
 
-        .brand-group {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
         .brand img {
             width: 146px;
             height: auto;
             display: block;
         }
 
-        .internal-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.48rem;
-            border: 1px solid rgba(255,255,255,0.24);
-            border-radius: 999px;
-            padding: 0.48rem 0.75rem;
-            color: rgba(255,255,255,0.84);
-            font-size: 0.76rem;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            text-shadow: 0 0 12px rgba(255,255,255,0.28);
-            box-shadow:
-                0 0 18px rgba(255,255,255,0.08),
-                inset 0 0 18px rgba(255,255,255,0.06);
-        }
-
-        .top-actions {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.65rem;
-        }
-
-        .top-links {
-            display: inline-flex;
-            justify-content: flex-end;
+        .nav {
+            display: flex;
             flex-wrap: wrap;
-            gap: 0.65rem;
+            gap: 0.55rem;
+            align-items: center;
+            justify-content: flex-end;
         }
 
-        .top-link {
+        .nav a {
             display: inline-flex;
             align-items: center;
             min-height: 40px;
@@ -149,18 +118,16 @@ $user = cdaRequireLogin();
             padding: 0.62rem 0.78rem;
             color: rgba(255,255,255,0.88);
             text-decoration: none;
-            font-size: 0.78rem;
-            font-weight: 900;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 850;
             background: rgba(255,255,255,0.08);
+            white-space: nowrap;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
         }
 
-        .top-link.primary {
-            border-color: rgba(246,235,23,0.55);
-            background: var(--yellow);
-            color: var(--blue);
-        }
+        .nav a:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.34); }
+        .nav a.active { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(246,235,23,0.48); box-shadow: none; }
+        .nav a:focus-visible { outline: 3px solid rgba(246,235,23,0.52); outline-offset: 2px; }
 
         .profile-menu {
             position: relative;
@@ -175,12 +142,10 @@ $user = cdaRequireLogin();
             border: 1px solid rgba(255,255,255,0.24);
             border-radius: var(--radius);
             padding: 0.62rem 0.78rem;
-            color: rgba(255,255,255,0.9);
-            background: rgba(255,255,255,0.08);
-            font-size: 0.78rem;
-            font-weight: 900;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            font-weight: 850;
             cursor: pointer;
         }
 
@@ -204,7 +169,6 @@ $user = cdaRequireLogin();
         .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
         .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
         .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
-        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
 
         .profile-dropdown {
             position: absolute;
@@ -242,14 +206,6 @@ $user = cdaRequireLogin();
         }
 
         .profile-dropdown a.logout-link { color: #991b1b; }
-
-        .availability-dot {
-            width: 0.58rem;
-            height: 0.58rem;
-            border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34,197,94,0.16), 0 0 16px rgba(34,197,94,0.72);
-        }
 
         .hero {
             padding: clamp(3rem, 7vw, 6.5rem) 0 clamp(2.4rem, 5vw, 4rem);
@@ -782,11 +738,7 @@ $user = cdaRequireLogin();
                 flex-direction: column;
             }
 
-            .top-actions {
-                justify-content: flex-start;
-            }
-
-            .top-links {
+            .nav {
                 justify-content: flex-start;
             }
 
@@ -795,7 +747,6 @@ $user = cdaRequireLogin();
                 right: auto;
             }
 
-            .internal-tag,
             .ticket-number {
                 width: fit-content;
             }
@@ -832,17 +783,16 @@ $user = cdaRequireLogin();
 <body>
     <div class="page-shell">
         <header class="topbar">
-            <div class="brand-group">
-                <a class="brand" href="index.html" aria-label="Ir al inicio de Central de Alarmas">
-                    <img src="img/cda-logo-f.svg" alt="Central de Alarmas">
-                </a>
-                <span class="internal-tag"><span class="availability-dot" aria-hidden="true"></span>Área interna · Marketing</span>
-            </div>
-            <div class="top-actions">
-                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="top-link" href="panel-marketing.php">Tickets</a><?php endif; ?>
-                <a class="top-link" href="seguimiento.php">Seguimiento</a>
-                <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a class="top-link" href="control-marketing.php">Tablero</a><?php endif; ?>
-                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="top-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+            <a class="brand" href="index.html" aria-label="Ir al inicio de Central de Alarmas">
+                <img src="img/cda-logo-f.svg" alt="Central de Alarmas">
+            </a>
+            <nav class="nav" aria-label="Navegacion">
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a class="admin-link" href="panel-marketing.php">Tickets</a><?php endif; ?>
+                <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a class="admin-link" href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
+                <a class="public-link active" href="crear-ticket.php">Crear ticket</a>
+                <a class="public-link" href="seguimiento.php">Seguimiento</a>
                 <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($user['rol'])); ?>">
                     <summary><?php echo htmlspecialchars($user['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($user['rol'])); ?></summary>
                     <div class="profile-dropdown">
@@ -851,7 +801,7 @@ $user = cdaRequireLogin();
                         <a class="logout-link" href="logout.php">Cerrar sesión</a>
                     </div>
                 </details>
-            </div>
+            </nav>
         </header>
 
         <main>

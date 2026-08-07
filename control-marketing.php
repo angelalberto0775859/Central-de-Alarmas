@@ -45,10 +45,12 @@ $stats = [
     'waiting' => 0,
     'dueSoon' => 0,
 ];
+$statusStats = array_fill_keys(cdaMarketingStatuses(), 0);
 $today = new DateTimeImmutable('today');
 foreach ($tickets as $ticket) {
     if ($ticket['prioridad'] === 'Urgente') $stats['urgent']++;
     if ($ticket['estado'] === 'Pendiente de informacion') $stats['waiting']++;
+    if (isset($statusStats[$ticket['estado']])) $statusStats[$ticket['estado']]++;
     $due = DateTimeImmutable::createFromFormat('Y-m-d', $ticket['fecha_requerida']);
     if ($due && $due <= $today->modify('+3 days') && !in_array($ticket['estado'], ['Entregado','Cerrado','Rechazado'], true)) {
         $stats['dueSoon']++;
@@ -118,7 +120,6 @@ foreach ($tickets as $ticket) {
         .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
         .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
         .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
-        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -140,6 +141,17 @@ foreach ($tickets as $ticket) {
         .stat::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:linear-gradient(90deg,var(--yellow),var(--blue-3)); }
         .stat span { display:block; color:var(--muted); font-size:.72rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
         .stat strong { display:block; color:var(--blue); font-size:2.15rem; line-height:1; margin-top:.25rem; }
+        .state-dashboard { margin-bottom:1rem; border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); }
+        .state-dashboard-head { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin-bottom:.85rem; }
+        .state-dashboard h2 { color:var(--blue); font-size:1.08rem; }
+        .state-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.65rem; }
+        .state-card { display:grid; gap:.28rem; min-height:74px; border:1px solid rgba(6,57,112,.1); border-left:5px solid var(--blue-2); border-radius:var(--radius); padding:.72rem; background:#fff; }
+        .state-card.tone-green { border-left-color:var(--green); }
+        .state-card.tone-red { border-left-color:var(--red); }
+        .state-card.tone-amber { border-left-color:#f59e0b; }
+        .state-card.tone-purple { border-left-color:#6d28d9; }
+        .state-card span { color:var(--muted); font-size:.72rem; font-weight:850; line-height:1.25; }
+        .state-card strong { color:var(--blue); font-size:1.6rem; line-height:1; }
         .board { display:grid; grid-template-columns:repeat(4,minmax(290px,1fr)); gap:.9rem; align-items:start; overflow-x:auto; padding:.15rem .1rem .45rem; }
         .lane { border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:rgba(255,255,255,.86); min-height:560px; padding:.75rem; box-shadow:var(--shadow); backdrop-filter:blur(10px); }
         .lane-head { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-bottom:.75rem; padding:.8rem; border-radius:var(--radius); background:linear-gradient(135deg,var(--blue),var(--blue-2)); color:#fff; box-shadow:0 14px 30px rgba(6,57,112,.18); }
@@ -200,8 +212,8 @@ foreach ($tickets as $ticket) {
         .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
         .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
-        @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-        @media (max-width:620px) { .stats, .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
+        @media (max-width:920px) { .topbar, .hero, .state-dashboard-head { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } .state-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+        @media (max-width:620px) { .stats, .story-strip, .state-grid { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -246,6 +258,24 @@ foreach ($tickets as $ticket) {
             <div class="stat"><span>Por vencer</span><strong><?php echo $stats['dueSoon']; ?></strong></div>
             <div class="stat"><span>Esperando info</span><strong><?php echo $stats['waiting']; ?></strong></div>
         </section>
+        <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?>
+        <section class="state-dashboard" aria-label="Estadisticas por estado de tickets">
+            <div class="state-dashboard-head">
+                <div>
+                    <h2>Estadisticas por estado</h2>
+                    <p class="muted">Vista rapida para medir carga, avance, bloqueos y cierres del flujo.</p>
+                </div>
+            </div>
+            <div class="state-grid">
+                <?php foreach (cdaMarketingStatuses() as $status): ?>
+                    <div class="state-card tone-<?php echo htmlspecialchars(cdaMarketingStatusTone($status)); ?>">
+                        <span><?php echo htmlspecialchars(cdaMarketingStatusLabel($status)); ?></span>
+                        <strong><?php echo (int) $statusStats[$status]; ?></strong>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
         <?php if ($flashError): ?>
             <div class="alert-error"><?php echo htmlspecialchars($flashError); ?></div>
         <?php endif; ?>

@@ -233,7 +233,7 @@ function cdaMarketingChatFileExtensions() {
 }
 
 function cdaMarketingCanUploadChatFiles($role) {
-    return in_array((string) $role, ['admin', 'marketing', 'usuario', 'manager', 'trabajador'], true);
+    return in_array((string) $role, ['admin', 'usuario', 'manager', 'trabajador'], true);
 }
 
 function cdaMarketingRoleLabel($role) {
@@ -241,7 +241,6 @@ function cdaMarketingRoleLabel($role) {
         'admin' => 'Admin',
         'manager' => 'Manager',
         'trabajador' => 'Trabajador',
-        'marketing' => 'Marketing',
         'usuario' => 'Usuario',
     ];
 
@@ -250,7 +249,7 @@ function cdaMarketingRoleLabel($role) {
 
 function cdaMarketingRoleClass($role) {
     $role = strtolower(cdaMarketingClean($role));
-    return in_array($role, ['admin', 'manager', 'trabajador', 'marketing', 'usuario'], true) ? $role : 'usuario';
+    return in_array($role, ['admin', 'manager', 'trabajador', 'usuario'], true) ? $role : 'usuario';
 }
 
 function cdaMarketingCanManageUsers($role) {
@@ -262,15 +261,15 @@ function cdaMarketingCanManageTrash($role) {
 }
 
 function cdaMarketingCanManageTickets($role) {
-    return in_array((string) $role, ['admin', 'manager', 'marketing'], true);
+    return in_array((string) $role, ['admin', 'manager'], true);
 }
 
 function cdaMarketingCanAccessBoard($role) {
-    return in_array((string) $role, ['admin', 'manager', 'marketing', 'trabajador'], true);
+    return in_array((string) $role, ['admin', 'manager', 'trabajador'], true);
 }
 
 function cdaMarketingCanViewAllTickets($role) {
-    return in_array((string) $role, ['admin', 'manager', 'marketing'], true);
+    return in_array((string) $role, ['admin', 'manager'], true);
 }
 
 function cdaMarketingDefaultRouteForRole($role) {
@@ -385,7 +384,7 @@ function cdaMarketingSendPasswordResetEmail($user, $token) {
 
 function cdaMarketingFetchAssignableAdmins() {
     try {
-        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol IN ('admin','manager','marketing','trabajador') AND activo = 1 ORDER BY nombre ASC");
+        $stmt = cdaDb()->query("SELECT nombre, correo FROM marketing_usuarios WHERE rol IN ('admin','manager','trabajador') AND activo = 1 ORDER BY nombre ASC");
         return $stmt->fetchAll();
     } catch (Throwable $e) {
         return [];

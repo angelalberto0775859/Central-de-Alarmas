@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nombre = cdaMarketingClean($_POST['nombre'] ?? '');
         $correo = filter_var(strtolower(cdaMarketingClean($_POST['correo'] ?? '')), FILTER_VALIDATE_EMAIL);
         $password = (string) ($_POST['password'] ?? '');
-        $rol = in_array($_POST['rol'] ?? '', ['admin', 'marketing', 'usuario', 'manager', 'trabajador'], true) ? $_POST['rol'] : 'usuario';
+        $rol = in_array($_POST['rol'] ?? '', ['admin', 'usuario', 'manager', 'trabajador'], true) ? $_POST['rol'] : 'usuario';
         $activo = !empty($_POST['activo']) ? 1 : 0;
 
         if (!$nombre || !$correo) {
@@ -162,7 +162,6 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
         .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
         .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
-        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
@@ -257,7 +256,6 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                             <option value="admin">Administrador</option>
                             <option value="manager">Manager</option>
                             <option value="trabajador">Trabajador</option>
-                            <option value="marketing">Marketing</option>
                             <option value="usuario">Usuario</option>
                         </select>
                     </label>
@@ -287,7 +285,6 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
                                         <option value="admin" <?php echo $item['rol'] === 'admin' ? 'selected' : ''; ?>>Administrador</option>
                                         <option value="manager" <?php echo $item['rol'] === 'manager' ? 'selected' : ''; ?>>Manager</option>
                                         <option value="trabajador" <?php echo $item['rol'] === 'trabajador' ? 'selected' : ''; ?>>Trabajador</option>
-                                        <option value="marketing" <?php echo $item['rol'] === 'marketing' ? 'selected' : ''; ?>>Marketing</option>
                                         <option value="usuario" <?php echo $item['rol'] === 'usuario' ? 'selected' : ''; ?>>Usuario</option>
                                     </select>
                                     <label class="check"><input name="activo" type="checkbox" value="1" <?php echo (int) $item['activo'] === 1 ? 'checked' : ''; ?>> Activo</label>

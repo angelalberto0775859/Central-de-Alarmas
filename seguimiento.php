@@ -144,27 +144,30 @@ if ($folio) {
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
         .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
         @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#fff; margin-bottom:clamp(2rem,5vw,3.8rem); }
-        .topbar img { width:154px; display:block; }
-        .nav { display:flex; flex-wrap:wrap; gap:.62rem; justify-content:flex-end; }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; color:#fff; margin-bottom:clamp(2rem,5vw,3.8rem); }
+        .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+        .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
         .nav a {
             min-height:40px;
             display:inline-flex;
             align-items:center;
-            color:rgba(255,255,255,.88);
+            color:rgba(255,255,255,.86);
             text-decoration:none;
-            border:1px solid rgba(255,255,255,.22);
+            border:1px solid rgba(255,255,255,.2);
             border-radius:var(--radius);
             padding:.62rem .78rem;
             background:rgba(255,255,255,.08);
-            font-size:.78rem;
-            font-weight:900;
-            letter-spacing:.04em;
-            text-transform:uppercase;
+            font-size:.8rem;
+            font-weight:850;
+            white-space:nowrap;
+            transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
         }
+        .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
+        .nav a.active { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(246,235,23,.48); box-shadow:none; }
         .nav a.primary { background:var(--yellow); color:var(--blue); border-color:rgba(246,235,23,.65); }
+        .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
         .profile-menu { position:relative; }
-        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.08); font-size:.78rem; font-weight:900; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:850; cursor:pointer; }
         .profile-menu summary::-webkit-details-marker { display:none; }
         .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
         .profile-menu[open] summary { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.36); }
@@ -172,7 +175,6 @@ if ($folio) {
         .profile-menu.role-admin summary { border-color:rgba(248,113,113,.9); box-shadow:0 0 0 1px rgba(248,113,113,.2); }
         .profile-menu.role-trabajador summary { border-color:rgba(34,197,94,.88); box-shadow:0 0 0 1px rgba(34,197,94,.18); }
         .profile-menu.role-manager summary { border-color:rgba(96,165,250,.88); box-shadow:0 0 0 1px rgba(96,165,250,.18); }
-        .profile-menu.role-marketing summary { border-color:rgba(216,180,254,.88); box-shadow:0 0 0 1px rgba(216,180,254,.18); }
         .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
         .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; border-radius:6px; padding:.55rem .65rem; background:#fff; color:var(--ink); box-shadow:none; }
         .profile-dropdown a:hover { background:var(--soft); color:var(--blue); }
@@ -336,10 +338,13 @@ if ($folio) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <a href="crear-ticket.php">Crear ticket</a>
                 <?php if ($currentUser): ?>
                     <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                     <?php if (cdaMarketingCanAccessBoard($currentUser['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                    <?php if (cdaMarketingCanManageUsers($currentUser['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
+                    <?php if (cdaMarketingCanManageTrash($currentUser['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
+                    <a href="crear-ticket.php">Crear ticket</a>
+                    <a class="active" href="seguimiento.php">Seguimiento</a>
                     <details class="profile-menu role-<?php echo htmlspecialchars(cdaMarketingRoleClass($currentUser['rol'])); ?>">
                         <summary><?php echo htmlspecialchars($currentUser['nombre']); ?> · <?php echo htmlspecialchars(cdaMarketingRoleLabel($currentUser['rol'])); ?></summary>
                         <div class="profile-dropdown">
@@ -349,6 +354,8 @@ if ($folio) {
                         </div>
                     </details>
                 <?php else: ?>
+                    <a href="crear-ticket.php">Crear ticket</a>
+                    <a class="active" href="seguimiento.php">Seguimiento</a>
                     <a class="primary" href="login.php?return_to=panel-marketing.php">Iniciar sesion</a>
                 <?php endif; ?>
             </nav>

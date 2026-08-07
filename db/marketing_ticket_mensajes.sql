@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS marketing_ticket_mensajes (
     ticket_id INT UNSIGNED NOT NULL,
     usuario_id INT UNSIGNED NULL,
     autor_nombre VARCHAR(140) NOT NULL,
-    autor_rol ENUM('admin','marketing','usuario') NOT NULL DEFAULT 'marketing',
+    autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
     mensaje TEXT NOT NULL,
     creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_ticket_id (ticket_id),
@@ -11,5 +11,7 @@ CREATE TABLE IF NOT EXISTS marketing_ticket_mensajes (
     INDEX idx_creado (creado_en)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+UPDATE marketing_ticket_mensajes SET autor_rol = 'admin' WHERE autor_rol = 'marketing';
+
 ALTER TABLE marketing_ticket_mensajes
-    MODIFY autor_rol ENUM('admin','marketing','usuario') NOT NULL DEFAULT 'marketing';
+    MODIFY autor_rol ENUM('admin','usuario') NOT NULL DEFAULT 'usuario';
