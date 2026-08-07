@@ -115,17 +115,22 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
         .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
         @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.65rem .75rem; background:rgba(255,255,255,.12); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; margin-bottom:1rem; color:#fff; }
         .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
-        .nav a { min-height:36px; display:inline-flex; align-items:center; color:rgba(255,255,255,.88); text-decoration:none; border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:.58rem .7rem; background:rgba(255,255,255,.09); font-size:.8rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
-        .nav a:hover { background:rgba(246,235,23,.16); color:#fff; border-color:rgba(246,235,23,.5); }
-        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); box-shadow:0 8px 18px rgba(0,0,0,.1); }
+        .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.86); text-decoration:none; border:1px solid rgba(255,255,255,.2); border-radius:8px; padding:.62rem .78rem; background:rgba(255,255,255,.08); font-size:.8rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
+        .nav a.active { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(246,235,23,.48); box-shadow:none; }
         .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
-        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
-        .user-chip, .role-chip { min-height:32px; display:inline-flex; align-items:center; border-radius:8px; padding:.48rem .62rem; font-size:.78rem; font-weight:850; }
-        .user-chip { color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
-        .role-chip { color:var(--blue); background:rgba(246,235,23,.92); border:1px solid rgba(246,235,23,.7); }
+        .profile-menu { position:relative; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:850; cursor:pointer; }
+        .profile-menu summary::-webkit-details-marker { display:none; }
+        .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
+        .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
+        .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
+        .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
+        .profile-dropdown a.logout-link { color:#991b1b; }
         .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); position:relative; overflow:hidden; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
         .hero > * { position:relative; z-index:1; }
@@ -161,7 +166,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         .ok, .error { margin-bottom:.8rem; border-radius:var(--radius); padding:.75rem; font-weight:750; }
         .ok { color:#047857; background:#d1fae5; border:1px solid #a7f3d0; }
         .error { color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; }
-        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
+        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
 </head>
@@ -171,16 +176,20 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                <span class="role-chip">Modo admin</span>
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link" href="control-marketing.php">Tablero</a>
                 <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <a class="public-link" href="perfil-marketing.php">Perfil</a>
-                <a class="session-link" href="logout.php">Cerrar sesión</a>
+                <details class="profile-menu">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · Admin</summary>
+                    <div class="profile-dropdown">
+                        <a href="perfil-marketing.php">Mi perfil</a>
+                        <a href="perfil-marketing.php#configuracion">Configuración</a>
+                        <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </details>
             </nav>
         </header>
         <section class="hero">

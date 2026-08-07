@@ -163,6 +163,15 @@ if ($folio) {
             text-transform:uppercase;
         }
         .nav a.primary { background:var(--yellow); color:var(--blue); border-color:rgba(246,235,23,.65); }
+        .profile-menu { position:relative; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:var(--radius); padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.08); font-size:.78rem; font-weight:900; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; }
+        .profile-menu summary::-webkit-details-marker { display:none; }
+        .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
+        .profile-menu[open] summary { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.36); }
+        .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:var(--radius); background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
+        .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; border-radius:6px; padding:.55rem .65rem; background:#fff; color:var(--ink); box-shadow:none; }
+        .profile-dropdown a:hover { background:var(--soft); color:var(--blue); }
+        .profile-dropdown a.logout-link { color:#991b1b; }
         .hero-grid { display:grid; grid-template-columns:minmax(0, .95fr) minmax(330px, .55fr); gap:clamp(1rem,4vw,2.4rem); align-items:end; margin-bottom:1rem; }
         .hero { color:#fff; }
         .eyebrow { color:var(--yellow); font-size:.78rem; font-weight:950; letter-spacing:.13em; text-transform:uppercase; margin-bottom:.8rem; }
@@ -306,6 +315,7 @@ if ($folio) {
             .shell { width:min(100% - 1rem, 1160px); }
             .topbar, .search-head, .ticket-head { align-items:flex-start; flex-direction:column; }
             .nav { justify-content:flex-start; }
+            .profile-dropdown { left:0; right:auto; }
             .meta { grid-template-columns:1fr; }
             .progress { grid-template-columns:1fr; }
             .progress-step { min-height:auto; display:flex; align-items:center; gap:.5rem; text-align:left; }
@@ -324,8 +334,15 @@ if ($folio) {
                 <a href="crear-ticket.php">Crear ticket</a>
                 <?php if ($currentUser): ?>
                     <a href="panel-marketing.php">Mis tickets</a>
-                    <a href="perfil-marketing.php">Perfil</a>
-                    <a class="primary" href="logout.php">Cerrar sesión</a>
+                    <?php if ($currentUser['rol'] === 'admin'): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                    <details class="profile-menu">
+                        <summary><?php echo htmlspecialchars($currentUser['nombre']); ?><?php echo $currentUser['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                        <div class="profile-dropdown">
+                            <a href="perfil-marketing.php">Mi perfil</a>
+                            <a href="perfil-marketing.php#configuracion">Configuración</a>
+                            <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                        </div>
+                    </details>
                 <?php else: ?>
                     <a class="primary" href="login.php?return_to=panel-marketing.php">Iniciar sesion</a>
                 <?php endif; ?>

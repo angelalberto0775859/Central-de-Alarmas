@@ -120,47 +120,38 @@ if ($statsRow) {
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
         .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
         @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
-        .topbar {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:1rem;
-            margin-bottom:1.35rem;
-            color:#fff;
-            border:1px solid rgba(255,255,255,.16);
-            border-radius:var(--radius);
-            padding:.65rem .75rem;
-            background:rgba(255,255,255,.12);
-            backdrop-filter:blur(14px);
-            box-shadow:0 18px 50px rgba(0,0,0,.14);
-        }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; margin-bottom:1.35rem; color:#fff; }
         .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
+        .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
         .nav a, button {
-            min-height:36px;
+            min-height:40px;
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            color:var(--blue);
+            color:rgba(255,255,255,.86);
             text-decoration:none;
             border:1px solid rgba(255,255,255,.2);
             border-radius:8px;
-            padding:.58rem .7rem;
-            background:#fff;
+            padding:.62rem .78rem;
+            background:rgba(255,255,255,.08);
             font-size:.8rem;
             font-weight:850;
             cursor:pointer;
             white-space:nowrap;
             transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
         }
-        .nav a { background:rgba(255,255,255,.09); color:rgba(255,255,255,.88); border-color:rgba(255,255,255,.18); }
-        .nav a:hover { background:rgba(246,235,23,.16); color:#fff; border-color:rgba(246,235,23,.5); }
-        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); box-shadow:0 8px 18px rgba(0,0,0,.1); }
+        .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
+        .nav a.active { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(246,235,23,.48); box-shadow:none; }
         .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
-        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
-        .user-chip, .role-chip { min-height:32px; display:inline-flex; align-items:center; border-radius:8px; padding:.48rem .62rem; font-size:.78rem; font-weight:850; }
-        .user-chip { color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
-        .role-chip { color:var(--blue); background:rgba(246,235,23,.92); border:1px solid rgba(246,235,23,.7); }
+        .profile-menu { position:relative; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:850; cursor:pointer; }
+        .profile-menu summary::-webkit-details-marker { display:none; }
+        .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
+        .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
+        .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
+        .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
+        .profile-dropdown a.logout-link { color:#991b1b; }
         .hero {
             display:flex;
             justify-content:space-between;
@@ -186,17 +177,6 @@ if ($statsRow) {
         .story-step span { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; margin-bottom:.45rem; border-radius:50%; background:var(--blue); color:var(--yellow); font-weight:950; font-size:.76rem; }
         .story-step strong { display:block; color:var(--blue); font-size:.82rem; line-height:1.2; }
         .story-step p { margin-top:.22rem; color:var(--muted); font-size:.75rem; line-height:1.35; }
-        .portal-grid { display:grid; grid-template-columns:360px minmax(0,1fr); gap:.85rem; margin-bottom:1rem; }
-        .profile-card, .option-card { border:1px solid rgba(255,255,255,.5); border-radius:var(--radius); padding:1rem; background:linear-gradient(180deg,#fff,#f8fbff); box-shadow:var(--shadow); }
-        .profile-card h2, .option-card h2 { color:var(--blue); font-size:1rem; margin-bottom:.7rem; }
-        .profile-row { display:grid; gap:.18rem; padding:.58rem 0; border-top:1px solid rgba(6,57,112,.08); }
-        .profile-row span { color:var(--muted); font-size:.7rem; font-weight:950; letter-spacing:.05em; text-transform:uppercase; }
-        .profile-row strong { color:var(--ink); font-size:.9rem; }
-        .option-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.65rem; }
-        .option-link { display:grid; gap:.35rem; min-height:112px; border:1px solid rgba(6,57,112,.1); border-radius:var(--radius); padding:.85rem; color:var(--ink); text-decoration:none; background:#fff; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-        .option-link:hover { transform:translateY(-1px); border-color:rgba(6,57,112,.24); box-shadow:0 14px 30px rgba(6,57,112,.1); }
-        .option-link strong { color:var(--blue); font-size:.95rem; }
-        .option-link span { color:var(--muted); font-size:.78rem; line-height:1.4; }
         .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.8rem; margin-bottom:1rem; }
         .stat {
             border:1px solid rgba(255,255,255,.5);
@@ -312,8 +292,10 @@ if ($statsRow) {
         .ticket-file { display:inline-flex; border-radius:6px; padding:.34rem .48rem; background:#fff7cc; color:#7c5800; font-size:.72rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.42rem; font-size:.72rem; background:#fff; }
         @media (max-width:900px) {
-            .filters, .hero, .stats, .story-strip, .portal-grid, .option-list { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
+            .filters, .hero, .stats, .story-strip { grid-template-columns:1fr; flex-direction:column; align-items:stretch; }
             .topbar { align-items:flex-start; flex-direction:column; }
+            .nav { justify-content:flex-start; }
+            .profile-dropdown { left:0; right:auto; }
             .ticket-row-summary, .ticket-drawer, .ticket-meta-grid { grid-template-columns:1fr; }
             .ticket-pills { justify-content:flex-start; }
             table, tbody, tr, td { display:block; min-width:0; }
@@ -332,8 +314,6 @@ if ($statsRow) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                <?php if ($user['rol'] === 'admin'): ?><span class="role-chip">Modo admin</span><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? '' : 'active'; ?>" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] !== 'admin'): ?><a class="active" href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link" href="control-marketing.php">Tablero</a><?php endif; ?>
@@ -341,8 +321,14 @@ if ($statsRow) {
                 <?php if ($user['rol'] === 'admin'): ?><a class="admin-link <?php echo $trashMode ? 'active' : ''; ?>" href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <a class="public-link" href="perfil-marketing.php">Perfil</a>
-                <a class="session-link" href="logout.php">Cerrar sesión</a>
+                <details class="profile-menu">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                    <div class="profile-dropdown">
+                        <a href="perfil-marketing.php">Mi perfil</a>
+                        <a href="perfil-marketing.php#configuracion">Configuración</a>
+                        <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </details>
             </nav>
         </header>
         <section class="hero">
@@ -353,26 +339,10 @@ if ($statsRow) {
             </div>
         </section>
         <section class="story-strip" aria-label="Historia del ticket">
-            <div class="story-step"><span>1</span><strong>Registro</strong><p>El correo crea o actualiza el usuario ligado a la solicitud.</p></div>
+            <div class="story-step"><span>1</span><strong>Sesión</strong><p>El ticket queda ligado al perfil activo del solicitante.</p></div>
             <div class="story-step"><span>2</span><strong>Confirmacion</strong><p>El folio llega al solicitante y avisa a los admins.</p></div>
             <div class="story-step"><span>3</span><strong>Seguimiento</strong><p>El chat mantiene dudas, aprobaciones y acuerdos en el ticket.</p></div>
             <div class="story-step"><span>4</span><strong>Entrega</strong><p>Estado e historial dejan claro que paso y cuando cerro.</p></div>
-        </section>
-        <section class="portal-grid" aria-label="Opciones de sesión">
-            <article class="profile-card">
-                <h2>Perfil del solicitante</h2>
-                <div class="profile-row"><span>Nombre</span><strong><?php echo htmlspecialchars($user['nombre']); ?></strong></div>
-                <div class="profile-row"><span>Correo</span><strong><?php echo htmlspecialchars($user['correo']); ?></strong></div>
-                <div class="profile-row"><span>Rol</span><strong><?php echo htmlspecialchars($user['rol']); ?></strong></div>
-            </article>
-            <article class="option-card">
-                <h2>Opciones principales</h2>
-                <div class="option-list">
-                    <a class="option-link" href="crear-ticket.php"><strong>Crear ticket</strong><span>Genera una nueva solicitud usando tu perfil de sesión.</span></a>
-                    <a class="option-link" href="seguimiento.php"><strong>Seguimiento</strong><span>Consulta un folio y conversa en el chat del ticket.</span></a>
-                    <a class="option-link" href="perfil-marketing.php"><strong>Gestionar perfil</strong><span>Actualiza tu nombre o cambia tu contraseña.</span></a>
-                </div>
-            </article>
         </section>
         <section class="stats" aria-label="Resumen de tickets">
             <div class="stat"><span>Total</span><strong><?php echo $stats['total']; ?></strong></div>

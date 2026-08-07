@@ -54,13 +54,21 @@ $tickets = $ticketStmt->fetchAll();
         * { box-sizing:border-box; margin:0; padding:0; }
         body { min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:var(--ink); background:linear-gradient(135deg,#061226,#063970 58%,#031025); }
         .shell { width:min(1120px, calc(100% - 2rem)); margin:0 auto; padding:1.1rem 0 3rem; }
-        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.65rem .75rem; background:rgba(255,255,255,.12); }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; margin-bottom:1rem; color:#fff; }
         .topbar img { width:140px; display:block; }
-        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
-        .nav a, .chip { min-height:36px; display:inline-flex; align-items:center; color:rgba(255,255,255,.88); text-decoration:none; border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:.58rem .7rem; background:rgba(255,255,255,.09); font-size:.8rem; font-weight:850; }
-        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); }
-        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
-        .chip { color:#fff; }
+        .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.86); text-decoration:none; border:1px solid rgba(255,255,255,.2); border-radius:8px; padding:.62rem .78rem; background:rgba(255,255,255,.08); font-size:.8rem; font-weight:850; }
+        .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
+        .nav a.active { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(246,235,23,.48); }
+        .profile-menu { position:relative; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:850; cursor:pointer; }
+        .profile-menu summary::-webkit-details-marker { display:none; }
+        .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
+        .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
+        .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
+        .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
+        .profile-dropdown a.logout-link { color:#991b1b; }
         .hero { margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); }
         .eyebrow { color:var(--yellow); font-size:.74rem; font-weight:950; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.55rem; }
         h1 { color:#fff; font-size:clamp(1.9rem,4vw,3.35rem); line-height:1; letter-spacing:0; }
@@ -81,7 +89,7 @@ $tickets = $ticketStmt->fetchAll();
         .ticket { border:1px solid var(--line); border-left:5px solid var(--blue-2); border-radius:var(--radius); background:#fff; padding:.78rem; }
         .ticket strong { color:var(--blue); }
         .ticket p { color:var(--muted); margin-top:.25rem; font-size:.86rem; }
-        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } }
+        @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } }
     </style>
 </head>
 <body>
@@ -89,12 +97,18 @@ $tickets = $ticketStmt->fetchAll();
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <span class="chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
                 <a href="panel-marketing.php">Mis tickets</a>
                 <a href="crear-ticket.php">Crear ticket</a>
                 <a href="seguimiento.php">Seguimiento</a>
-                <a class="active" href="perfil-marketing.php">Perfil</a>
-                <a class="session-link" href="logout.php">Cerrar sesión</a>
+                <?php if ($user['rol'] === 'admin'): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                <details class="profile-menu">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                    <div class="profile-dropdown">
+                        <a href="perfil-marketing.php">Mi perfil</a>
+                        <a href="perfil-marketing.php#configuracion">Configuración</a>
+                        <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </details>
             </nav>
         </header>
         <section class="hero">
@@ -111,7 +125,7 @@ $tickets = $ticketStmt->fetchAll();
                 </div>
                 <?php if ($message): ?><div class="ok"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
                 <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
-                <form method="post" action="perfil-marketing.php">
+                <form id="configuracion" method="post" action="perfil-marketing.php">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cdaCsrfToken()); ?>">
                     <label>Nombre <input name="nombre" value="<?php echo htmlspecialchars($user['nombre']); ?>" required></label>
                     <label>Nueva contrasena <input name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Opcional"></label>

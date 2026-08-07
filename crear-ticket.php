@@ -162,6 +162,82 @@ $user = cdaRequireLogin();
             color: var(--blue);
         }
 
+        .profile-menu {
+            position: relative;
+        }
+
+        .profile-menu summary {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            border: 1px solid rgba(255,255,255,0.24);
+            border-radius: var(--radius);
+            padding: 0.62rem 0.78rem;
+            color: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.08);
+            font-size: 0.78rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .profile-menu summary::-webkit-details-marker { display: none; }
+
+        .profile-menu summary::after {
+            content: "";
+            width: 0.45rem;
+            height: 0.45rem;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg) translateY(-2px);
+            opacity: 0.75;
+        }
+
+        .profile-menu[open] summary {
+            background: rgba(255,255,255,0.16);
+            border-color: rgba(255,255,255,0.36);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.45rem);
+            z-index: 10;
+            display: grid;
+            min-width: 190px;
+            padding: 0.45rem;
+            border: 1px solid rgba(6,57,112,0.12);
+            border-radius: var(--radius);
+            background: #fff;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+        }
+
+        .profile-dropdown a {
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            border: 0;
+            border-radius: 6px;
+            padding: 0.55rem 0.65rem;
+            background: #fff;
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 850;
+            box-shadow: none;
+        }
+
+        .profile-dropdown a:hover {
+            background: var(--soft);
+            color: var(--blue);
+        }
+
+        .profile-dropdown a.logout-link { color: #991b1b; }
+
         .availability-dot {
             width: 0.58rem;
             height: 0.58rem;
@@ -709,6 +785,11 @@ $user = cdaRequireLogin();
                 justify-content: flex-start;
             }
 
+            .profile-dropdown {
+                left: 0;
+                right: auto;
+            }
+
             .internal-tag,
             .ticket-number {
                 width: fit-content;
@@ -755,8 +836,15 @@ $user = cdaRequireLogin();
             <div class="top-actions">
                 <a class="top-link" href="panel-marketing.php">Mis tickets</a>
                 <a class="top-link" href="seguimiento.php">Seguimiento</a>
-                <a class="top-link" href="perfil-marketing.php">Perfil</a>
-                <a class="top-link primary" href="logout.php">Cerrar sesión</a>
+                <?php if ($user['rol'] === 'admin'): ?><a class="top-link" href="control-marketing.php">Tablero</a><?php endif; ?>
+                <details class="profile-menu">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?><?php echo $user['rol'] === 'admin' ? ' · Admin' : ''; ?></summary>
+                    <div class="profile-dropdown">
+                        <a href="perfil-marketing.php">Mi perfil</a>
+                        <a href="perfil-marketing.php#configuracion">Configuración</a>
+                        <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </details>
             </div>
         </header>
 

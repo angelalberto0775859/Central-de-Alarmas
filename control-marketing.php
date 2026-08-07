@@ -101,17 +101,22 @@ foreach ($tickets as $ticket) {
         .ambient-points { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
         .ambient-point { --size:2px; --x:50vw; --y:50vh; --dx:18px; --dy:-22px; --duration:18s; --delay:0s; position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 calc(var(--size) * 4) rgba(166,205,255,.28); opacity:.42; transform:translate3d(0,0,0); animation:ambientDrift var(--duration) ease-in-out var(--delay) infinite alternate; }
         @keyframes ambientDrift { 0% { transform:translate3d(0,0,0); opacity:.18; } 38% { opacity:.56; } 100% { transform:translate3d(var(--dx), var(--dy), 0); opacity:.32; } }
-        .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:.65rem .75rem; background:rgba(255,255,255,.12); backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.14); }
+        .topbar { display:flex; justify-content:space-between; align-items:center; gap:1rem; min-height:64px; margin-bottom:1rem; color:#fff; }
         .topbar img { width:140px; display:block; filter:drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-        .nav { display:flex; flex-wrap:wrap; gap:.42rem; align-items:center; justify-content:flex-end; }
-        .nav a { min-height:36px; display:inline-flex; align-items:center; color:rgba(255,255,255,.88); text-decoration:none; border:1px solid rgba(255,255,255,.18); border-radius:var(--radius); padding:.58rem .7rem; background:rgba(255,255,255,.09); font-size:.8rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
-        .nav a:hover { background:rgba(246,235,23,.16); color:#fff; border-color:rgba(246,235,23,.5); }
-        .nav a.active { background:var(--yellow); color:var(--blue); border-color:var(--yellow); box-shadow:0 8px 18px rgba(0,0,0,.1); }
+        .nav { display:flex; flex-wrap:wrap; gap:.55rem; align-items:center; justify-content:flex-end; }
+        .nav a { min-height:40px; display:inline-flex; align-items:center; color:rgba(255,255,255,.86); text-decoration:none; border:1px solid rgba(255,255,255,.2); border-radius:var(--radius); padding:.62rem .78rem; background:rgba(255,255,255,.08); font-size:.8rem; font-weight:850; white-space:nowrap; transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .nav a:hover { background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.34); }
+        .nav a.active { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(246,235,23,.48); box-shadow:none; }
         .nav a:focus-visible { outline:3px solid rgba(246,235,23,.52); outline-offset:2px; }
-        .nav a.session-link { color:#fecaca; border-color:rgba(254,202,202,.32); background:rgba(185,28,28,.12); }
-        .user-chip, .role-chip { min-height:32px; display:inline-flex; align-items:center; border-radius:8px; padding:.48rem .62rem; font-size:.78rem; font-weight:850; }
-        .user-chip { color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
-        .role-chip { color:var(--blue); background:rgba(246,235,23,.92); border:1px solid rgba(246,235,23,.7); }
+        .profile-menu { position:relative; }
+        .profile-menu summary { min-height:40px; display:inline-flex; align-items:center; gap:.5rem; list-style:none; border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:.62rem .78rem; color:#fff; background:rgba(255,255,255,.1); font-size:.8rem; font-weight:850; cursor:pointer; }
+        .profile-menu summary::-webkit-details-marker { display:none; }
+        .profile-menu summary::after { content:""; width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:.75; }
+        .profile-menu[open] summary { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.36); }
+        .profile-dropdown { position:absolute; right:0; top:calc(100% + .45rem); z-index:10; display:grid; min-width:190px; padding:.45rem; border:1px solid rgba(6,57,112,.12); border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.18); }
+        .profile-dropdown a { min-height:36px; justify-content:flex-start; border:0; background:#fff; color:var(--ink); box-shadow:none; }
+        .profile-dropdown a:hover { background:var(--soft); color:var(--blue); border-color:transparent; }
+        .profile-dropdown a.logout-link { color:#991b1b; }
         .hero { display:flex; justify-content:space-between; gap:1rem; align-items:end; margin:1rem 0; color:#fff; border:1px solid rgba(255,255,255,.16); border-radius:var(--radius); padding:1.2rem; background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); box-shadow:0 24px 70px rgba(0,0,0,.16); overflow:hidden; position:relative; }
         .hero::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,var(--yellow),rgba(255,255,255,.6),var(--blue-3)); }
         .hero > * { position:relative; z-index:1; }
@@ -189,7 +194,7 @@ foreach ($tickets as $ticket) {
         .ticket-file { display:inline-flex; border-radius:6px; padding:.32rem .46rem; background:#fff7cc; color:#7c5800; font-size:.7rem; font-weight:850; text-decoration:none; }
         .file-input { padding:.52rem; font-size:.74rem; background:#fff; }
         .alert-error { margin-bottom:1rem; border:1px solid #fecaca; border-radius:var(--radius); background:#fee2e2; color:#991b1b; padding:.85rem 1rem; font-size:.86rem; font-weight:850; line-height:1.45; }
-        @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media (max-width:920px) { .topbar, .hero { align-items:flex-start; flex-direction:column; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } .stats, .story-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:620px) { .stats, .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
@@ -200,16 +205,20 @@ foreach ($tickets as $ticket) {
         <header class="topbar">
             <a href="index.html"><img src="img/cda-logo-f.svg" alt="Central de Alarmas"></a>
             <nav class="nav" aria-label="Navegacion">
-                <span class="user-chip"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                <span class="role-chip">Modo admin</span>
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link active" href="control-marketing.php">Tablero</a>
                 <a class="admin-link" href="usuarios-marketing.php">Usuarios</a>
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>
                 <a class="public-link" href="seguimiento.php">Seguimiento</a>
-                <a class="public-link" href="perfil-marketing.php">Perfil</a>
-                <a class="session-link" href="logout.php">Cerrar sesión</a>
+                <details class="profile-menu">
+                    <summary><?php echo htmlspecialchars($user['nombre']); ?> · Admin</summary>
+                    <div class="profile-dropdown">
+                        <a href="perfil-marketing.php">Mi perfil</a>
+                        <a href="perfil-marketing.php#configuracion">Configuración</a>
+                        <a class="logout-link" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </details>
             </nav>
         </header>
         <section class="hero">
@@ -220,7 +229,7 @@ foreach ($tickets as $ticket) {
             </div>
         </section>
         <section class="story-strip" aria-label="Flujo admin del ticket">
-            <div class="story-step"><span>1</span><strong>Entrada validada</strong><p>El usuario queda ligado al correo del ticket desde el registro.</p></div>
+            <div class="story-step"><span>1</span><strong>Entrada validada</strong><p>El ticket queda ligado al perfil activo del solicitante.</p></div>
             <div class="story-step"><span>2</span><strong>Prioridad visible</strong><p>El admin revisa urgencia, fecha y etapa sin abrir otra pantalla.</p></div>
             <div class="story-step"><span>3</span><strong>Chat con contexto</strong><p>Las dudas y aprobaciones se guardan directo en el folio.</p></div>
             <div class="story-step"><span>4</span><strong>Cierre trazable</strong><p>La entrega queda documentada con historial y comentarios.</p></div>
