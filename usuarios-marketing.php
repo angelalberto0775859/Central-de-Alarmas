@@ -218,6 +218,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
             <nav class="nav" aria-label="Navegacion">
                 <a class="admin-link" href="panel-marketing.php">Tickets</a>
                 <a class="admin-link" href="control-marketing.php">Tablero</a>
+                <a class="admin-link" href="estadisticas-marketing.php">Estadísticas</a>
                 <a class="admin-link active" href="usuarios-marketing.php">Usuarios</a>
                 <a class="admin-link" href="panel-marketing.php?papelera=1">Basurero</a>
                 <a class="public-link" href="crear-ticket.php">Crear ticket</a>

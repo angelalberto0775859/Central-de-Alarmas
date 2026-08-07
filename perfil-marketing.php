@@ -103,6 +103,7 @@ $tickets = $ticketStmt->fetchAll();
             <nav class="nav" aria-label="Navegacion">
                 <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                 <?php if (cdaMarketingCanAccessBoard($user['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                <?php if (cdaMarketingCanViewAllTickets($user['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageUsers($user['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                 <?php if (cdaMarketingCanManageTrash($user['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                 <a href="crear-ticket.php">Crear ticket</a>

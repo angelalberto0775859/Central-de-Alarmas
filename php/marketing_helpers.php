@@ -313,6 +313,10 @@ function cdaMarketingRouteForUser($user, $requested = '') {
         return cdaMarketingDefaultRouteForRole($role);
     }
 
+    if ($requestedPath === 'estadisticas-marketing.php' && !cdaMarketingCanViewAllTickets($role)) {
+        return cdaMarketingDefaultRouteForRole($role);
+    }
+
     return $requested;
 }
 

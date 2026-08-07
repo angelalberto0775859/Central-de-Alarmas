@@ -341,6 +341,7 @@ if ($folio) {
                 <?php if ($currentUser): ?>
                     <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="panel-marketing.php">Tickets</a><?php endif; ?>
                     <?php if (cdaMarketingCanAccessBoard($currentUser['rol'])): ?><a href="control-marketing.php">Tablero</a><?php endif; ?>
+                    <?php if (cdaMarketingCanViewAllTickets($currentUser['rol'])): ?><a href="estadisticas-marketing.php">Estadísticas</a><?php endif; ?>
                     <?php if (cdaMarketingCanManageUsers($currentUser['rol'])): ?><a href="usuarios-marketing.php">Usuarios</a><?php endif; ?>
                     <?php if (cdaMarketingCanManageTrash($currentUser['rol'])): ?><a href="panel-marketing.php?papelera=1">Basurero</a><?php endif; ?>
                     <a href="crear-ticket.php">Crear ticket</a>

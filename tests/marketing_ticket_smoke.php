@@ -69,6 +69,8 @@ assertSameValue('perfil-marketing.php', cdaMarketingDefaultRouteForRole('usuario
 assertSameValue('control-marketing.php', cdaMarketingDefaultRouteForRole('trabajador'), 'workers land on board');
 assertSameValue('panel-marketing.php', cdaMarketingDefaultRouteForRole('manager'), 'managers land on ticket panel');
 assertSameValue('perfil-marketing.php', cdaMarketingRouteForUser(['rol' => 'usuario'], 'panel-marketing.php'), 'regular users are rerouted away from ticket panel');
+assertSameValue('perfil-marketing.php', cdaMarketingRouteForUser(['rol' => 'usuario'], 'estadisticas-marketing.php'), 'regular users are rerouted away from statistics');
+assertSameValue('estadisticas-marketing.php', cdaMarketingRouteForUser(['rol' => 'manager'], 'estadisticas-marketing.php'), 'managers can access statistics');
 assertSameValue('seguimiento.php?folio=MKT-1#chat', cdaMarketingRouteForUser(['rol' => 'usuario'], 'seguimiento.php?folio=MKT-1#chat'), 'regular users can return to seguimiento with query');
 assertSameValue('Logo-CDA.png', cdaMarketingNormalizeUploadName(' Logo CDA.png '), 'upload names are normalized');
 assertSameValue('Angel Admin', cdaMarketingAssigneeValue('Angel Admin', ['Angel Admin', 'Maria Admin']), 'known admin can be assigned');

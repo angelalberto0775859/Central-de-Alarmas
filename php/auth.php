@@ -68,7 +68,7 @@ function cdaSafeLocalReturnTo($value, $fallback = 'panel-marketing.php') {
         return $fallback;
     }
 
-    $allowed = ['panel-marketing.php', 'control-marketing.php', 'seguimiento.php', 'crear-ticket.php', 'perfil-marketing.php', 'usuarios-marketing.php'];
+    $allowed = ['panel-marketing.php', 'control-marketing.php', 'estadisticas-marketing.php', 'seguimiento.php', 'crear-ticket.php', 'perfil-marketing.php', 'usuarios-marketing.php'];
     $path = parse_url($value, PHP_URL_PATH) ?: $value;
 
     return in_array($path, $allowed, true) ? $value : $fallback;
