@@ -133,13 +133,16 @@ function cdaMarketingTableExists($table) {
     return $cache[$table];
 }
 
-function cdaMarketingColumnExists($table, $column) {
+function cdaMarketingColumnExists($table, $column, $refresh = false) {
     static $cache = [];
     $table = cdaMarketingClean($table);
     $column = cdaMarketingClean($column);
     $key = $table . '.' . $column;
     if ($table === '' || $column === '') return false;
     if (!preg_match('/^[a-zA-Z0-9_]+$/', $table) || !preg_match('/^[a-zA-Z0-9_]+$/', $column)) return false;
+    if ($refresh) {
+        unset($cache[$key]);
+    }
     if (array_key_exists($key, $cache)) return $cache[$key];
 
     try {
@@ -193,7 +196,11 @@ function cdaMarketingEnsureTable($table, $sql) {
 
 function cdaMarketingEnsureColumn($table, $column, $sql) {
     if (!cdaMarketingColumnExists($table, $column)) {
-        return cdaMarketingTryExec($sql);
+        if (!cdaMarketingTryExec($sql)) {
+            return false;
+        }
+
+        return cdaMarketingColumnExists($table, $column, true);
     }
 
     return true;

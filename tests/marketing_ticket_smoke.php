@@ -152,6 +152,8 @@ assertSameValue(true, strpos($schemaSql, 'fecha_entrega_estimada DATE NULL') !==
 assertSameValue(true, strpos($schemaSql, 'CREATE TABLE IF NOT EXISTS marketing_ticket_archivos') !== false, 'install schema creates ticket attachment table idempotently');
 $helpersSource = file_get_contents(__DIR__ . '/../php/marketing_helpers.php');
 assertSameValue(true, strpos($helpersSource, 'cdaMarketingEnsureTable') !== false && strpos($helpersSource, 'marketing_ticket_archivos') !== false, 'ticket schema repair creates attachment table');
+assertSameValue(true, strpos($helpersSource, 'function cdaMarketingColumnExists($table, $column, $refresh = false)') !== false, 'column existence helper can refresh cache after repairs');
+assertSameValue(true, strpos($helpersSource, 'cdaMarketingColumnExists($table, $column, true)') !== false, 'column repair refreshes existence cache');
 assertSameValue(true, strpos($helpersSource, "cdaMarketingEnsureColumn('marketing_ticket_historial', 'usuario_id'") !== false, 'ticket schema repair adds missing history user column');
 assertSameValue(true, strpos($helpersSource, "cdaMarketingTicketInternalRecipientEmails") !== false, 'ticket emails include internal involved recipients');
 assertSameValue(true, strpos($helpersSource, "rol) IN ('manager','trabajador')") !== false, 'assignable users are only managers and workers');
