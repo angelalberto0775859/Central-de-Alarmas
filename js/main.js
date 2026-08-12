@@ -75,6 +75,12 @@ const packageModalData = {
                 image: 'img/Paquetes AJAX/Paquete Essential/Render - Ajax TurretCam - Black - front3 4.png',
                 imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean W.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
+            },
+            {
+                name: 'Placa disuasoria Central de Alarmas de México',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes/placa-disuasoria-central-alarmas..jpeg',
+                description: 'Placa visual de advertencia con la identidad de Central de Alarmas de México para reforzar la presencia de seguridad del inmueble.'
             }
         ]
     },
@@ -132,6 +138,12 @@ const packageModalData = {
                 image: 'img/Paquetes AJAX/Paquete Profesional/Render - Ajax TurretCam - Black - front3 4.png',
                 imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax TurretCam - White - front clean W.png',
                 description: 'Cámara IP de seguridad cableada con tecnología IA, ángulo de visión de 110°, iluminación IR, True WDR, micrófono y PoE/12 V. Para exteriores e interiores.'
+            },
+            {
+                name: 'Placa disuasoria Central de Alarmas de México',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes/placa-disuasoria-central-alarmas..jpeg',
+                description: 'Placa visual de advertencia con la identidad de Central de Alarmas de México para reforzar la presencia de seguridad del inmueble.'
             }
         ]
     },
@@ -189,6 +201,12 @@ const packageModalData = {
                 image: 'img/Paquetes AJAX/Paquete Elite/Render - Black - Ajax DoorBell-front-angled.png',
                 imageWhite: 'img/Paquetes AJAX/Paquetes alta calidad/Render - Ajax DoorBell - White - front angled clean.png',
                 description: 'Video timbre con IA integrada, sensor PIR y control a través de apps.'
+            },
+            {
+                name: 'Placa disuasoria Central de Alarmas de México',
+                badge: 'Cantidad: 1',
+                image: 'img/Paquetes/placa-disuasoria-central-alarmas..jpeg',
+                description: 'Placa visual de advertencia con la identidad de Central de Alarmas de México para reforzar la presencia de seguridad del inmueble.'
             }
         ]
     }
@@ -687,16 +705,50 @@ function openPackageModal(packageKey) {
     document.body.style.overflow = 'hidden';
 }
 
+function getPackageGalleryItems(packageKey, packageData) {
+    if (!packageData || !Array.isArray(packageData.components)) return [];
+
+    const items = [...packageData.components];
+    const systemCard = packageData.showSystemCard === false ? null : (packageData.systemCard || {
+        title: t('packages.ajaxCard.title'),
+        badge: t('packages.ajaxCard.badge'),
+        image: 'img/Apps/ajax-security-system.jpeg',
+        description: t('packages.ajaxCard.description')
+    });
+
+    const plaqueIndex = items.findIndex((item) => item && item.name && item.name.toLowerCase().includes('placa disuasoria'));
+
+    if (systemCard) {
+        const galleryItem = {
+            name: systemCard.title,
+            badge: systemCard.badge,
+            image: systemCard.image,
+            description: systemCard.description
+        };
+
+        if (plaqueIndex >= 0) {
+            items.splice(plaqueIndex + 1, 0, galleryItem);
+        } else {
+            items.push(galleryItem);
+        }
+    }
+
+    return items;
+}
+
 function renderPackageGallerySlide() {
     const modalBody = document.getElementById('modalBody');
     const modalTitle = document.getElementById('modalTitle');
     const packageData = packageModalData[packageGalleryState.packageKey];
     if (!modalBody || !modalTitle || !packageData) return;
 
-    const total = packageData.components.length;
+    const galleryItems = getPackageGalleryItems(packageGalleryState.packageKey, packageData);
+    const total = galleryItems.length;
+    if (total === 0) return;
+
     const currentIndex = ((packageGalleryState.index % total) + total) % total;
     packageGalleryState.index = currentIndex;
-    const component = packageData.components[currentIndex];
+    const component = galleryItems[currentIndex];
     const componentImage = getPackageComponentImage(component, packageGalleryState.packageKey);
     const imageClass = /\.avif$/i.test(componentImage) ? 'package-gallery-img compact-render' : 'package-gallery-img';
 
@@ -715,7 +767,7 @@ function renderPackageGallerySlide() {
                     <button type="button" class="package-gallery-control" onclick="changePackageGallerySlide(-1)" aria-label="${escapeHtml(t('gallery.prev'))}">‹</button>
                     <button type="button" class="package-gallery-control" onclick="changePackageGallerySlide(1)" aria-label="${escapeHtml(t('gallery.next'))}">›</button>
                     <div class="package-gallery-dots" aria-label="${escapeHtml(t('gallery.nav'))}">
-                        ${packageData.components.map((_, index) => `
+                        ${galleryItems.map((_, index) => `
                             <button type="button" class="package-gallery-dot${index === currentIndex ? ' active' : ''}" onclick="goToPackageGallerySlide(${index})" aria-label="${escapeHtml(t('gallery.goTo', { index: index + 1 }))}"></button>
                         `).join('')}
                     </div>
@@ -724,7 +776,17 @@ function renderPackageGallerySlide() {
         </div>
     `;
 
-    preloadPackageGalleryNeighbors(packageData, currentIndex);
+    preloadPackageGalleryNeighbors(packageData, currentIndex, galleryItems);
+}
+
+function preloadPackageGalleryNeighbors(packageData, currentIndex, galleryItems = null) {
+    const items = galleryItems || packageData?.components || [];
+    if (!packageData || !Array.isArray(items)) return;
+    const total = items.length;
+    [currentIndex, currentIndex + 1, currentIndex - 1].forEach((index) => {
+        const component = items[((index % total) + total) % total];
+        if (component) preloadPackageGalleryImage(getPackageComponentImage(component, packageGalleryState.packageKey));
+    });
 }
 
 function preloadPackageGalleryImage(src) {
@@ -741,15 +803,6 @@ function getPackageComponentImage(component, packageKey) {
     if (!component) return '';
     const color = getPackageColor(packageKey);
     return color === 'white' && component.imageWhite ? component.imageWhite : component.image;
-}
-
-function preloadPackageGalleryNeighbors(packageData, currentIndex) {
-    if (!packageData || !Array.isArray(packageData.components)) return;
-    const total = packageData.components.length;
-    [currentIndex, currentIndex + 1, currentIndex - 1].forEach((index) => {
-        const component = packageData.components[((index % total) + total) % total];
-        if (component) preloadPackageGalleryImage(getPackageComponentImage(component, packageGalleryState.packageKey));
-    });
 }
 
 function findPackageKeyFromSwatch(swatch) {

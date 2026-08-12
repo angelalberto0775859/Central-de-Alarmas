@@ -1,0 +1,119 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shieldBg" x1="180" y1="180" x2="1020" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B4A82"/>
+      <stop offset="1" stop-color="#0A2D66"/>
+    </linearGradient>
+    <radialGradient id="dotGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 580) rotate(90) scale(560)">
+      <stop stop-color="#1AA8FF" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#1AA8FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#0D233F" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <path d="M600 60C742 60 868 76 997 144C1014 154 1026 171 1026 190V438C1026 614 961 780 820 899C729 972 655 1039 600 1092C545 1039 471 972 380 899C239 780 174 614 174 438V190C174 171 186 154 203 144C332 76 458 60 600 60Z" fill="#F2F4F6"/>
+    <path d="M600 92C737 92 854 107 972 170C986 178 996 192 996 208V429C996 594 938 744 812 855C734 922 671 980 600 1033C529 980 466 922 388 855C262 744 204 594 204 429V208C204 192 214 178 228 170C346 107 463 92 600 92Z" fill="url(#shieldBg)"/>
+    <path d="M600 92C737 92 854 107 972 170C986 178 996 192 996 208V429C996 594 938 744 812 855C734 922 671 980 600 1033C529 980 466 922 388 855C262 744 204 594 204 429V208C204 192 214 178 228 170C346 107 463 92 600 92Z" opacity="0.9" fill="url(#dotGlow)"/>
+
+    <g opacity="0.8">
+      <circle cx="170" cy="240" r="4" fill="#5DBBFF"/>
+      <circle cx="240" cy="210" r="4" fill="#5DBBFF"/>
+      <circle cx="320" cy="190" r="4" fill="#5DBBFF"/>
+      <circle cx="440" cy="170" r="4" fill="#5DBBFF"/>
+      <circle cx="540" cy="145" r="4" fill="#5DBBFF"/>
+      <circle cx="660" cy="145" r="4" fill="#5DBBFF"/>
+      <circle cx="760" cy="170" r="4" fill="#5DBBFF"/>
+      <circle cx="860" cy="190" r="4" fill="#5DBBFF"/>
+      <circle cx="960" cy="220" r="4" fill="#5DBBFF"/>
+      <circle cx="1025" cy="300" r="4" fill="#5DBBFF"/>
+      <circle cx="1028" cy="410" r="4" fill="#5DBBFF"/>
+      <circle cx="980" cy="520" r="4" fill="#5DBBFF"/>
+      <circle cx="920" cy="610" r="4" fill="#5DBBFF"/>
+      <circle cx="860" cy="690" r="4" fill="#5DBBFF"/>
+      <circle cx="740" cy="810" r="4" fill="#5DBBFF"/>
+      <circle cx="600" cy="860" r="4" fill="#5DBBFF"/>
+      <circle cx="470" cy="810" r="4" fill="#5DBBFF"/>
+      <circle cx="340" cy="700" r="4" fill="#5DBBFF"/>
+      <circle cx="280" cy="610" r="4" fill="#5DBBFF"/>
+      <circle cx="220" cy="520" r="4" fill="#5DBBFF"/>
+      <circle cx="180" cy="410" r="4" fill="#5DBBFF"/>
+      <circle cx="182" cy="300" r="4" fill="#5DBBFF"/>
+    </g>
+
+    <g opacity="0.4">
+      <path d="M214 680C320 620 410 600 520 600C630 600 700 620 810 680" stroke="#BFE4FF" stroke-width="6" stroke-linecap="round"/>
+      <path d="M250 720C320 670 400 650 500 650C590 650 655 670 726 720" stroke="#BFE4FF" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <text x="600" y="240" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700" fill="#F4F8FF" letter-spacing="1">MONITOREADO POR</text>
+
+    <g transform="translate(600 370)">
+      <circle cx="0" cy="0" r="112" fill="#F6C90E" stroke="#F6C90E" stroke-width="18"/>
+      <circle cx="0" cy="0" r="60" fill="#F6C90E" stroke="#0B4A82" stroke-width="18"/>
+      <circle cx="-34" cy="0" r="54" fill="#0B4A82"/>
+      <circle cx="-20" cy="0" r="26" fill="#F6C90E"/>
+      <path d="M-42 0L-82 0" stroke="#F6C90E" stroke-width="18" stroke-linecap="round"/>
+      <path d="M42 0L82 0" stroke="#F6C90E" stroke-width="18" stroke-linecap="round"/>
+      <path d="M-112 0C-136 0 -150 -24 -150 -48C-150 -82 -121 -96 -92 -96H-68" stroke="#F6C90E" stroke-width="18" stroke-linecap="round"/>
+      <path d="M112 0C136 0 150 -24 150 -48C150 -82 121 -96 92 -96H68" stroke="#F6C90E" stroke-width="18" stroke-linecap="round"/>
+    </g>
+
+    <text x="600" y="450" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" fill="#F6C90E" font-size="66">CENTRAL</text>
+    <text x="600" y="520" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" fill="#FFFFFF" font-size="62">DE</text>
+    <text x="600" y="590" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" fill="#F6C90E" font-size="70">ALARMAS</text>
+
+    <text x="600" y="700" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" fill="#F5F9FF" font-size="92">800 953 0058</text>
+    <text x="600" y="760" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="600" fill="#E7F4FF">Central de Alarmas de México S.A. de C.V.</text>
+
+    <g transform="translate(600 820)">
+      <rect x="-170" y="-30" width="340" height="70" rx="12" fill="#F4C228"/>
+      <text x="0" y="16" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" fill="#0B3A64">centraldealarmas.com.mx</text>
+      <rect x="160" y="-16" width="82" height="82" rx="8" fill="#F8F8F8"/>
+      <g transform="translate(170 0) scale(0.75)">
+        <rect x="0" y="0" width="62" height="62" fill="#FFF"/>
+        <g fill="#0A1930">
+          <rect x="8" y="8" width="10" height="10"/>
+          <rect x="20" y="8" width="10" height="10"/>
+          <rect x="32" y="8" width="10" height="10"/>
+          <rect x="44" y="8" width="10" height="10"/>
+          <rect x="8" y="20" width="10" height="10"/>
+          <rect x="32" y="20" width="10" height="10"/>
+          <rect x="44" y="20" width="10" height="10"/>
+          <rect x="8" y="32" width="10" height="10"/>
+          <rect x="20" y="32" width="10" height="10"/>
+          <rect x="32" y="32" width="10" height="10"/>
+          <rect x="44" y="32" width="10" height="10"/>
+          <rect x="20" y="44" width="10" height="10"/>
+          <rect x="44" y="44" width="10" height="10"/>
+        </g>
+      </g>
+    </g>
+
+    <g transform="translate(600 930)">
+      <circle cx="-120" cy="18" r="17" fill="#F4F8FF"/>
+      <path d="M-126 18h12M-120 12v12" stroke="#0A2F69" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="0" cy="18" r="17" fill="#F4F8FF"/>
+      <path d="M-4 22c0-10 8-18 18-18 10 0 18 8 18 18" stroke="#0A2F69" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M8 14h18" stroke="#0A2F69" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="120" cy="18" r="17" fill="#F4F8FF"/>
+      <path d="M110 15h20v16h-20z" stroke="#0A2F69" stroke-width="3" fill="none"/>
+      <path d="M116 22h8" stroke="#0A2F69" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="180" cy="18" r="17" fill="#F4F8FF"/>
+      <path d="M176 12v12M170 18h12" stroke="#0A2F69" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="240" cy="18" r="17" fill="#F4F8FF"/>
+      <rect x="232" y="10" width="16" height="16" rx="3" stroke="#0A2F69" stroke-width="3" fill="none"/>
+      <path d="M236 18h8" stroke="#0A2F69" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <g transform="translate(600 1015)">
+      <rect x="-120" y="-38" width="240" height="78" rx="16" fill="#F3F5F6"/>
+      <rect x="-93" y="-22" width="70" height="46" rx="8" fill="#0A2F69"/>
+      <text x="-58" y="9" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="900" fill="#F4F8FF">GSI</text>
+      <text x="10" y="-5" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800" fill="#0A2F69">UNA EMPRESA DE</text>
+      <text x="10" y="18" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="800" fill="#0A2F69">GRUPO SEGURIDAD INTEGRAL</text>
+    </g>
+  </g>
+</svg>
