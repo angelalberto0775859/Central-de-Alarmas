@@ -386,21 +386,13 @@ function cdaMarketingFetchTicketForUpdate($id) {
 
 function cdaMarketingSaveTicketUpdate($id, $status, $comment, $assignee, $estimatedDelivery) {
     $columns = cdaMarketingTicketOptionalColumns();
-    $sets = ['estado = ?'];
-    $params = [$status];
-
-    if (!empty($columns['respuesta_interna'])) {
-        $sets[] = 'respuesta_interna = ?';
-        $params[] = $comment;
-    }
-    if (!empty($columns['asignado_a'])) {
-        $sets[] = 'asignado_a = ?';
-        $params[] = $assignee;
-    }
-    if (!empty($columns['fecha_entrega_estimada'])) {
-        $sets[] = 'fecha_entrega_estimada = ?';
-        $params[] = $estimatedDelivery;
-    }
+    $sets = [
+        'estado = ?',
+        'respuesta_interna = ?',
+        'asignado_a = ?',
+        'fecha_entrega_estimada = ?',
+    ];
+    $params = [$status, $comment, $assignee, $estimatedDelivery];
 
     $params[] = (int) $id;
     $stmt = cdaDb()->prepare(
@@ -409,18 +401,6 @@ function cdaMarketingSaveTicketUpdate($id, $status, $comment, $assignee, $estima
     $stmt->execute($params);
 
     return $stmt->rowCount();
-}
-
-function cdaMarketingTicketUpdateColumnsReady() {
-    $columns = cdaMarketingTicketOptionalColumns();
-
-    foreach (['asignado_a', 'fecha_entrega_estimada'] as $requiredColumn) {
-        if (empty($columns[$requiredColumn])) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 function cdaMarketingInsertTicketHistorySafe($ticketId, $userId, $status, $comment) {
