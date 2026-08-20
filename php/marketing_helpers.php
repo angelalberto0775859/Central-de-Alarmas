@@ -595,11 +595,11 @@ function cdaMarketingTicketInternalRecipientEmails($ticket = []) {
         $rows = [];
     }
 
-    $assignedName = cdaMarketingClean($ticket['asignado_a'] ?? '');
-    if ($assignedName !== '') {
+    $assignedIdentifier = cdaMarketingClean($ticket['asignado_a'] ?? '');
+    if ($assignedIdentifier !== '') {
         try {
-            $assignedStmt = cdaDb()->prepare("SELECT nombre, correo, rol FROM marketing_usuarios WHERE nombre = ? AND rol IN ('admin','manager','trabajador') AND activo = 1");
-            $assignedStmt->execute([$assignedName]);
+            $assignedStmt = cdaDb()->prepare("SELECT nombre, correo, rol FROM marketing_usuarios WHERE (correo = ? OR nombre = ?) AND rol IN ('admin','manager','trabajador') AND activo = 1");
+            $assignedStmt->execute([$assignedIdentifier, $assignedIdentifier]);
             $rows = array_merge($rows, $assignedStmt->fetchAll());
         } catch (Throwable $e) {
             error_log('No fue posible consultar involucrados del ticket: ' . $e->getMessage());
@@ -755,16 +755,17 @@ function cdaMarketingEnsureUserRoleSchema() {
     $checked = true;
 
     try {
-        $stmt = cdaDb()->query("SHOW COLUMNS FROM marketing_usuarios LIKE 'rol'");
+        $db = cdaDb();
+        $stmt = $db->query("SHOW COLUMNS FROM marketing_usuarios LIKE 'rol'");
         $column = $stmt->fetch();
         $type = strtolower((string) ($column['Type'] ?? ''));
 
         if (strpos($type, "'manager'") === false || strpos($type, "'trabajador'") === false) {
-            $db = cdaDb();
             $db->exec("ALTER TABLE marketing_usuarios MODIFY rol ENUM('admin','usuario','marketing','manager','trabajador') NOT NULL DEFAULT 'usuario'");
-            $db->exec("UPDATE marketing_usuarios SET rol = 'manager' WHERE rol = 'marketing'");
-            $db->exec("ALTER TABLE marketing_usuarios MODIFY rol ENUM('admin','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario'");
         }
+
+        $db->exec("UPDATE marketing_usuarios SET rol = 'manager' WHERE LOWER(rol) = 'marketing'");
+        $db->exec("ALTER TABLE marketing_usuarios MODIFY rol ENUM('admin','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario'");
     } catch (Throwable $e) {
         error_log('No fue posible actualizar el esquema de roles de marketing: ' . $e->getMessage());
     }
@@ -887,17 +888,17 @@ function cdaMarketingAssignableAssigneeValue($value) {
         $hasActiveColumn = cdaMarketingColumnExists('marketing_usuarios', 'activo');
         $activeSql = $hasActiveColumn ? 'AND activo = 1' : '';
         $stmt = cdaDb()->prepare(
-            "SELECT nombre
+            "SELECT nombre, correo
             FROM marketing_usuarios
-            WHERE nombre = ?
+            WHERE (correo = ? OR nombre = ?)
             AND LOWER(rol) IN ('manager','trabajador')
             $activeSql
             LIMIT 1"
         );
-        $stmt->execute([$value]);
+        $stmt->execute([$value, $value]);
         $row = $stmt->fetch();
 
-        return $row ? (string) $row['nombre'] : '';
+        return $row ? (string) $row['correo'] : '';
     } catch (Throwable $e) {
         error_log('No fue posible validar asignable de marketing: ' . $e->getMessage());
         return '';
@@ -1008,8 +1009,37 @@ function cdaMarketingFetchAssignableUsers() {
 function cdaMarketingTicketBelongsToUser($ticket, $user) {
     $assignedTo = cdaMarketingClean($ticket['asignado_a'] ?? '');
     $userName = cdaMarketingClean($user['nombre'] ?? '');
+    $userEmail = strtolower(cdaMarketingClean($user['correo'] ?? ''));
 
-    return $assignedTo !== '' && $userName !== '' && strcasecmp($assignedTo, $userName) === 0;
+    return $assignedTo !== ''
+        && (
+            ($userEmail !== '' && strcasecmp($assignedTo, $userEmail) === 0)
+            || ($userName !== '' && strcasecmp($assignedTo, $userName) === 0)
+        );
+}
+
+function cdaMarketingTicketAssigneeLabel($assignee) {
+    $assignee = cdaMarketingClean($assignee);
+    if ($assignee === '') {
+        return 'Sin asignar';
+    }
+
+    if (strpos($assignee, '@') === false) {
+        return $assignee;
+    }
+
+    try {
+        $stmt = cdaDb()->prepare("SELECT nombre FROM marketing_usuarios WHERE correo = ? OR nombre = ? LIMIT 1");
+        $stmt->execute([$assignee, $assignee]);
+        $row = $stmt->fetch();
+        if ($row && cdaMarketingClean($row['nombre'] ?? '') !== '') {
+            return (string) $row['nombre'];
+        }
+    } catch (Throwable $e) {
+        error_log('No fue posible resolver asignado de marketing: ' . $e->getMessage());
+    }
+
+    return $assignee;
 }
 
 function cdaMarketingTicketAssignmentLabel($ticket, $user = []) {
@@ -1018,7 +1048,7 @@ function cdaMarketingTicketAssignmentLabel($ticket, $user = []) {
         return 'Sin asignar';
     }
 
-    return cdaMarketingTicketBelongsToUser($ticket, $user) ? 'Te toca a ti' : 'Asignado a ' . $assignedTo;
+    return cdaMarketingTicketBelongsToUser($ticket, $user) ? 'Te toca a ti' : 'Asignado a ' . cdaMarketingTicketAssigneeLabel($assignedTo);
 }
 
 function cdaMarketingTicketAssignmentClass($ticket, $user = []) {

@@ -3,6 +3,7 @@ require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/marketing_helpers.php';
 
 $user = cdaRequireLogin();
+cdaMarketingEnsureTicketSchema();
 $message = '';
 $error = '';
 
@@ -36,13 +37,15 @@ function cdaProfileTicketColumns() {
         'actualizado_en',
     ];
 
-    try {
-        $stmt = cdaDb()->query("SHOW COLUMNS FROM marketing_tickets LIKE 'fecha_entrega_estimada'");
-        if ($stmt && $stmt->fetch()) {
-            $columns[] = 'fecha_entrega_estimada';
+    foreach (['fecha_entrega_estimada', 'asignado_a'] as $optionalColumn) {
+        try {
+            $stmt = cdaDb()->query("SHOW COLUMNS FROM marketing_tickets LIKE '" . $optionalColumn . "'");
+            if ($stmt && $stmt->fetch()) {
+                $columns[] = $optionalColumn;
+            }
+        } catch (Throwable $e) {
+            // En hosting sin permisos de SHOW, dejamos la vista operable con las columnas base.
         }
-    } catch (Throwable $e) {
-        // En hosting sin permisos de SHOW, dejamos la vista operable con las columnas base.
     }
 
     return $columns;
@@ -93,6 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // User Ticket Statistics
+$ticketColumns = cdaProfileTicketColumns();
+$hasAssignmentColumn = in_array('asignado_a', $ticketColumns, true);
+$profileTicketWhere = $hasAssignmentColumn
+    ? '(correo = ? OR asignado_a = ? OR asignado_a = ?) AND eliminado_en IS NULL'
+    : 'correo = ? AND eliminado_en IS NULL';
+$profileTicketParams = $hasAssignmentColumn
+    ? [$user['correo'], $user['correo'], $user['nombre']]
+    : [$user['correo']];
+
 $statsStmt = cdaDb()->prepare("
     SELECT
         COUNT(*) AS total,
@@ -100,21 +112,21 @@ $statsStmt = cdaDb()->prepare("
         COALESCE(SUM(CASE WHEN estado IN ('Entregado','Cerrado') THEN 1 ELSE 0 END), 0) AS finalizadas,
         COALESCE(SUM(CASE WHEN prioridad = 'Urgente' AND estado NOT IN ('Entregado','Cerrado','Rechazado') THEN 1 ELSE 0 END), 0) AS urgentes
     FROM marketing_tickets
-    WHERE correo = ? AND eliminado_en IS NULL
+    WHERE $profileTicketWhere
 ");
-$statsStmt->execute([$user['correo']]);
+$statsStmt->execute($profileTicketParams);
 $stats = $statsStmt->fetch() ?: ['total' => 0, 'activas' => 0, 'finalizadas' => 0, 'urgentes' => 0];
 
 // User Tickets List
-$ticketColumns = implode(', ', cdaProfileTicketColumns());
+$ticketColumnsSql = implode(', ', $ticketColumns);
 $ticketStmt = cdaDb()->prepare("
-    SELECT $ticketColumns
+    SELECT $ticketColumnsSql
     FROM marketing_tickets
-    WHERE correo = ? AND eliminado_en IS NULL
+    WHERE $profileTicketWhere
     ORDER BY actualizado_en DESC
     LIMIT 30
 ");
-$ticketStmt->execute([$user['correo']]);
+$ticketStmt->execute($profileTicketParams);
 $tickets = $ticketStmt->fetchAll();
 
 // Role Descriptions

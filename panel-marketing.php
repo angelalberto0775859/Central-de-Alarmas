@@ -418,7 +418,7 @@ if ($statsRow) {
                             <div class="ticket-meta-grid">
                                 <div><span>Correo</span><strong><?php echo htmlspecialchars($ticket['correo']); ?></strong></div>
                                 <div><span>Actualizado</span><strong><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($ticket['actualizado_en']))); ?></strong></div>
-                                <div><span>Asignado</span><strong><?php echo htmlspecialchars($ticket['asignado_a'] ?: 'Sin asignar'); ?></strong></div>
+                                <div><span>Asignado</span><strong><?php echo htmlspecialchars(cdaMarketingTicketAssigneeLabel($ticket['asignado_a'] ?? '')); ?></strong></div>
                                 <div><span>Entrega aproximada</span><strong><?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)); ?></strong></div>
                                 <div><span>Área</span><strong><?php echo htmlspecialchars($ticket['departamento']); ?></strong></div>
                             </div>
@@ -449,8 +449,9 @@ if ($statsRow) {
                                     <?php endif; ?>
                                     <?php foreach ($assignableUsers as $assignableUser): ?>
                                         <?php $adminName = (string) ($assignableUser['nombre'] ?? ''); ?>
+                                        <?php $assigneeValue = (string) ($assignableUser['correo'] ?? $adminName); ?>
                                         <?php $roleLabel = cdaMarketingRoleLabel($assignableUser['rol'] ?? 'usuario'); ?>
-                                        <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName . ' · ' . $roleLabel); ?></option>
+                                        <option value="<?php echo htmlspecialchars($assigneeValue); ?>" <?php echo in_array(($ticket['asignado_a'] ?? ''), [$assigneeValue, $adminName], true) ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName . ' · ' . $roleLabel); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <label class="section-label">Entrega aproximada

@@ -37,6 +37,10 @@ function cdaCurrentUser() {
         return null;
     }
 
+    if (function_exists('cdaMarketingEnsureUserRoleSchema')) {
+        cdaMarketingEnsureUserRoleSchema();
+    }
+
     $stmt = cdaDb()->prepare('SELECT id, nombre, correo, rol, activo FROM marketing_usuarios WHERE id = ? LIMIT 1');
     $stmt->execute([$_SESSION['cda_user_id']]);
     $user = $stmt->fetch();

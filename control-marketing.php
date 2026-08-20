@@ -266,7 +266,7 @@ foreach ($tickets as $ticket) {
                         <span><?php echo htmlspecialchars($ticket['tipo_solicitud']); ?></span>
                         <span>Requerido: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_requerida'])); ?></span>
                         <span>Entrega aproximada: <?php echo htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)); ?></span>
-                        <?php if (!empty($ticket['asignado_a'])): ?><span>Asignado a: <?php echo htmlspecialchars($ticket['asignado_a']); ?></span><?php endif; ?>
+                        <?php if (!empty($ticket['asignado_a'])): ?><span>Asignado a: <?php echo htmlspecialchars(cdaMarketingTicketAssigneeLabel($ticket['asignado_a'])); ?></span><?php endif; ?>
                         <?php if (!empty($ticketFiles[(int) $ticket['id']])): ?>
                             <span class="section-label">Archivos iniciales</span>
                             <div class="ticket-files">
@@ -293,8 +293,9 @@ foreach ($tickets as $ticket) {
                             <?php endif; ?>
                             <?php foreach ($assignableUsers as $assignableUser): ?>
                                 <?php $adminName = (string) ($assignableUser['nombre'] ?? ''); ?>
+                                <?php $assigneeValue = (string) ($assignableUser['correo'] ?? $adminName); ?>
                                 <?php $roleLabel = cdaMarketingRoleLabel($assignableUser['rol'] ?? 'usuario'); ?>
-                                <option value="<?php echo htmlspecialchars($adminName); ?>" <?php echo ($ticket['asignado_a'] ?? '') === $adminName ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName . ' · ' . $roleLabel); ?></option>
+                                <option value="<?php echo htmlspecialchars($assigneeValue); ?>" <?php echo in_array(($ticket['asignado_a'] ?? ''), [$assigneeValue, $adminName], true) ? 'selected' : ''; ?>><?php echo htmlspecialchars($adminName . ' · ' . $roleLabel); ?></option>
                             <?php endforeach; ?>
                         </select>
                         <label class="section-label">Entrega aproximada
