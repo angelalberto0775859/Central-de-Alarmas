@@ -411,6 +411,18 @@ function cdaMarketingSaveTicketUpdate($id, $status, $comment, $assignee, $estima
     return $stmt->rowCount();
 }
 
+function cdaMarketingTicketUpdateColumnsReady() {
+    $columns = cdaMarketingTicketOptionalColumns();
+
+    foreach (['asignado_a', 'fecha_entrega_estimada'] as $requiredColumn) {
+        if (empty($columns[$requiredColumn])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function cdaMarketingInsertTicketHistorySafe($ticketId, $userId, $status, $comment) {
     try {
         cdaMarketingEnsureTicketSchema();

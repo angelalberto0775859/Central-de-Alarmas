@@ -38,6 +38,10 @@ if ($asignadoRaw !== '' && $asignado === '') {
 
 try {
     $db = cdaDb();
+    if (!cdaMarketingTicketUpdateColumnsReady()) {
+        cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No se pudo guardar asignacion o fecha estimada: falta actualizar la base de datos. Ejecuta db/repair_marketing_schema.sql en el hosting.', 'error', $ticketFragment);
+    }
+
     $ticket = cdaMarketingFetchTicketForUpdate($id);
     if (!$ticket) {
         cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No encontramos ese ticket o ya fue eliminado.', 'error', $ticketFragment);

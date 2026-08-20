@@ -165,6 +165,8 @@ assertSameValue(true, strpos($helpersSource, "UPDATE marketing_usuarios SET rol 
 assertSameValue(true, strpos($helpersSource, 'No fue posible consultar asignables') !== false, 'assignable user query logs failures');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingAssignableAssigneeValue') !== false, 'assignment validation is independent from rendered options');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingTicketAssigneeLabel') !== false, 'assignment labels resolve assigned email to display name');
+assertSameValue(true, strpos($helpersSource, 'function cdaMarketingTicketUpdateColumnsReady') !== false, 'ticket update checks required assignment and delivery columns');
+assertSameValue(true, strpos($helpersSource, "['asignado_a', 'fecha_entrega_estimada']") !== false, 'ticket updates require assignee and estimated delivery columns');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingSaveTicketUpdate') !== false, 'ticket update helper centralizes resilient saves');
 assertSameValue(true, strpos($helpersSource, 'function cdaMarketingInsertTicketHistorySafe') !== false, 'ticket history insert does not block ticket saves');
 $ticketUpdateSource = file_get_contents(__DIR__ . '/../ticket-actualizar.php');
@@ -173,12 +175,17 @@ assertSameValue(true, strpos($authSource, 'cdaMarketingEnsureUserRoleSchema') !=
 assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingSaveTicketUpdate') !== false, 'ticket update endpoint uses resilient save helper');
 assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingAssignableAssigneeValue') !== false, 'ticket update endpoint validates assignee from database');
 assertSameValue(true, strpos($ticketUpdateSource, 'No se pudo asignar') !== false, 'ticket update endpoint rejects invalid assignment instead of clearing it');
+assertSameValue(true, strpos($ticketUpdateSource, 'cdaMarketingTicketUpdateColumnsReady') !== false, 'ticket update refuses success when assignment schema is missing');
+assertSameValue(true, strpos($ticketUpdateSource, 'db/repair_marketing_schema.sql') !== false, 'ticket update tells admins which SQL repair to run');
 assertSameValue(true, strpos($panelHtml, 'value="<?php echo htmlspecialchars($assigneeValue); ?>"') !== false, 'panel posts assignee email instead of display name');
 assertSameValue(true, strpos($controlHtml, 'value="<?php echo htmlspecialchars($assigneeValue); ?>"') !== false, 'board posts assignee email instead of display name');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSyncUserTicketEmail') !== false, 'users page updates ticket requester emails when user email changes');
 assertSameValue(true, strpos($usersHtml, 'cdaMarketingSendPasswordChangedEmail') !== false, 'users page emails users when password changes');
 $fixedRolesSql = file_get_contents(__DIR__ . '/../db/marketing_fixed_user_roles.sql');
 assertSameValue(true, strpos($fixedRolesSql, "ENUM('admin','usuario','manager','trabajador')") !== false, 'fixed roles migration updates user role enum');
+$repairSql = file_get_contents(__DIR__ . '/../db/repair_marketing_schema.sql');
+assertSameValue(true, strpos($repairSql, "ENUM('admin','usuario','marketing','manager','trabajador')") !== false, 'repair SQL temporarily allows legacy marketing role');
+assertSameValue(true, strpos($repairSql, "UPDATE marketing_usuarios SET rol = 'manager' WHERE LOWER(rol) = 'marketing'") !== false, 'repair SQL converts legacy marketing users before final enum cleanup');
 
 $singleUpload = cdaMarketingNormalizeFileUpload([
     'name' => 'brief.pdf',

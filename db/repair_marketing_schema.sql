@@ -153,6 +153,11 @@ ALTER TABLE marketing_usuarios
     ADD COLUMN IF NOT EXISTS activo TINYINT(1) NOT NULL DEFAULT 1;
 
 ALTER TABLE marketing_usuarios
+    MODIFY rol ENUM('admin','usuario','marketing','manager','trabajador') NOT NULL DEFAULT 'usuario';
+
+UPDATE marketing_usuarios SET rol = 'manager' WHERE LOWER(rol) = 'marketing';
+
+ALTER TABLE marketing_usuarios
     MODIFY rol ENUM('admin','usuario','manager','trabajador') NOT NULL DEFAULT 'usuario';
 
 INSERT INTO marketing_usuarios (nombre, correo, password_hash, rol, activo)
