@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </html>";
 
     // Enviar correo
-    if (mail($destinatario, $asunto, $mensajeHTML, $headers, '-f' . $destinatario)) {
+    if (mail($destinatario, $asunto, $mensajeHTML, $headers)) {
         responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
     } else {
         responder(false, 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');

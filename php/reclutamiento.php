@@ -146,7 +146,7 @@ if ($archivoAdjunto) {
     $cuerpo = $mensajeHTML;
 }
 
-if (mail($destinatario, $asunto, $cuerpo, implode("\r\n", $headers), '-f' . $destinatario)) {
+if (mail($destinatario, $asunto, $cuerpo, implode("\r\n", $headers))) {
     responder(true, 'Tu postulacion fue enviada correctamente. Reclutamiento revisara tu perfil.');
 }
 
