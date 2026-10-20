@@ -716,6 +716,39 @@ $user = cdaRequireLogin();
             cursor: pointer;
         }
 
+        .ticket-dialog {
+            width: min(460px, calc(100% - 2rem));
+            margin: auto;
+            border: 0;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            background: var(--white);
+            color: var(--ink);
+            box-shadow: var(--shadow);
+        }
+
+        .ticket-dialog::backdrop {
+            background: rgba(6, 57, 112, 0.45);
+        }
+
+        .ticket-dialog .success-icon {
+            display: grid;
+            place-items: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(16,185,129,0.12);
+            color: #047857;
+            font-size: 1.6rem;
+            font-weight: 900;
+        }
+
+        .ticket-dialog .success-actions a {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: var(--white);
+        }
+
         @media (max-width: 900px) {
             .hero-grid,
             .workspace {
@@ -1033,6 +1066,8 @@ $user = cdaRequireLogin();
         </main>
     </div>
 
+    <dialog class="ticket-dialog" id="ticketDialog" aria-labelledby="ticketDialogTitle"></dialog>
+
     <script>
         const ticketNumber = document.getElementById('ticketNumber');
         const form = document.getElementById('marketingTicketForm');
@@ -1091,10 +1126,15 @@ $user = cdaRequireLogin();
             });
         });
 
+        // El reset que hace el envio exitoso no debe ocultar la confirmacion.
+        let keepNoticeOnReset = false;
+
         form.addEventListener('reset', () => {
+            const keepNotice = keepNoticeOnReset;
+            keepNoticeOnReset = false;
             setTimeout(() => {
                 fileList.textContent = 'Sin archivos seleccionados';
-                successNotice.className = 'notice';
+                if (!keepNotice) successNotice.className = 'notice';
                 updatePreview();
             }, 0);
         });
@@ -1128,16 +1168,39 @@ $user = cdaRequireLogin();
 	                        <div class="success-folio">${data.folio}</div>
 	                        <div class="success-actions">
 	                            <a href="${data.seguimiento}">Abrir seguimiento y chat</a>
-	                            <button type="button" id="copyFolio">Copiar folio</button>
+	                            <button type="button" data-copy-folio>Copiar folio</button>
 	                        </div>
 	                    </div>
                 `;
                 successNotice.className = 'notice visible';
-                const copyButton = document.getElementById('copyFolio');
-                copyButton?.addEventListener('click', async () => {
-                    await navigator.clipboard.writeText(data.folio);
-                    copyButton.textContent = 'Folio copiado';
+
+                const ticketDialog = document.getElementById('ticketDialog');
+                ticketDialog.innerHTML = `
+                    <div class="success-card">
+                        <div class="success-icon" aria-hidden="true">✓</div>
+                        <h3 id="ticketDialogTitle">¡Ticket creado correctamente!</h3>
+                        <p>Tu solicitud ya está con el equipo de Marketing. Este es tu folio:</p>
+                        <div class="success-folio">${data.folio}</div>
+                        <div class="success-actions">
+                            <a href="${data.seguimiento}">Ver seguimiento y chat</a>
+                            <button type="button" data-copy-folio>Copiar folio</button>
+                            <button type="button" data-close-dialog>Cerrar</button>
+                        </div>
+                    </div>
+                `;
+                document.querySelectorAll('[data-copy-folio]').forEach((copyButton) => {
+                    copyButton.addEventListener('click', async () => {
+                        await navigator.clipboard.writeText(data.folio);
+                        copyButton.textContent = 'Folio copiado';
+                    });
                 });
+                ticketDialog.querySelector('[data-close-dialog]').addEventListener('click', () => ticketDialog.close());
+                ticketDialog.addEventListener('click', (dialogEvent) => {
+                    if (dialogEvent.target === ticketDialog) ticketDialog.close();
+                });
+                ticketDialog.showModal();
+
+                keepNoticeOnReset = true;
                 form.reset();
                 fileList.textContent = 'Sin archivos seleccionados';
                 updatePreview();
