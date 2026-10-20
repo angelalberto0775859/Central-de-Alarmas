@@ -556,8 +556,8 @@ function cdaMarketingTicketUrl($folio) {
     return rtrim(CDA_SITE_URL, '/') . '/seguimiento.php?folio=' . urlencode((string) $folio) . '#chat';
 }
 
-function cdaMarketingMailHeaders($replyTo = 'no-reply@centraldealarmas.com.mx') {
-    $replyTo = filter_var($replyTo, FILTER_VALIDATE_EMAIL) ?: 'no-reply@centraldealarmas.com.mx';
+function cdaMarketingMailHeaders($replyTo = CDA_MAIL_FROM) {
+    $replyTo = filter_var($replyTo, FILTER_VALIDATE_EMAIL) ?: CDA_MAIL_FROM;
 
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -567,10 +567,88 @@ function cdaMarketingMailHeaders($replyTo = 'no-reply@centraldealarmas.com.mx') 
     return $headers;
 }
 
+function cdaMarketingSmtpCommand($socket, $command, array $expectedCodes) {
+    if ($command !== null) {
+        fwrite($socket, $command . "\r\n");
+    }
+
+    $response = '';
+    while (($line = fgets($socket, 515)) !== false) {
+        $response .= $line;
+        // Las respuestas multilinea usan "250-"; la ultima linea usa "250 ".
+        if (strlen($line) < 4 || $line[3] !== '-') {
+            break;
+        }
+    }
+
+    if (!in_array((int) substr($response, 0, 3), $expectedCodes, true)) {
+        throw new RuntimeException('SMTP respondio: ' . trim($response));
+    }
+
+    return $response;
+}
+
+function cdaMarketingSmtpSend($to, $subject, $message, $headers) {
+    $secure = strtolower(CDA_SMTP_SECURE);
+    $context = stream_context_create(['ssl' => ['peer_name' => CDA_SMTP_PEER_NAME]]);
+    $address = ($secure === 'ssl' ? 'ssl://' : 'tcp://') . CDA_SMTP_HOST . ':' . CDA_SMTP_PORT;
+    $socket = stream_socket_client($address, $errno, $errstr, 20, STREAM_CLIENT_CONNECT, $context);
+    if (!$socket) {
+        throw new RuntimeException('No fue posible conectar a SMTP: ' . $errstr);
+    }
+    stream_set_timeout($socket, 20);
+
+    try {
+        $host = parse_url(CDA_SITE_URL, PHP_URL_HOST) ?: 'localhost';
+        cdaMarketingSmtpCommand($socket, null, [220]);
+        cdaMarketingSmtpCommand($socket, 'EHLO ' . $host, [250]);
+
+        if ($secure === 'tls') {
+            cdaMarketingSmtpCommand($socket, 'STARTTLS', [220]);
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new RuntimeException('No fue posible iniciar TLS con SMTP.');
+            }
+            cdaMarketingSmtpCommand($socket, 'EHLO ' . $host, [250]);
+        }
+
+        cdaMarketingSmtpCommand($socket, 'AUTH LOGIN', [334]);
+        cdaMarketingSmtpCommand($socket, base64_encode(CDA_SMTP_USER), [334]);
+        cdaMarketingSmtpCommand($socket, base64_encode(CDA_SMTP_PASS), [235]);
+        cdaMarketingSmtpCommand($socket, 'MAIL FROM:<' . CDA_MAIL_FROM . '>', [250]);
+        cdaMarketingSmtpCommand($socket, 'RCPT TO:<' . $to . '>', [250, 251]);
+        cdaMarketingSmtpCommand($socket, 'DATA', [354]);
+
+        $data = 'Date: ' . date('r') . "\r\n";
+        $data .= 'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . substr(strrchr(CDA_MAIL_FROM, '@'), 1) . ">\r\n";
+        $data .= 'To: <' . $to . ">\r\n";
+        $data .= 'Subject: =?UTF-8?B?' . base64_encode($subject) . "?=\r\n";
+        $data .= rtrim($headers, "\r\n") . "\r\n\r\n";
+        $body = preg_replace("/\r\n|\r|\n/", "\r\n", $message);
+        // Una linea que empieza con punto se duplica para no cerrar el DATA.
+        $data .= preg_replace('/^\./m', '..', $body);
+
+        cdaMarketingSmtpCommand($socket, $data . "\r\n.", [250]);
+        cdaMarketingSmtpCommand($socket, 'QUIT', [221]);
+    } finally {
+        fclose($socket);
+    }
+
+    return true;
+}
+
 function cdaMarketingMail($to, $subject, $message, $headers) {
-    // El remitente de sobre (-f) debe ser del dominio para pasar SPF; sin el,
-    // el servidor usa usuario@host y muchos buzones descartan el correo.
-    $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
+    if (CDA_SMTP_PASS !== '') {
+        try {
+            $sent = cdaMarketingSmtpSend($to, $subject, $message, $headers);
+        } catch (Throwable $e) {
+            error_log('Error SMTP de marketing: ' . $e->getMessage());
+            $sent = false;
+        }
+    } else {
+        // El remitente de sobre (-f) debe ser del dominio para pasar SPF; sin el,
+        // el servidor usa usuario@host y muchos buzones descartan el correo.
+        $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
+    }
     // Se registra cada intento para poder rastrear correos que no llegan.
     error_log(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
 
