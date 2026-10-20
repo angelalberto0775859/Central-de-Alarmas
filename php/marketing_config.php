@@ -43,7 +43,7 @@ defined('CDA_SITE_URL') || define('CDA_SITE_URL', rtrim(cdaConfigValue('CDA_SITE
 // (separados por coma), ademas de admins, managers y el asignado.
 defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'notificaciones@centraldealarmaspromo.com'));
 defined('CDA_MAIL_REPLY_TO') || define('CDA_MAIL_REPLY_TO', cdaConfigValue('CDA_MAIL_REPLY_TO', 'marketing@centraldealarmas.com.mx'));
-defined('CDA_MARKETING_NOTIFY_EMAILS') || define('CDA_MARKETING_NOTIFY_EMAILS', cdaConfigValue('CDA_MARKETING_NOTIFY_EMAILS', 'marketing@centraldealarmas.com.mx'));
+defined('CDA_MARKETING_NOTIFY_EMAILS') || define('CDA_MARKETING_NOTIFY_EMAILS', cdaConfigValue('CDA_MARKETING_NOTIFY_EMAILS', 'marketing@centraldealarmas.com.mx,rvillaverde@centraldealarmas.com.mx'));
 
 // SMTP autenticado de Hostinger con el buzon CDA_MAIL_FROM. Si no hay password
 // configurado se usa mail() de PHP.
