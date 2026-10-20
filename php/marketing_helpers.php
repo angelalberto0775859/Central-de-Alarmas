@@ -636,13 +636,20 @@ function cdaMarketingSmtpSend($to, $subject, $message, $headers) {
     return true;
 }
 
+function cdaMarketingMailLog($line) {
+    error_log($line);
+    // Copia en un archivo fuera de public_html (no accesible desde la web) para
+    // revisarlo desde el Administrador de archivos de Hostinger.
+    @file_put_contents(dirname(__DIR__, 2) . '/correo-marketing.log', date('Y-m-d H:i:s') . ' ' . $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
 function cdaMarketingMail($to, $subject, $message, $headers) {
     $sent = false;
     if (CDA_SMTP_PASS !== '') {
         try {
             $sent = cdaMarketingSmtpSend($to, $subject, $message, $headers);
         } catch (Throwable $e) {
-            error_log('Error SMTP de marketing, se intenta con mail(): ' . $e->getMessage());
+            cdaMarketingMailLog('Error SMTP de marketing, se intenta con mail(): ' . $e->getMessage());
         }
     }
 
@@ -652,7 +659,7 @@ function cdaMarketingMail($to, $subject, $message, $headers) {
         $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
     }
     // Se registra cada intento para poder rastrear correos que no llegan.
-    error_log(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
+    cdaMarketingMailLog(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
 
     return $sent;
 }
