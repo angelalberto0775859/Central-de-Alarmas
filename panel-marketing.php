@@ -311,6 +311,8 @@ if ($statsRow) {
         .chat-meta { display:flex; justify-content:space-between; gap:.5rem; color:var(--muted); font-size:.7rem; font-weight:850; }
         .chat-message p { margin-top:.28rem; color:var(--ink); font-size:.84rem; line-height:1.5; }
         .chat-form { display:grid; gap:.5rem; }
+        .chat-form button { justify-self:end; background:var(--blue); color:#fff; border-color:var(--blue); }
+        .chat-form button:hover { background:var(--blue-2); }
         .chat-files { display:grid; gap:.35rem; margin-top:.42rem; }
         .chat-file { display:inline-flex; width:fit-content; border-radius:6px; padding:.34rem .48rem; background:#eef4fb; color:var(--blue); font-size:.72rem; font-weight:850; text-decoration:none; }
         .ticket-files { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
