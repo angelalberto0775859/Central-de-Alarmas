@@ -662,6 +662,18 @@ function cdaMarketingMail($to, $subject, $message, $headers) {
             cdaMarketingMailLog('mail() con -f rechazado, se reintenta sin -f');
             $sent = mail($to, $subject, $message, $headers);
         }
+
+        $siteHost = preg_replace('/^www\./', '', strtolower((string) ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '')));
+        $hostSender = 'no-reply@' . $siteHost;
+        if (!$sent && $siteHost !== '' && filter_var($hostSender, FILTER_VALIDATE_EMAIL) && $hostSender !== CDA_MAIL_FROM) {
+            // Hostinger solo acepta remitentes de dominios del hosting; el sitio
+            // vive en otro dominio que el correo, asi que se envia desde el del
+            // sitio y las respuestas siguen yendo a CDA_MAIL_FROM.
+            cdaMarketingMailLog('mail() rechazado con ' . CDA_MAIL_FROM . ', se reintenta desde ' . $hostSender);
+            $hostHeaders = preg_replace('/^From: .*$/m', 'From: Central de Alarmas <' . $hostSender . ">\r", $headers);
+            $sent = mail($to, $subject, $message, $hostHeaders, '-f' . $hostSender)
+                || mail($to, $subject, $message, $hostHeaders);
+        }
     }
     // Se registra cada intento para poder rastrear correos que no llegan.
     cdaMarketingMailLog(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
