@@ -1,6 +1,9 @@
 <?php
 // Configuración
 $destinatario = 'salducin@centraldealarmas.com.mx';
+// Hostinger solo envia con remitentes de dominios del hosting (el sitio vive en
+// centraldealarmas.website); el buzon destino sigue en centraldealarmas.com.mx.
+$remitente = 'no-reply@centraldealarmas.website';
 $asunto = 'Nuevo Mensaje de Contacto Empresarial - Central de Alarmas';
 
 require_once __DIR__ . '/recaptcha.php';
@@ -18,7 +21,7 @@ function responder($exito, $mensaje) {
 // Cabeceras para correo HTML
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-$headers .= 'From: ' . $destinatario . "\r\n";
+$headers .= 'From: Central de Alarmas <' . $remitente . ">\r\n";
 $headers .= 'Reply-To: ' . $destinatario . "\r\n";
 $headers .= 'X-Mailer: PHP/' . phpversion();
 

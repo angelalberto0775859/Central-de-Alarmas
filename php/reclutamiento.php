@@ -1,5 +1,8 @@
 <?php
 $destinatario = 'reclutamiento@centraldealarmas.com.mx';
+// Hostinger solo envia con remitentes de dominios del hosting (el sitio vive en
+// centraldealarmas.website); el buzon destino sigue en centraldealarmas.com.mx.
+$remitente = 'no-reply@centraldealarmas.website';
 
 require_once __DIR__ . '/recaptcha.php';
 
@@ -124,7 +127,7 @@ $mensajeHTML = "
 
 $headers = [];
 $headers[] = 'MIME-Version: 1.0';
-$headers[] = 'From: Central de Alarmas <' . $destinatario . '>';
+$headers[] = 'From: Central de Alarmas <' . $remitente . '>';
 $headers[] = 'Reply-To: ' . $datos['correo'];
 
 if ($archivoAdjunto) {
