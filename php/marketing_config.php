@@ -37,6 +37,11 @@ defined('CDA_DB_PASS') || define('CDA_DB_PASS', cdaConfigValue('CDA_DB_PASS'));
 // Dominio final, sin slash al final. Ejemplo: https://centraldealarmas.com.mx
 defined('CDA_SITE_URL') || define('CDA_SITE_URL', rtrim(cdaConfigValue('CDA_SITE_URL', 'https://centraldealarmas.com.mx'), '/'));
 
+// Remitente de los correos del panel y buzones que siempre reciben avisos de
+// tickets (separados por coma), ademas de admins, managers y el asignado.
+defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'no-reply@centraldealarmas.com.mx'));
+defined('CDA_MARKETING_NOTIFY_EMAILS') || define('CDA_MARKETING_NOTIFY_EMAILS', cdaConfigValue('CDA_MARKETING_NOTIFY_EMAILS', 'marketing@centraldealarmas.com.mx'));
+
 // Google OAuth es opcional. Crea credenciales en Google Cloud y pega aqui.
 defined('CDA_GOOGLE_CLIENT_ID') || define('CDA_GOOGLE_CLIENT_ID', cdaConfigValue('CDA_GOOGLE_CLIENT_ID'));
 defined('CDA_GOOGLE_CLIENT_SECRET') || define('CDA_GOOGLE_CLIENT_SECRET', cdaConfigValue('CDA_GOOGLE_CLIENT_SECRET'));

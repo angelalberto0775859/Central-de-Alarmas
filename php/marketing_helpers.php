@@ -561,10 +561,20 @@ function cdaMarketingMailHeaders($replyTo = 'no-reply@centraldealarmas.com.mx') 
 
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Central de Alarmas <no-reply@centraldealarmas.com.mx>\r\n";
+    $headers .= "From: Central de Alarmas <" . CDA_MAIL_FROM . ">\r\n";
     $headers .= "Reply-To: " . $replyTo . "\r\n";
 
     return $headers;
+}
+
+function cdaMarketingMail($to, $subject, $message, $headers) {
+    // El remitente de sobre (-f) debe ser del dominio para pasar SPF; sin el,
+    // el servidor usa usuario@host y muchos buzones descartan el correo.
+    $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
+    // Se registra cada intento para poder rastrear correos que no llegan.
+    error_log(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
+
+    return $sent;
 }
 
 function cdaMarketingUniqueEmails(array $emails) {
@@ -577,6 +587,10 @@ function cdaMarketingUniqueEmails(array $emails) {
     }
 
     return array_values($unique);
+}
+
+function cdaMarketingNotifyEmails() {
+    return cdaMarketingUniqueEmails(explode(',', CDA_MARKETING_NOTIFY_EMAILS));
 }
 
 function cdaMarketingTicketInternalRecipientEmails($ticket = []) {
@@ -598,15 +612,17 @@ function cdaMarketingTicketInternalRecipientEmails($ticket = []) {
         }
     }
 
-    return cdaMarketingUniqueEmails(array_map(function ($row) {
+    $emails = array_map(function ($row) {
         return $row['correo'] ?? '';
-    }, $rows));
+    }, $rows);
+
+    return cdaMarketingUniqueEmails(array_merge(cdaMarketingNotifyEmails(), $emails));
 }
 
 function cdaMarketingSendHtmlMailToMany(array $recipients, $subject, $message, $headers) {
     $sent = false;
     foreach (cdaMarketingUniqueEmails($recipients) as $email) {
-        $sent = mail($email, $subject, $message, $headers) || $sent;
+        $sent = cdaMarketingMail($email, $subject, $message, $headers) || $sent;
     }
 
     return $sent;
@@ -941,7 +957,7 @@ function cdaMarketingSendPasswordResetEmail($user, $token) {
     </body>
     </html>';
 
-    return mail($email, $subject, $message, cdaMarketingMailHeaders());
+    return cdaMarketingMail($email, $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingSendPasswordChangedEmail($user) {
@@ -971,7 +987,7 @@ function cdaMarketingSendPasswordChangedEmail($user) {
     </body>
     </html>';
 
-    return mail($email, $subject, $message, cdaMarketingMailHeaders());
+    return cdaMarketingMail($email, $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingFetchAssignableAdmins() {
@@ -1227,7 +1243,7 @@ function cdaMarketingSendChatEmail($ticket, $authorName, $messageText, array $fi
     </body>
     </html>';
 
-    return mail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
+    return cdaMarketingMail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
 }
 
 function cdaMarketingSendChatAdminEmail($ticket, $authorName, $messageText, array $files = []) {

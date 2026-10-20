@@ -120,7 +120,7 @@ function cdaMarketingNotifyRequester($ticket, $files) {
         'Abrir seguimiento y chat'
     );
 
-    mail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
+    cdaMarketingMail($ticket['correo'], $subject, $message, cdaMarketingMailHeaders());
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
