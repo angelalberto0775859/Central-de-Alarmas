@@ -37,18 +37,20 @@ defined('CDA_DB_PASS') || define('CDA_DB_PASS', cdaConfigValue('CDA_DB_PASS'));
 // Dominio final, sin slash al final. Ejemplo: https://centraldealarmas.com.mx
 defined('CDA_SITE_URL') || define('CDA_SITE_URL', rtrim(cdaConfigValue('CDA_SITE_URL', 'https://centraldealarmas.com.mx'), '/'));
 
-// Remitente de los correos del panel y buzones que siempre reciben avisos de
-// tickets (separados por coma), ademas de admins, managers y el asignado.
-defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'marketing@centraldealarmas.com.mx'));
+// Remitente de los correos del panel y formularios. Debe ser un buzon creado en
+// Hostinger (dominio del sitio); las respuestas van a CDA_MAIL_REPLY_TO.
+// CDA_MARKETING_NOTIFY_EMAILS son buzones que siempre reciben avisos de tickets
+// (separados por coma), ademas de admins, managers y el asignado.
+defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'no-reply@centraldealarmas.website'));
+defined('CDA_MAIL_REPLY_TO') || define('CDA_MAIL_REPLY_TO', cdaConfigValue('CDA_MAIL_REPLY_TO', 'marketing@centraldealarmas.com.mx'));
 defined('CDA_MARKETING_NOTIFY_EMAILS') || define('CDA_MARKETING_NOTIFY_EMAILS', cdaConfigValue('CDA_MARKETING_NOTIFY_EMAILS', 'marketing@centraldealarmas.com.mx'));
 
-// SMTP autenticado del correo del dominio (carrierzone). Si no hay password
-// configurado se usa mail() de PHP. El certificado del servidor es
-// *.carrierzone.com, por eso se valida contra CDA_SMTP_PEER_NAME.
-defined('CDA_SMTP_HOST') || define('CDA_SMTP_HOST', cdaConfigValue('CDA_SMTP_HOST', 'smtp.centraldealarmas.com.mx'));
+// SMTP autenticado de Hostinger con el buzon CDA_MAIL_FROM. Si no hay password
+// configurado se usa mail() de PHP.
+defined('CDA_SMTP_HOST') || define('CDA_SMTP_HOST', cdaConfigValue('CDA_SMTP_HOST', 'smtp.hostinger.com'));
 defined('CDA_SMTP_PORT') || define('CDA_SMTP_PORT', (int) cdaConfigValue('CDA_SMTP_PORT', '465'));
 defined('CDA_SMTP_SECURE') || define('CDA_SMTP_SECURE', cdaConfigValue('CDA_SMTP_SECURE', 'ssl'));
-defined('CDA_SMTP_PEER_NAME') || define('CDA_SMTP_PEER_NAME', cdaConfigValue('CDA_SMTP_PEER_NAME', 'smtp.carrierzone.com'));
+defined('CDA_SMTP_PEER_NAME') || define('CDA_SMTP_PEER_NAME', cdaConfigValue('CDA_SMTP_PEER_NAME', CDA_SMTP_HOST));
 defined('CDA_SMTP_USER') || define('CDA_SMTP_USER', cdaConfigValue('CDA_SMTP_USER', CDA_MAIL_FROM));
 defined('CDA_SMTP_PASS') || define('CDA_SMTP_PASS', cdaConfigValue('CDA_SMTP_PASS'));
 

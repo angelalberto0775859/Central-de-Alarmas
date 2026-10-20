@@ -1,12 +1,10 @@
 <?php
 // Configuración
 $destinatario = 'salducin@centraldealarmas.com.mx';
-// Hostinger solo envia con remitentes de dominios del hosting (el sitio vive en
-// centraldealarmas.website); el buzon destino sigue en centraldealarmas.com.mx.
-$remitente = 'no-reply@centraldealarmas.website';
 $asunto = 'Nuevo Mensaje de Contacto Empresarial - Central de Alarmas';
 
 require_once __DIR__ . '/recaptcha.php';
+require_once __DIR__ . '/mailer.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 
@@ -21,7 +19,7 @@ function responder($exito, $mensaje) {
 // Cabeceras para correo HTML
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-$headers .= 'From: Central de Alarmas <' . $remitente . ">\r\n";
+$headers .= 'From: Central de Alarmas <' . CDA_MAIL_FROM . ">\r\n";
 $headers .= 'Reply-To: ' . $destinatario . "\r\n";
 $headers .= 'X-Mailer: PHP/' . phpversion();
 
@@ -140,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </html>";
 
     // Enviar correo
-    if (mail($destinatario, $asunto, $mensajeHTML, $headers)) {
+    if (cdaMarketingMail($destinatario, $asunto, $mensajeHTML, $headers)) {
         responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
     } else {
         responder(false, 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');

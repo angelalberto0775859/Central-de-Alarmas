@@ -1,10 +1,8 @@
 <?php
 $destinatario = 'reclutamiento@centraldealarmas.com.mx';
-// Hostinger solo envia con remitentes de dominios del hosting (el sitio vive en
-// centraldealarmas.website); el buzon destino sigue en centraldealarmas.com.mx.
-$remitente = 'no-reply@centraldealarmas.website';
 
 require_once __DIR__ . '/recaptcha.php';
+require_once __DIR__ . '/mailer.php';
 
 function limpiarCampo($valor) {
     return htmlspecialchars(trim(stripslashes($valor ?? '')), ENT_QUOTES, 'UTF-8');
@@ -127,7 +125,7 @@ $mensajeHTML = "
 
 $headers = [];
 $headers[] = 'MIME-Version: 1.0';
-$headers[] = 'From: Central de Alarmas <' . $remitente . '>';
+$headers[] = 'From: Central de Alarmas <' . CDA_MAIL_FROM . '>';
 $headers[] = 'Reply-To: ' . $datos['correo'];
 
 if ($archivoAdjunto) {
@@ -149,7 +147,7 @@ if ($archivoAdjunto) {
     $cuerpo = $mensajeHTML;
 }
 
-if (mail($destinatario, $asunto, $cuerpo, implode("\r\n", $headers))) {
+if (cdaMarketingMail($destinatario, $asunto, $cuerpo, implode("\r\n", $headers))) {
     responder(true, 'Tu postulacion fue enviada correctamente. Reclutamiento revisara tu perfil.');
 }
 
