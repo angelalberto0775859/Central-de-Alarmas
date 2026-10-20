@@ -15,7 +15,7 @@
 
 ### Requisitos
 1. **PHP 7.4 o superior** instalado en el servidor
-2. **Función mail() de PHP** configurada y funcionando
+2. **Cuenta SMTP de Hostinger** con su password en `php/marketing_secrets.php` (ver abajo)
 3. **Permisos de escritura** en la carpeta del proyecto
 
 ### Configuración de Correo
@@ -26,6 +26,17 @@ Para cambiar el destinatario, edita la variable `$destinatario` en ambos archivo
 ```php
 $destinatario = 'nuevo-correo@ejemplo.com';
 ```
+
+Todos los correos (formularios y tickets de Marketing) se envian con `php/mailer.php`
+por SMTP de Hostinger desde `notificaciones@centraldealarmaspromo.com`. En Hostinger,
+`mail()` de PHP rechaza los remitentes, asi que el SMTP es obligatorio. La password
+vive solo en el servidor, en `php/marketing_secrets.php` (ignorado por Git):
+
+```php
+define('CDA_SMTP_PASS', 'password-de-notificaciones');
+```
+
+Para usar otra cuenta de Hostinger, agrega tambien `define('CDA_MAIL_FROM', 'cuenta@dominio');`.
 
 ### Configuración de reCAPTCHA
 Los formularios utilizan Google reCAPTCHA v2. La clave visible en el HTML es la clave pública del sitio. La clave secreta no debe guardarse en el repositorio; configúrala en el servidor como variable de entorno:
@@ -105,9 +116,9 @@ Edita la variable `$mensajeHTML` en los archivos PHP para personalizar el diseñ
 ## Solución de Problemas
 
 ### Correos no llegan
-1. Verifica que la función mail() de PHP esté configurada
-2. Revisa la carpeta de spam
-3. Configura un servidor SMTP si es necesario
+1. Revisa `correo-marketing.log`, una carpeta arriba de `public_html`: cada envio deja una linea con el resultado o el error SMTP
+2. Si dice `535 authentication failed`, la password de `CDA_SMTP_PASS` es incorrecta o cambio
+3. Revisa la carpeta de spam
 
 ### Error 403
 1. Verifica permisos de archivos PHP (755 recomendado)
