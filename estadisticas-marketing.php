@@ -158,6 +158,7 @@ $statusConic = $conicParts ? implode(', ', $conicParts) : '#e5edf7 0 100%';
         @media (max-width:620px) { .kpi-row, .pie-layout { grid-template-columns:1fr; } .month-bars { grid-template-columns:repeat(3,minmax(0,1fr)); } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
+    <link rel="stylesheet" href="css/marketing-app.css">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->

@@ -1,0 +1,306 @@
+/*
+ * Estilo comun del panel de Marketing (tickets, tablero, seguimiento, perfil,
+ * usuarios, estadisticas y crear ticket). Se carga despues de los estilos de
+ * cada pagina y los simplifica: fondo claro, una sola barra superior, tarjetas
+ * blancas y color solo donde aporta informacion (estado, prioridad).
+ */
+:root {
+    --app-bg: #f4f6f9;
+    --app-surface: #ffffff;
+    --app-subtle: #f8fafc;
+    --app-border: #e3e8ef;
+    --app-border-strong: #cfd8e3;
+    --app-ink: #172033;
+    --app-muted: #5f6b7d;
+    --app-brand: #063970;
+    --app-brand-hover: #0b4f92;
+    --app-accent: #f6eb17;
+    --app-radius: 10px;
+    --app-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+    --app-shadow-raised: 0 8px 24px rgba(16, 24, 40, .08);
+}
+
+/* Base: sin degradados, puntos animados ni brillos de fondo. */
+html body {
+    background: var(--app-bg);
+    color: var(--app-ink);
+}
+body::before,
+body::after,
+.ambient-points { display: none !important; }
+
+.shell,
+.page-shell {
+    width: min(1240px, calc(100% - 2rem));
+    padding-top: 0;
+}
+
+/* Barra superior blanca y fija. */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    min-height: 64px;
+    margin: 0 0 1.5rem;
+    padding: .6rem 0;
+    background: var(--app-surface);
+    /* Fondo blanco a todo el ancho sin provocar scroll horizontal. */
+    box-shadow: 0 0 0 100vmax var(--app-surface), 0 1px 0 100vmax var(--app-border);
+    clip-path: inset(0 -100vmax -1px);
+    color: var(--app-ink);
+}
+.topbar img { width: 120px; filter: none; }
+.nav { gap: .2rem; }
+.nav a,
+.nav .admin-link,
+.nav .public-link {
+    min-height: 36px;
+    padding: .45rem .7rem;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--app-muted);
+    box-shadow: none;
+    font-weight: 650;
+}
+.nav a:hover { background: var(--app-subtle); color: var(--app-ink); border-color: transparent; }
+.nav a.active { background: #eaf1f9; color: var(--app-brand); box-shadow: none; }
+.nav a:focus-visible { outline: 2px solid var(--app-brand); outline-offset: 2px; }
+
+.profile-menu summary,
+.profile-menu[open] summary,
+.profile-menu[class*="role-"] summary {
+    min-height: 36px;
+    padding: .45rem .75rem;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface);
+    color: var(--app-ink);
+    box-shadow: none;
+    font-weight: 650;
+}
+.profile-dropdown { border-color: var(--app-border); box-shadow: var(--app-shadow-raised); }
+
+/* Encabezado de pagina: texto oscuro, sin caja ni degradado. */
+.hero,
+.hero-banner,
+.hero-grid {
+    color: var(--app-ink);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: .25rem 0 0;
+    min-height: 0;
+}
+.hero::before,
+.hero::after,
+.hero-banner::before,
+.hero-banner::after { display: none; }
+.eyebrow,
+.hero-label {
+    color: var(--app-muted);
+    font-size: .72rem;
+    letter-spacing: .08em;
+}
+.hero h1,
+.hero-banner h1,
+.hero-grid h1,
+.hero-copy h1,
+main > section:first-child h1 {
+    color: var(--app-ink);
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    line-height: 1.15;
+}
+.hero h1 span,
+.hero-copy h1 span { color: var(--app-muted); }
+.hero p,
+.hero .muted,
+.hero-banner p,
+.hero-grid p,
+.hero-copy p { color: var(--app-muted); }
+
+/* Bloques explicativos que saturaban las vistas de trabajo. */
+.story-strip,
+.hero-kpis,
+.hero-points,
+.signal-card,
+.process-panel h2,
+.process-panel .status-track { display: none; }
+
+/* Encabezados con mucho aire vertical (seguimiento y crear ticket). */
+section.hero-grid,
+.page-shell .hero { padding: .25rem 0 1rem; min-height: 0; margin-bottom: 1rem; }
+.page-shell .hero-grid { align-items: start; gap: 1.5rem; }
+.process-panel { padding: 0; background: transparent; border: 0; box-shadow: none; }
+.urgent-note {
+    margin: 0;
+    padding: .9rem 1rem;
+    border: 1px solid #f1e3a6;
+    border-left: 3px solid #d4a514;
+    border-radius: var(--app-radius);
+    background: #fffbea;
+    color: #5c4a10;
+    font-size: .92rem;
+    line-height: 1.5;
+}
+.urgent-note strong { color: #5c4a10; }
+
+/* Tarjetas y superficies. */
+.card,
+.stat,
+.stat-box,
+.story-step,
+.lane,
+.search-card,
+.chat-box,
+.ticket-chat,
+.form-section,
+.ideas-card,
+.ticket-preview,
+main.analytics,
+.analytics > section,
+.analytics article,
+.ticket-row-card,
+.ticket-card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: var(--app-radius);
+    box-shadow: var(--app-shadow);
+}
+.stat::before,
+.lane::before,
+.card::before,
+.search-card::before { display: none; }
+
+.stat span,
+.stat-box .lbl { color: var(--app-muted); }
+.stat strong,
+.stat-box .num { color: var(--app-ink); }
+.stat-box { color: var(--app-ink); }
+
+.card-head h2,
+.card h2,
+.ticket-chat h3,
+.chat-box h2,
+.search-card h2 { color: var(--app-ink); }
+
+/* Tickets: borde lateral fino que solo indica el tono del estado. */
+.ticket-row-card,
+.ticket-card { border-left-width: 3px; }
+.ticket-row-card:hover,
+.ticket-card:hover { box-shadow: var(--app-shadow-raised); transform: none; }
+.ticket-row-card[open],
+.ticket-card[open] { box-shadow: var(--app-shadow-raised); }
+
+/* Columnas del tablero. */
+.lane { background: #eef2f6; border-color: var(--app-border); }
+.lane-head {
+    background: var(--app-surface);
+    color: var(--app-ink);
+    border: 1px solid var(--app-border);
+    box-shadow: none;
+}
+.lane-head h2 { color: var(--app-ink); }
+.lane-head p,
+.lane-kicker { color: var(--app-muted); }
+
+/* Chat. */
+.chat-thread { background: var(--app-subtle); border-radius: 8px; padding: .5rem; }
+.chat-message { box-shadow: none; border-color: var(--app-border); border-left-width: 3px; }
+.chat-message.admin { background: #fffdf3; }
+.chat-message.usuario { background: var(--app-surface); }
+
+/* Formularios. */
+input,
+select,
+textarea {
+    border-color: var(--app-border-strong);
+    background: var(--app-surface);
+}
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--app-brand);
+    box-shadow: 0 0 0 3px rgba(6, 57, 112, .12);
+}
+.filters { background: var(--app-subtle); border-color: var(--app-border); }
+.file-drop { background: var(--app-subtle); border-color: var(--app-border-strong); }
+
+/* Botones: azul de marca como accion principal; el amarillo queda de acento. */
+.shell button:not(.danger-button):not(.restore-button):not(.filter-btn):not([class*="tab"]),
+.page-shell button:not(.danger-button):not(.restore-button),
+.btn.primary,
+.inline-form button,
+.filters button,
+.chat-form button,
+.quick-form button {
+    background: var(--app-brand);
+    color: #fff;
+    border: 1px solid var(--app-brand);
+    box-shadow: none;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+}
+.shell button:not(.danger-button):not(.restore-button):not(.filter-btn):hover,
+.btn.primary:hover,
+.inline-form button:hover,
+.filters button:hover,
+.chat-form button:hover,
+.quick-form button:hover {
+    background: var(--app-brand-hover);
+    border-color: var(--app-brand-hover);
+    transform: none;
+    box-shadow: none;
+}
+.btn.secondary,
+.section-link,
+.filter-btn {
+    background: var(--app-surface);
+    color: var(--app-ink);
+    border: 1px solid var(--app-border-strong);
+    box-shadow: none;
+}
+.filter-btn.active,
+.section-link.active {
+    background: #eaf1f9;
+    color: var(--app-brand);
+    border-color: #c7d8ec;
+}
+.danger-button {
+    background: var(--app-surface) !important;
+    color: #b42318 !important;
+    border: 1px solid #f3c6c2 !important;
+    text-transform: none;
+}
+.danger-button:hover { background: #fef3f2 !important; }
+.restore-button { text-transform: none; }
+
+/* Perfil. */
+.avatar-circle { background: var(--app-brand); color: #fff; box-shadow: none; }
+.user-email { color: var(--app-muted); }
+.role-pill { background: #eef2f6; color: var(--app-ink); border-color: var(--app-border); }
+.role-pill.role-admin { background: #fef3f2; color: #b42318; border-color: #f3c6c2; }
+.role-pill.role-manager { background: #eff6ff; color: #1d4ed8; border-color: #c7d8f5; }
+.role-pill.role-trabajador { background: #ecfdf3; color: #067647; border-color: #b7e4c7; }
+button.btn-primary,
+.button {
+    background: var(--app-brand);
+    color: #fff;
+    border: 1px solid var(--app-brand);
+    box-shadow: none;
+    text-transform: none;
+    letter-spacing: 0;
+}
+button.btn-primary:hover,
+.button:hover { background: var(--app-brand-hover); transform: none; box-shadow: none; }
+
+/* Estadisticas: barras en un solo tono de marca. */
+.bar-fill,
+.month-fill { background: var(--app-brand); }
+
+@media (max-width: 760px) {
+    .topbar { position: static; flex-wrap: wrap; padding: .6rem 1rem; }
+    .nav { justify-content: flex-start; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; flex-direction: row !important; }
+    .stat strong { font-size: 1.6rem; }
+}

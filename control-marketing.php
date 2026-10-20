@@ -199,6 +199,7 @@ foreach ($tickets as $ticket) {
         @media (max-width:620px) { .story-strip { grid-template-columns:1fr; } .board { grid-template-columns:1fr; overflow:visible; } .lane { min-height:auto; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
+    <link rel="stylesheet" href="css/marketing-app.css">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->

@@ -330,6 +330,7 @@ $users = cdaDb()->query('SELECT id, nombre, correo, rol, activo, google_sub, cre
         @media (max-width:820px) { .topbar, .grid { grid-template-columns:1fr; flex-direction:column; align-items:stretch; } .nav { justify-content:flex-start; } .profile-dropdown { left:0; right:auto; } table, tbody, tr, td { display:block; min-width:0; } thead { display:none; } tr { border:1px solid var(--line); border-radius:var(--radius); margin-bottom:.75rem; background:#fff; overflow:hidden; } td { border:0; } td + td { border-top:1px solid rgba(6,57,112,.08); } .user-edit { grid-template-columns:1fr; } .user-edit .check { justify-content:flex-start; } .bulk-actions { position:static; align-items:stretch; flex-direction:column; } .bulk-actions button { width:100%; } }
         @media (prefers-reduced-motion:reduce) { .ambient-point { animation:none; } }
     </style>
+    <link rel="stylesheet" href="css/marketing-app.css">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
