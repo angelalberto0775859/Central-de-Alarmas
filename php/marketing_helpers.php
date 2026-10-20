@@ -371,7 +371,7 @@ function cdaMarketingTicketNotDeletedSql(array $columns, $alias = '') {
 function cdaMarketingFetchTicketForUpdate($id) {
     $columns = cdaMarketingTicketOptionalColumns();
     $select = ['id', 'folio', 'solicitante', 'correo', 'actividad', 'estado'];
-    foreach (['fecha_entrega_estimada', 'asignado_a'] as $column) {
+    foreach (['fecha_entrega_estimada', 'respuesta_interna', 'asignado_a'] as $column) {
         if (!empty($columns[$column])) {
             $select[] = $column;
         }
@@ -501,15 +501,8 @@ function cdaMarketingPriorityTone($priority) {
 }
 
 function cdaMarketingStatusEmailStatuses() {
-    return [
-        'Pendiente de informacion',
-        'Ajustes solicitados',
-        'Aprobado',
-        'Programado',
-        'Entregado',
-        'Cerrado',
-        'Rechazado',
-    ];
+    // Todos los estados avisan por correo al solicitante y al equipo.
+    return cdaMarketingStatuses();
 }
 
 function cdaMarketingStatusSendsEmail($status) {
@@ -542,6 +535,10 @@ function cdaMarketingStatusEmailSubject($status, $folio) {
 
 function cdaMarketingStatusEmailIntro($status) {
     $messages = [
+        'Recibido' => 'Tu solicitud fue recibida y esta en espera de evaluacion.',
+        'En evaluacion' => 'El equipo esta evaluando tu solicitud.',
+        'En diseno' => 'Tu solicitud ya esta en diseno.',
+        'En revision' => 'El material de tu solicitud esta en revision.',
         'Pendiente de informacion' => 'El equipo necesita informacion o materiales adicionales para continuar con tu solicitud.',
         'Ajustes solicitados' => 'El ticket requiere ajustes o confirmaciones antes de avanzar.',
         'Aprobado' => 'Tu solicitud fue aprobada para continuar con el flujo de trabajo.',
@@ -620,12 +617,17 @@ function cdaMarketingSendHtmlMailToMany(array $recipients, $subject, $message, $
     return $sent;
 }
 
-function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment = '') {
+function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment = '', array $changes = []) {
     if (!cdaMarketingStatusSendsEmail($newStatus)) {
         return false;
     }
 
+    $statusChanged = $oldStatus !== $newStatus;
     $subject = cdaMarketingStatusEmailSubject($newStatus, $ticket['folio'] ?? '');
+    $intro = $statusChanged ? cdaMarketingStatusEmailIntro($newStatus) : 'Tu ticket tuvo una actualizacion del equipo de Marketing.';
+    $changesHtml = $changes
+        ? '<p><strong>Cambios:</strong> ' . htmlspecialchars(implode(', ', $changes)) . '</p>'
+        : '';
     $statusLabel = cdaMarketingStatusLabel($newStatus);
     $oldStatusLabel = cdaMarketingStatusLabel($oldStatus);
     $commentHtml = $comment !== '' ? nl2br(htmlspecialchars($comment)) : 'Sin comentario adicional.';
@@ -640,11 +642,14 @@ function cdaMarketingSendStatusEmail($ticket, $oldStatus, $newStatus, $comment =
                 <h1 style="margin:0;font-size:21px;">Actualizacion de ticket</h1>
             </div>
             <div style="padding:20px;background:#fff;">
-                <p>' . htmlspecialchars(cdaMarketingStatusEmailIntro($newStatus)) . '</p>
+                <p>' . htmlspecialchars($intro) . '</p>
                 <p><strong>Folio:</strong> ' . htmlspecialchars($ticket['folio'] ?? '') . '</p>
                 <p><strong>Solicitud:</strong> ' . htmlspecialchars($ticket['actividad'] ?? '') . '</p>
-                <p><strong>Estado anterior:</strong> ' . htmlspecialchars($oldStatusLabel) . '</p>
-                <p><strong>Nuevo estado:</strong> ' . htmlspecialchars($statusLabel) . '</p>
+                ' . ($statusChanged
+                    ? '<p><strong>Estado anterior:</strong> ' . htmlspecialchars($oldStatusLabel) . '</p><p><strong>Nuevo estado:</strong> ' . htmlspecialchars($statusLabel) . '</p>'
+                    : '<p><strong>Estado:</strong> ' . htmlspecialchars($statusLabel) . '</p>') . '
+                ' . $changesHtml . '
+                <p><strong>Responsable:</strong> ' . htmlspecialchars(($ticket['asignado_a'] ?? '') ?: 'Sin asignar') . '</p>
                 <p><strong>Entrega aproximada:</strong> ' . htmlspecialchars(cdaMarketingFormatDate($ticket['fecha_entrega_estimada'] ?? null)) . '</p>
                 <div style="background:#f4f8fc;border:1px solid #d8e3f0;border-radius:8px;padding:12px;margin-top:12px;">
                     <strong>Comentario del equipo</strong><br>' . $commentHtml . '

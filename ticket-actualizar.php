@@ -43,14 +43,25 @@ try {
         cdaMarketingRedirect($returnTo, 'panel-marketing.php', 'No encontramos ese ticket o ya fue eliminado.', 'error', $ticketFragment);
     }
     $oldStatus = $ticket['estado'];
+    $changes = [];
+    if ((string) ($ticket['fecha_entrega_estimada'] ?? '') !== (string) ($fechaEntregaEstimada ?? '')) {
+        $changes[] = 'Fecha de entrega aproximada';
+    }
+    if ((string) ($ticket['asignado_a'] ?? '') !== (string) $asignado) {
+        $changes[] = 'Responsable asignado';
+    }
+    if ($respuesta !== '' && $respuesta !== (string) ($ticket['respuesta_interna'] ?? '')) {
+        $changes[] = 'Comentario del equipo';
+    }
     $ticket['fecha_entrega_estimada'] = $fechaEntregaEstimada;
     $ticket['asignado_a'] = $asignado;
 
     cdaMarketingSaveTicketUpdate($id, $estado, $respuesta, $asignado, $fechaEntregaEstimada);
     cdaMarketingInsertTicketHistorySafe($id, $user['id'], $estado, $respuesta ?: 'Actualizacion de estado.');
 
-    if ($oldStatus !== $estado) {
-        cdaMarketingSendStatusEmail($ticket, $oldStatus, $estado, $respuesta);
+    // Cada cambio de estado o de datos del ticket avisa por correo.
+    if ($oldStatus !== $estado || $changes) {
+        cdaMarketingSendStatusEmail($ticket, $oldStatus, $estado, $respuesta, $changes);
     }
 } catch (Throwable $e) {
     error_log('No fue posible actualizar ticket de marketing: ' . $e->getMessage());

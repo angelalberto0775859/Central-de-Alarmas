@@ -26,7 +26,7 @@ assertSameValue('red', cdaMarketingPriorityTone('Urgente'), 'urgent priority use
 assertSameValue(true, cdaMarketingStatusSendsEmail('Pendiente de informacion'), 'waiting info status sends email');
 assertSameValue(true, cdaMarketingStatusSendsEmail('Ajustes solicitados'), 'adjustments status sends email');
 assertSameValue(true, cdaMarketingStatusSendsEmail('Entregado'), 'delivered status sends email');
-assertSameValue(false, cdaMarketingStatusSendsEmail('En diseno'), 'in design status stays internal');
+assertSameValue(true, cdaMarketingStatusSendsEmail('En diseno'), 'in design status sends email');
 assertSameValue(true, strpos(cdaMarketingStatusEmailSubject('Entregado', 'MKT-1'), 'MKT-1') !== false, 'status email subject includes folio');
 assertSameValue(true, in_array('zip', cdaMarketingTicketFileExtensions(), true), 'initial files allow zip');
 assertSameValue(true, in_array('rar', cdaMarketingTicketFileExtensions(), true), 'initial files allow rar');
