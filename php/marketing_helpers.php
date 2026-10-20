@@ -637,14 +637,16 @@ function cdaMarketingSmtpSend($to, $subject, $message, $headers) {
 }
 
 function cdaMarketingMail($to, $subject, $message, $headers) {
+    $sent = false;
     if (CDA_SMTP_PASS !== '') {
         try {
             $sent = cdaMarketingSmtpSend($to, $subject, $message, $headers);
         } catch (Throwable $e) {
-            error_log('Error SMTP de marketing: ' . $e->getMessage());
-            $sent = false;
+            error_log('Error SMTP de marketing, se intenta con mail(): ' . $e->getMessage());
         }
-    } else {
+    }
+
+    if (!$sent) {
         // El remitente de sobre (-f) debe ser del dominio para pasar SPF; sin el,
         // el servidor usa usuario@host y muchos buzones descartan el correo.
         $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
