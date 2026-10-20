@@ -657,6 +657,11 @@ function cdaMarketingMail($to, $subject, $message, $headers) {
         // El remitente de sobre (-f) debe ser del dominio para pasar SPF; sin el,
         // el servidor usa usuario@host y muchos buzones descartan el correo.
         $sent = mail($to, $subject, $message, $headers, '-f' . CDA_MAIL_FROM);
+        if (!$sent) {
+            // Hostinger puede rechazar el -f; se reintenta como antes, sin el.
+            cdaMarketingMailLog('mail() con -f rechazado, se reintenta sin -f');
+            $sent = mail($to, $subject, $message, $headers);
+        }
     }
     // Se registra cada intento para poder rastrear correos que no llegan.
     cdaMarketingMailLog(($sent ? 'Correo de marketing aceptado' : 'No fue posible enviar correo de marketing') . ' a ' . $to . ': ' . $subject);
