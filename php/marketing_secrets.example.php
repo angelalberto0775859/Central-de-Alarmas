@@ -17,6 +17,6 @@ define('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 // Alternativa: tambien puedes definir estos mismos nombres como variables de entorno
 // o guardarlos en la tabla marketing_configuracion del hosting.
 
-// Correo: se envia por SMTP de Hostinger con el buzon no-reply@centraldealarmas.website
-// (crealo en hPanel > Correos). Solo hace falta su password.
-define('CDA_SMTP_PASS', 'PASSWORD_DE_NO-REPLY@CENTRALDEALARMAS.WEBSITE');
+// Correo: se envia por SMTP de Hostinger con el buzon notificaciones@centraldealarmaspromo.com
+// (cuenta de correo de Hostinger). Solo hace falta su password.
+define('CDA_SMTP_PASS', 'PASSWORD_DE_NOTIFICACIONES@CENTRALDEALARMASPROMO.COM');

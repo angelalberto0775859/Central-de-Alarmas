@@ -38,10 +38,10 @@ defined('CDA_DB_PASS') || define('CDA_DB_PASS', cdaConfigValue('CDA_DB_PASS'));
 defined('CDA_SITE_URL') || define('CDA_SITE_URL', rtrim(cdaConfigValue('CDA_SITE_URL', 'https://centraldealarmas.com.mx'), '/'));
 
 // Remitente de los correos del panel y formularios. Debe ser un buzon creado en
-// Hostinger (dominio del sitio); las respuestas van a CDA_MAIL_REPLY_TO.
+// Hostinger; las respuestas van a CDA_MAIL_REPLY_TO.
 // CDA_MARKETING_NOTIFY_EMAILS son buzones que siempre reciben avisos de tickets
 // (separados por coma), ademas de admins, managers y el asignado.
-defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'no-reply@centraldealarmas.website'));
+defined('CDA_MAIL_FROM') || define('CDA_MAIL_FROM', cdaConfigValue('CDA_MAIL_FROM', 'notificaciones@centraldealarmaspromo.com'));
 defined('CDA_MAIL_REPLY_TO') || define('CDA_MAIL_REPLY_TO', cdaConfigValue('CDA_MAIL_REPLY_TO', 'marketing@centraldealarmas.com.mx'));
 defined('CDA_MARKETING_NOTIFY_EMAILS') || define('CDA_MARKETING_NOTIFY_EMAILS', cdaConfigValue('CDA_MARKETING_NOTIFY_EMAILS', 'marketing@centraldealarmas.com.mx'));
 
