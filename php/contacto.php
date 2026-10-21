@@ -131,8 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= 'From: Central de Alarmas <' . CDA_MAIL_FROM . ">\r\n";
+    // Sin copia (Cc) a quien llena el formulario: los bots dejan correos falsos que
+    // rebotan y agotan el limite de envio del buzon de Hostinger.
     $headers .= 'Reply-To: ' . $datos['correo'] . "\r\n";
-    $headers .= 'Cc: ' . $datos['correo'] . "\r\n";
 
     // Enviar correo
     if (cdaMarketingMail($destinatario, $asunto, $mensajeHTML, $headers)) {

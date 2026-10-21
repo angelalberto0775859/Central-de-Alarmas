@@ -1,5 +1,10 @@
 <?php
+// La clave secreta va en php/marketing_secrets.php (CDA_RECAPTCHA_SECRET) o en la
+// variable de entorno RECAPTCHA_SECRET. Sin clave, el reCAPTCHA no se valida.
 function cdaRecaptchaSecret() {
+    if (defined('CDA_RECAPTCHA_SECRET') && trim((string) CDA_RECAPTCHA_SECRET) !== '') {
+        return trim((string) CDA_RECAPTCHA_SECRET);
+    }
     return getenv('RECAPTCHA_SECRET') ?: '';
 }
 
