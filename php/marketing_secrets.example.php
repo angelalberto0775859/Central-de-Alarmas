@@ -21,6 +21,6 @@ define('CDA_GOOGLE_REDIRECT_URI', CDA_SITE_URL . '/google-callback.php');
 // (cuenta de correo de Hostinger). Solo hace falta su password.
 define('CDA_SMTP_PASS', 'PASSWORD_DE_NOTIFICACIONES@CENTRALDEALARMASPROMO.COM');
 
-// reCAPTCHA v2 de los formularios (sitekey 6LfjgrQp... en index.html y empresa.html).
+// reCAPTCHA v2 de los formularios (sitekey 6LfBmfot... en index.html y empresa.html).
 // Google reCAPTCHA Admin -> el sitio -> Configuracion -> Clave secreta.
 define('CDA_RECAPTCHA_SECRET', 'TU_CLAVE_SECRETA_RECAPTCHA');

@@ -1,6 +1,11 @@
 <?php
-// La clave secreta va en php/marketing_secrets.php (CDA_RECAPTCHA_SECRET) o en la
-// variable de entorno RECAPTCHA_SECRET. Sin clave, el reCAPTCHA no se valida.
+// La clave secreta va en php/recaptcha_secret.php o php/marketing_secrets.php
+// (CDA_RECAPTCHA_SECRET), ambos ignorados por Git, o en la variable de entorno
+// RECAPTCHA_SECRET. Sin clave, el reCAPTCHA no se valida.
+if (is_file(__DIR__ . '/recaptcha_secret.php')) {
+    require_once __DIR__ . '/recaptcha_secret.php';
+}
+
 function cdaRecaptchaSecret() {
     if (defined('CDA_RECAPTCHA_SECRET') && trim((string) CDA_RECAPTCHA_SECRET) !== '') {
         return trim((string) CDA_RECAPTCHA_SECRET);
