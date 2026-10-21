@@ -1,6 +1,7 @@
 <?php
 // Configuración
-$destinatario = 'salducin@centraldealarmas.com.mx';
+$destinatario = 'rvillaverde@centraldealarmas.com.mx';
+$copia = 'marketing@centraldealarmas.com.mx';
 $asunto = 'Nuevo Mensaje de Contacto - Central de Alarmas';
 
 require_once __DIR__ . '/recaptcha.php';
@@ -134,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sin copia (Cc) a quien llena el formulario: los bots dejan correos falsos que
     // rebotan y agotan el limite de envio del buzon de Hostinger.
     $headers .= 'Reply-To: ' . $datos['correo'] . "\r\n";
+    $headers .= 'Cc: ' . $copia . "\r\n";
 
     // Enviar correo
     if (cdaMarketingMail($destinatario, $asunto, $mensajeHTML, $headers)) {

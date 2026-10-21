@@ -1,6 +1,7 @@
 <?php
 // Configuración
-$destinatario = 'salducin@centraldealarmas.com.mx';
+$destinatario = 'rvillaverde@centraldealarmas.com.mx';
+$copia = 'marketing@centraldealarmas.com.mx';
 $asunto = 'Nuevo Mensaje de Contacto Empresarial - Central de Alarmas';
 
 require_once __DIR__ . '/recaptcha.php';
@@ -21,6 +22,7 @@ $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 $headers .= 'From: Central de Alarmas <' . CDA_MAIL_FROM . ">\r\n";
 $headers .= 'Reply-To: ' . $destinatario . "\r\n";
+$headers .= 'Cc: ' . $copia . "\r\n";
 $headers .= 'X-Mailer: PHP/' . phpversion();
 
 // Función para limpiar y validar datos
