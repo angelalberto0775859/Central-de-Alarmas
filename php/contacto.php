@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Enviar correo
     if (cdaMarketingMail($destinatario, $asunto, $mensajeHTML, $headers)) {
-        responder(true, '¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.');
+        responder(true, '¡Listo! Recibimos tu solicitud. Un asesor te contactará en breve.');
     } else {
         responder(false, 'Hubo un error al enviar el mensaje. Por favor, inténtalo más tarde.');
     }
