@@ -29,6 +29,11 @@ function cdaValidarRecaptcha($post) {
     $verificacion = @file_get_contents($url);
     $datos = $verificacion ? json_decode($verificacion, true) : null;
 
-    return !empty($datos['success']);
+    if (empty($datos['success'])) {
+        return false;
+    }
+
+    // reCAPTCHA v3 califica de 0.0 (bot) a 1.0 (persona); v2 no manda score.
+    return !isset($datos['score']) || (float) $datos['score'] >= 0.5;
 }
 ?>

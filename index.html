@@ -864,7 +864,7 @@
 
             <div class="contacto-grid">
                 <div class="contact-form-wrap" data-aos="fade-right">
-                    <form id="contact-form" action="php/contacto.php" method="POST" novalidate>
+                    <form id="contact-form" data-recaptcha-v3 action="php/contacto.php" method="POST" novalidate>
                         <select class="ghost" name="titulo">
                             <option value="Nuevo Mensaje de Contacto - Central de Alarmas"></option>
                         </select>
@@ -941,7 +941,6 @@
                             <textarea name="mensaje" placeholder="¿En qué podemos ayudarte? *" required rows="5"></textarea>
                             <span class="error-message" id="mensaje-error">El mensaje es obligatorio.</span>
                         </div>
-                        <div class="g-recaptcha" data-sitekey="6LfjgrQpAAAAABoTmAW2j8d-zxYCKUWbPpb8Fb9G"></div>
                         <button type="submit" class="btn-submit">Recibe Asesoría Gratuita</button>
                     </form>
                 </div>
@@ -1096,6 +1095,7 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
     <script src="./js/language-switcher.min.js?v=20260608-perf" defer></script>
     <script src="./js/main.js?v=packages-20260806" defer></script>
+    <script src="./js/recaptcha-v3.js?v=20261021" defer></script>
     <script src="./js/forms-runtime.min.js?v=20260608-perf" defer></script>
 </body>
 </html>
