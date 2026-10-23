@@ -104,3 +104,38 @@ function cdaMarketingMail($to, $subject, $message, $headers) {
 
     return $sent;
 }
+
+// Bloque HTML con el origen del envio (formulario, pagina, fecha, IP) para los
+// correos de los formularios del sitio. La pagina sale del Referer que manda
+// el fetch del formulario.
+function cdaOrigenFormularioHTML($formulario) {
+    $url = $_SERVER['HTTP_REFERER'] ?? '';
+    $ruta = (string) parse_url($url, PHP_URL_PATH);
+    $paginas = [
+        '' => 'Inicio',
+        '/' => 'Inicio',
+        '/index.html' => 'Inicio',
+        '/empresa.html' => 'Empresas',
+        '/vacantes/monitorista.html' => 'Vacante: Monitorista',
+        '/vacantes/tecnico-instalador.html' => 'Vacante: Técnico Instalador',
+        '/vacantes/ejecutivo-cobranza.html' => 'Vacante: Ejecutivo de Cobranza'
+    ];
+    $pagina = $paginas[$ruta] ?? ($ruta !== '' ? basename($ruta) : 'No identificada');
+
+    $filas = [
+        'Formulario' => $formulario,
+        'Página' => $pagina,
+        'URL' => $url !== '' ? $url : 'No disponible',
+        'Fecha' => date('d/m/Y H:i:s'),
+        'IP' => $_SERVER['REMOTE_ADDR'] ?? 'No disponible',
+        'Navegador' => $_SERVER['HTTP_USER_AGENT'] ?? 'No disponible'
+    ];
+
+    $html = "<table style='width: 100%; border-collapse: collapse; font-size: 13px;'>";
+    foreach ($filas as $etiqueta => $valor) {
+        $html .= "<tr><td style='padding: 6px 8px; border-bottom: 1px solid #e5e7eb; color: #063970; font-weight: bold; width: 110px; vertical-align: top;'>{$etiqueta}</td>"
+            . "<td style='padding: 6px 8px; border-bottom: 1px solid #e5e7eb; word-break: break-all;'>" . htmlspecialchars($valor, ENT_QUOTES, 'UTF-8') . "</td></tr>";
+    }
+    return $html . '</table>';
+}
+

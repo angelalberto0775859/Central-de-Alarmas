@@ -97,7 +97,6 @@ if (isset($_FILES['cv']) && $_FILES['cv']['error'] !== UPLOAD_ERR_NO_FILE) {
 }
 
 $asunto = 'Postulacion - ' . $datos['vacante'] . ' | Central de Alarmas';
-$fecha = date('d/m/Y H:i:s');
 $mensajeHTML = "
 <html>
 <body style='font-family: Arial, sans-serif; color: #1a202c; line-height: 1.6;'>
@@ -117,7 +116,9 @@ $mensajeHTML = "
             <p><strong>Experiencia:</strong> {$datos['experiencia']}</p>
             <p><strong>Disponibilidad:</strong> {$datos['disponibilidad']}</p>
             <p><strong>Mensaje:</strong><br>" . nl2br($datos['mensaje']) . "</p>
-            <p style='font-size: 12px; color: #64748b;'>Enviado desde bolsa de trabajo el {$fecha}</p>
+            <h2 style='margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #f6eb17; color: #063970; font-size: 15px; text-transform: uppercase;'>Origen de la postulacion</h2>
+            " . cdaOrigenFormularioHTML('Bolsa de trabajo - ' . $datos['vacante']) . "
+            <p style='font-size: 12px; color: #64748b;'>CV adjunto: " . ($archivoAdjunto ? $archivoAdjunto['name'] : 'No se adjunto CV') . "</p>
         </div>
     </div>
 </body>

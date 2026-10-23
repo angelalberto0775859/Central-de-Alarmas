@@ -80,18 +80,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         responder(false, 'Por favor, corrige los siguientes errores: ' . implode(', ', $errores));
     }
 
+    $asunto = 'Contacto de ' . $datos['nombre'] . ' | Formulario de contacto (Inicio) - Central de Alarmas';
+
     // Crear mensaje HTML
+    $correoLink = "<a href='mailto:" . $datos['correo'] . "' style='color: #063970;'>" . $datos['correo'] . "</a>";
+    $telefonoLink = "<a href='tel:" . preg_replace('/[^0-9+]/', '', $datos['telefono']) . "' style='color: #063970;'>" . $datos['telefono'] . "</a>";
     $mensajeHTML = "
     <html>
     <head>
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .container { max-width: 640px; margin: 0 auto; padding: 20px; }
             .header { background: #063970; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
             .header h1 { margin: 0; font-size: 24px; }
-            .content { background: #f9f9f9; padding: 30px; border: 1px solid #ddd; border-radius: 0 0 8px 8px; }
-            .campo { margin-bottom: 15px; }
+            .header p { margin: 6px 0 0; color: rgba(255,255,255,.85); font-size: 14px; }
+            .content { background: #f9f9f9; padding: 26px 30px; border: 1px solid #ddd; border-radius: 0 0 8px 8px; }
+            .seccion { margin: 0 0 8px; padding-bottom: 4px; border-bottom: 2px solid #f6eb17; color: #063970; font-size: 15px; text-transform: uppercase; letter-spacing: .5px; }
+            .campo { margin-bottom: 10px; }
             .campo strong { color: #063970; display: inline-block; width: 120px; }
+            .mensaje { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; margin-bottom: 22px; }
+            .badge { background: #f6eb17; color: #063970; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-bottom: 14px; display: inline-block; }
             .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
         </style>
     </head>
@@ -99,30 +107,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class='container'>
             <div class='header'>
                 <h1>Nuevo Mensaje de Contacto</h1>
+                <p>Formulario de contacto (Inicio)</p>
             </div>
             <div class='content'>
-                <div class='campo'>
-                    <strong>Nombre:</strong> " . $datos['nombre'] . "
-                </div>
-                <div class='campo'>
-                    <strong>Correo:</strong> " . $datos['correo'] . "
-                </div>
-                <div class='campo'>
-                    <strong>Teléfono:</strong> " . $datos['telefono'] . "
-                </div>
-                <div class='campo'>
-                    <strong>Servicio:</strong> " . $datos['servicios'] . "
-                </div>
-                <div class='campo'>
-                    <strong>Estado:</strong> " . $datos['estado'] . "
-                </div>
-                <div class='campo'>
-                    <strong>Mensaje:</strong><br>" . nl2br($datos['mensaje']) . "
-                </div>
+                <div class='badge'>SOLICITUD DE CONTACTO</div>
+
+                <h2 class='seccion'>Datos del cliente</h2>
+                <div class='campo'><strong>Nombre:</strong> " . $datos['nombre'] . "</div>
+                <div class='campo'><strong>Correo:</strong> " . $correoLink . "</div>
+                <div class='campo'><strong>Teléfono:</strong> " . $telefonoLink . "</div>
+                <div class='campo' style='margin-bottom: 22px;'><strong>Estado:</strong> " . $datos['estado'] . "</div>
+
+                <h2 class='seccion'>Solicitud</h2>
+                <div class='campo'><strong>Servicio:</strong> " . $datos['servicios'] . "</div>
+                <div class='campo'><strong>Mensaje:</strong></div>
+                <div class='mensaje'>" . nl2br($datos['mensaje']) . "</div>
+
+                <h2 class='seccion'>Origen del mensaje</h2>
+                " . cdaOrigenFormularioHTML('Formulario de contacto (Inicio)') . "
             </div>
             <div class='footer'>
-                <p>Este mensaje fue enviado desde el formulario de contacto de Central de Alarmas</p>
-                <p>Fecha: " . date('d/m/Y H:i:s') . "</p>
+                <p>Responde este correo para contestarle directamente al cliente.</p>
             </div>
         </div>
     </body>
