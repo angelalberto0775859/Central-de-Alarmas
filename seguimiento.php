@@ -342,7 +342,6 @@ if ($folio) {
         }
         @media (prefers-reduced-motion:reduce) { .ambient-point, .progress-step.current::before { animation:none; } }
     </style>
-    <link rel="stylesheet" href="css/marketing-app.css">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->

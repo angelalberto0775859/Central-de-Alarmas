@@ -1,8 +1,10 @@
 /*
- * Estilo comun del panel de Marketing (tickets, tablero, seguimiento, perfil,
- * usuarios, estadisticas y crear ticket). Se carga despues de los estilos de
- * cada pagina y los simplifica: fondo claro, una sola barra superior, tarjetas
- * blancas y color solo donde aporta informacion (estado, prioridad).
+ * Estilo de las vistas de administracion del panel de Marketing (tickets,
+ * tablero, usuarios y estadisticas). Las vistas para los demas usuarios
+ * (seguimiento, crear ticket, perfil) conservan su diseno original. Se carga
+ * despues de los estilos de cada pagina y los simplifica: fondo claro con un
+ * degradado azul suave, una sola barra superior, tarjetas blancas y color solo
+ * donde aporta informacion (estado, prioridad).
  */
 :root {
     --app-bg: #f4f6f9;
@@ -18,11 +20,13 @@
     --app-radius: 10px;
     --app-shadow: 0 1px 2px rgba(16, 24, 40, .05);
     --app-shadow-raised: 0 8px 24px rgba(16, 24, 40, .08);
+    --app-gradient: linear-gradient(135deg, #063970 0%, #0b5cad 100%);
+    --app-gradient-hover: linear-gradient(135deg, #0b4f92 0%, #1a6fc4 100%);
 }
 
-/* Base: sin degradados, puntos animados ni brillos de fondo. */
+/* Base: degradado azul suave arriba, sin puntos animados ni brillos. */
 html body {
-    background: var(--app-bg);
+    background: linear-gradient(180deg, #dce8f6 0%, #eaf1f9 260px, var(--app-bg) 560px) no-repeat, var(--app-bg);
     color: var(--app-ink);
 }
 body::before,
@@ -233,7 +237,7 @@ textarea:focus {
 .filters button,
 .chat-form button,
 .quick-form button {
-    background: var(--app-brand);
+    background: var(--app-gradient);
     color: #fff;
     border: 1px solid var(--app-brand);
     box-shadow: none;
@@ -247,7 +251,7 @@ textarea:focus {
 .filters button:hover,
 .chat-form button:hover,
 .quick-form button:hover {
-    background: var(--app-brand-hover);
+    background: var(--app-gradient-hover);
     border-color: var(--app-brand-hover);
     transform: none;
     box-shadow: none;
@@ -294,9 +298,9 @@ button.btn-primary,
 button.btn-primary:hover,
 .button:hover { background: var(--app-brand-hover); transform: none; box-shadow: none; }
 
-/* Estadisticas: barras en un solo tono de marca. */
+/* Estadisticas: barras con el degradado azul de marca. */
 .bar-fill,
-.month-fill { background: var(--app-brand); }
+.month-fill { background: var(--app-gradient); }
 
 @media (max-width: 760px) {
     .topbar { position: static; flex-wrap: wrap; padding: .6rem 1rem; }
