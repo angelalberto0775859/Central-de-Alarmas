@@ -67,6 +67,13 @@ class FormHandler {
             }
 
             if (data.exito) {
+                // Evento para las conversiones de Google Tag Manager: solo se
+                // manda cuando el servidor confirma que el envio salio bien.
+                (window.dataLayer = window.dataLayer || []).push({
+                    event: 'formulario_enviado',
+                    form_id: this.form.id,
+                    form_page: window.location.pathname
+                });
                 this.showSuccess(data.mensaje);
                 this.form.reset();
                 this.clearCachedFields();
